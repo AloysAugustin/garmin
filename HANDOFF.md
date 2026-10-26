@@ -6,9 +6,12 @@ the Docker simulator recipe. This file covers what's next.
 ## Where things stand
 
 - App in `source/` builds for 118 watches with SDK **9.3.0** and Garmin's
-  current device files (`tools/ciq-setup.sh`). **All 15 unit tests pass in
-  the simulator** on the Instinct 2 family and 8 representative watches
-  (Docker recipe in AGENTS.md).
+  current device files (`tools/ciq-setup.sh`). **All 29 unit tests pass in
+  the simulator** (Docker recipe in AGENTS.md; which watches: AGENTS.md
+  "Multi-device support").
+- Features added 2026-10-26, all untested on a car: experimental **Doors**
+  menu, optional **AES-GCM** encryption (setting, default off; 8x GHASH
+  speedup), opt-in **Drive** (keyless driving behind an on-watch PIN).
 - Protocol code was checked against the current `teslamotors/vehicle-command`
   and fixed: handshake challenge = request uuid, mandatory session-info tag,
   verified/monotonic session refresh, VCSEC multi-reply handling with
@@ -76,7 +79,19 @@ Device files and fonts are Garmin-licensed: keep them out of git.
    protocol vectors from the official .proto files, and Tesla's Go Verifier
    accepting our command and producing replies we decrypt). Follow-up: try
    the setting on the car (see "Needs hardware").
-7. **Store package:** `monkeyc -e -o dist/TeslaKey.iq ...`. A Connect IQ
+7. ~~Keyless driving~~ — done 2026-10-26 (Drive menu, setting + on-watch
+   PIN + lockout). See AGENTS.md "Keyless driving".
+8. **On-watch benchmark (suggested):** simulator timings don't reflect
+   watch speed, and the test runner doesn't enforce the watchdog. A hidden
+   menu item timing GCM/ECDH on the real Instinct 2 would show the margin
+   under its 120,000-instruction watchdog. Offered to the owner, not built.
+9. **More features (ideas, owner to choose):** VCSEC status screen (lock
+   state, open closures, asleep; no wake needed) is the cheapest and most
+   useful; then infotainment-domain commands (second handshake, car awake):
+   climate, honk/flash, charge port/charging, windows, Sentry, HomeLink,
+   battery/range via GetState. Walk-up auto-unlock is impossible (Connect IQ
+   apps only use BLE while open).
+10. **Store package:** `monkeyc -e -o dist/TeslaKey.iq ...`. A Connect IQ
    Store submission needs the owner's developer account, a description,
    screenshots, a privacy statement, and a name that doesn't present the app
    as official (no Tesla logo).
@@ -95,5 +110,5 @@ works with a Driver-role key or only Owner; whether PIN to Drive (if enabled
 on the car) is still asked for.
 Then turn on **Encrypt commands (AES-GCM, beta)** in the app settings, check
 *Vehicle* on the watch says "Encryption on", and repeat unlock/lock. A
-"Reply failed verification" result would point at the GCM reply path. Bluetooth behaviour varies by
-watch model, so test on several.
+"Reply failed verification" result would point at the GCM reply path.
+Bluetooth behaviour varies by watch model, so test on several.

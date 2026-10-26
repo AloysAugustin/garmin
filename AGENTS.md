@@ -1,8 +1,8 @@
 # AGENTS.md — working notes for this repo
 
 Context for anyone (human or AI) picking this project up. This is a **Connect IQ
-watch app** that makes a Garmin Instinct 2 act as a standalone BLE key for a
-Tesla, speaking Tesla's documented Vehicle Command protocol directly.
+watch app** that makes a Garmin watch (developed on the Instinct 2; 118
+models supported) act as a standalone BLE key for a Tesla, speaking Tesla's documented Vehicle Command protocol directly.
 
 ## What this project is
 
@@ -19,9 +19,9 @@ The build needs the Connect IQ SDK **and** the per-device files, which the Garmi
 SDK Manager normally downloads from `developer.garmin.com`.
 
 Run `tools/ciq-setup.sh` first (SDK 9.3.0 + device files + fonts from Garmin).
-Both the normal build and the `--unit-test` build compile cleanly for
-`instinct2`, `instinct2s` and `instinct2x`, and all 15 unit tests pass in the
-simulator on each. `tools/build-dist.sh` release-builds (`-r`) every manifest
+Both the normal build and the `--unit-test` build compile cleanly; the 29
+unit tests (+2 GCM timing tests) pass in the simulator (see "Multi-device
+support" for which watches). `tools/build-dist.sh` release-builds (`-r`) every manifest
 product into `dist/` and rewrites `dist/SHA256SUMS.txt`:
 
 ```bash
@@ -236,8 +236,8 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 - Unit tests: 29 (incl. Drive) pass on instinct2, venu3 and vivoactive3m;
   25 (since AES-GCM) on instinct2, fenix7 and venu3 (23 of
   them also on instinct2x, venusq2m and vivoactive3m); the earlier 15 also on fr55, instinctcrossover,
-  instincte40mm and instinct3amoled45mm. A GCM command + reply takes ~40 ms
-  in the simulator. `tools/build-dist.sh` builds all 118 (~8 min, 3.8 MB).
+  instincte40mm and instinct3amoled45mm. A GCM command encrypt takes ~2 ms
+  in the simulator after the GHASH speedup. `tools/build-dist.sh` builds all 118 (~8 min, 3.8 MB).
 - Simulator quirk: `BluetoothLowEnergy.registerProfile` fails with a fatal
   "System Error" (not the catchable `ProfileRegistrationException`) on about
   the 4th app launch in one simulator session — profiles are never released
@@ -285,7 +285,8 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 
 ## Repo conventions
 
-- Development branch: `claude/garmin-instinct-tesla-key-jlvhkd`.
+- The owner asked for commits to go straight to `main` (2026-10-26); the
+  session branch is pushed to the same commit.
 - `bin/` and `certs/` are gitignored — never commit build output or signing keys.
 - Keep the crypto/protocol code in sync with the test vectors; they are the
   safety net for a device nobody can easily hardware-test in CI.
