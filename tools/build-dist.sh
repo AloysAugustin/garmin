@@ -7,13 +7,18 @@
 set -euo pipefail
 key=${1:-certs/developer_key.der}
 devices=$(grep -o '<iq:product id="[^"]*"' manifest.xml | cut -d'"' -f2)
-rm -f dist/*.prg dist/SHA256SUMS.txt
-mkdir -p dist
+# monkeyc writes debug/mir/gen side files next to the output; build in a
+# scratch dir and copy only the .prg into dist/.
+out=$(mktemp -d)
+trap 'rm -rf "$out"' EXIT
 for d in $devices; do
   echo "== $d"
-  monkeyc -f monkey.jungle -o "dist/TeslaKey-$d.prg" -y "$key" -d "$d" -r 2>&1 \
+  monkeyc -f monkey.jungle -o "$out/$d/TeslaKey-$d.prg" -y "$key" -d "$d" -r 2>&1 \
     | grep -v '^Picked up JAVA_TOOL_OPTIONS' | grep -v '^BUILD SUCCESSFUL' || true
-  [ -s "dist/TeslaKey-$d.prg" ] || { echo "build failed for $d" >&2; exit 1; }
+  [ -s "$out/$d/TeslaKey-$d.prg" ] || { echo "build failed for $d" >&2; exit 1; }
 done
+rm -rf dist
+mkdir -p dist
+cp "$out"/*/TeslaKey-*.prg dist/
 (cd dist && sha256sum TeslaKey-*.prg > SHA256SUMS.txt)
 echo "Built $(echo $devices | wc -w) devices into dist/"

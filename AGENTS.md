@@ -47,6 +47,9 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   array — don't chain on their return value. Build into a `var`, then `return` it.
 - Byte-array literals from a **variable** (`[someVar]b`) are fragile; build with
   `var a = []b; a.add(x);` instead (see `Pb.oneByte`).
+- `monkeyc -o dir/x.prg` also writes `x.prg.debug.xml`, `*-settings.json`,
+  `external-mir/`, `internal-mir/` and `gen/` into `dir/`. Never point `-o` at
+  `dist/` directly; `tools/build-dist.sh` builds in a temp dir.
 - The launcher icon must match the device's size (Instinct 2 = **62x62**) or you
   get a scaling warning.
 - The manifest validates **every** `<iq:product>` against the SDK, even when
