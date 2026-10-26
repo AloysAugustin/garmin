@@ -16,7 +16,9 @@ Tesla, speaking Tesla's documented Vehicle Command protocol directly.
 The build needs the Connect IQ SDK **and** the per-device files, which the Garmin
 SDK Manager normally downloads from `developer.garmin.com`.
 
-Both the normal build and the `--unit-test` build compile cleanly for `instinct2`:
+Both the normal build and the `--unit-test` build compile cleanly for `instinct2`
+and `instinct2s` (verified with SDK 4.1.7 and with SDK **9.3.0** using the 4.1.7
+device files; `dist/` was last built with 9.3.0, release mode `-r`):
 
 ```bash
 monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y certs/developer_key.der -d instinct2
