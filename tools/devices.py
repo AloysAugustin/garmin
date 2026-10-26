@@ -32,6 +32,7 @@ REQUIRED_CLASSES = [
     "Toybox_Cryptography_KeyAgreement",
     "Toybox_Cryptography_Hash",
     "Toybox_Cryptography_HashBasedMessageAuthenticationCode",
+    "Toybox_Cryptography_Cipher",  # AES-ECB under TeslaGcm
     "Toybox_WatchUi_Menu2",
 ]
 REQUIRED_FUNCTIONS = [

@@ -1,4 +1,7 @@
 <properties>
     <!-- The 17-character Vehicle Identification Number of your Tesla. -->
     <property id="vin" type="string"></property>
+    <!-- Encrypt commands and replies with AES-GCM (beta). Off: HMAC-SHA256
+         authenticated plaintext, the original behaviour. -->
+    <property id="encrypt" type="boolean">false</property>
 </properties>

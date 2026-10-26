@@ -70,10 +70,12 @@ Device files and fonts are Garmin-licensed: keep them out of git.
      stay in: the owner decided to keep them (2026-10-26).
 5. **Permanent signing key:** create once, store outside the repo (store
    updates must use the same key forever). Ask the owner where to keep it.
-6. **AES-GCM (recommended before a public release):** Tesla recommends
-   `FLAG_ENCRYPT_RESPONSE`, and fault `REQUIRES_RESPONSE_ENCRYPTION` (28)
-   exists; if firmware enforces it, every user breaks. GCM can be built on
-   Connect IQ's AES-ECB (CTR + GHASH). Test against Go-generated vectors.
+6. ~~AES-GCM~~ — done 2026-10-26 as an opt-in app setting ("Encrypt
+   commands (AES-GCM, beta)", default off = HMAC as before). 25 tests pass in
+   the simulator (NIST, two Python libraries, Tesla's published example,
+   protocol vectors from the official .proto files, and Tesla's Go Verifier
+   accepting our command and producing replies we decrypt). Follow-up: try
+   the setting on the car (see "Needs hardware").
 7. **Store package:** `monkeyc -e -o dist/TeslaKey.iq ...`. A Connect IQ
    Store submission needs the owner's developer account, a description,
    screenshots, a privacy statement, and a name that doesn't present the app
@@ -85,5 +87,8 @@ Sideload, set the VIN in Garmin Connect, pair with an NFC key-card tap, then
 test unlock/lock/trunk/frunk/wake on the car. Also try **Doors**
 (experimental, added 2026-10-26): it sends `ClosureMoveRequest` with a door
 field set to OPEN, which Tesla's reference client never does. Note what the
-car does (opens, unlatches, ignores, or returns an error) and on which model. Bluetooth behaviour varies by
+car does (opens, unlatches, ignores, or returns an error) and on which model.
+Then turn on **Encrypt commands (AES-GCM, beta)** in the app settings, check
+*Vehicle* on the watch says "Encryption on", and repeat unlock/lock. A
+"Reply failed verification" result would point at the GCM reply path. Bluetooth behaviour varies by
 watch model, so test on several.

@@ -10,13 +10,13 @@ using Toybox.StringUtil;
 //   * SHA-1 to derive the shared key K = SHA1(Sx)[:16]             -> Hash(SHA1)
 //   * HMAC-SHA256 to derive sub-keys and authenticate commands     -> HMAC(SHA256)
 //
-// We deliberately authenticate commands with HMAC-SHA256 (the "personalized
-// HMAC" method, SIGNATURE_TYPE_HMAC_PERSONALIZED = 8) rather than AES-GCM.
-// Both are accepted by the vehicle; HMAC keeps the command in plaintext and,
-// crucially, avoids AES-GCM which Connect IQ's Cipher class does not provide
-// (it only supports AES in CBC/ECB mode). As long as we do NOT ask the vehicle
-// to encrypt its response (FLAG_ENCRYPT_RESPONSE is left unset), replies come
-// back in plaintext too and no GCM is ever required.
+// By default commands are authenticated with HMAC-SHA256 (the "personalized
+// HMAC" method, SIGNATURE_TYPE_HMAC_PERSONALIZED = 8) and sent in plaintext,
+// without FLAG_ENCRYPT_RESPONSE, so replies are plaintext too. The optional
+// "encrypt" setting switches to AES-GCM (SIGNATURE_TYPE_AES_GCM_PERSONALIZED
+// = 5) with FLAG_ENCRYPT_RESPONSE, as Tesla's Go client does over BLE; GCM is
+// implemented in TeslaGcm on top of AES-ECB, since Connect IQ's Cipher class
+// has no GCM mode.
 module TeslaCrypto {
 
     // Metadata TLV tags (Signatures.Tag in signatures.proto).
@@ -29,12 +29,19 @@ module TeslaCrypto {
         TAG_COUNTER = 5,
         TAG_CHALLENGE = 6,
         TAG_FLAGS = 7,
+        TAG_REQUEST_HASH = 8,
+        TAG_FAULT = 9,
         TAG_END = 255
     }
 
     // Signatures.SignatureType values we use.
     const SIGNATURE_TYPE_HMAC = 6;
     const SIGNATURE_TYPE_HMAC_PERSONALIZED = 8;
+    const SIGNATURE_TYPE_AES_GCM_PERSONALIZED = 5;
+    const SIGNATURE_TYPE_AES_GCM_RESPONSE = 9;
+
+    // UniversalMessage.Flags bit mask: 1 << FLAG_ENCRYPT_RESPONSE.
+    const FLAG_ENCRYPT_RESPONSE_MASK = 2;
 
     const SHARED_KEY_SIZE = 16; // K is a 128-bit key (first 16 bytes of SHA1).
 
@@ -187,6 +194,34 @@ module TeslaCrypto {
         }
         m.add(TAG_END);
         return m;
+    }
+
+    // Metadata for decrypting an AES-GCM response (protocol.md "Response
+    // metadata"). Unlike requests, flags are always included; the fault is a
+    // 32-bit big-endian integer.
+    function responseMetadata(domain, vinBytes, counter, flags, requestHash, fault) {
+        var m = []b;
+        m.addAll(tlv(TAG_SIGNATURE_TYPE, Pb.oneByte(SIGNATURE_TYPE_AES_GCM_RESPONSE)));
+        m.addAll(tlv(TAG_DOMAIN, Pb.oneByte(domain)));
+        m.addAll(tlv(TAG_PERSONALIZATION, vinBytes));
+        m.addAll(tlv(TAG_COUNTER, u32be(counter)));
+        m.addAll(tlv(TAG_FLAGS, u32be(flags)));
+        m.addAll(tlv(TAG_REQUEST_HASH, requestHash));
+        m.addAll(tlv(TAG_FAULT, u32be(fault)));
+        m.add(TAG_END);
+        return m;
+    }
+
+    // The "request hash" a response is bound to: the request's signature type
+    // followed by its tag, truncated to 17 bytes for VCSEC (which only
+    // shortens HMAC tags; GCM tags are 16 bytes).
+    function requestHash(signatureType, tag, domain) {
+        var out = Pb.oneByte(signatureType);
+        out.addAll(tag);
+        if (domain == TeslaProto.DOMAIN_VEHICLE_SECURITY && out.size() > 17) {
+            out = out.slice(0, 17);
+        }
+        return out;
     }
 
     // Build the serialized metadata for verifying a session-info response:

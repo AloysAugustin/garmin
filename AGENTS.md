@@ -43,6 +43,12 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 - **Compiling proves little.** Before 2026-10-26 the app compiled cleanly yet
   every crypto call crashed or produced wrong bytes at runtime (byte order,
   Array vs ByteArray). Always run the unit tests in the simulator.
+- `hidden` is only allowed inside classes, not modules. Functions take at most
+  **9 arguments** (pass a dictionary instead).
+- Test-only modules (`(:test) module X`) are stripped from normal builds, so
+  any non-test code referring to them breaks the app build: mark the whole
+  test module `(:test)` (see `GcmTests`). Test hooks in app classes use
+  `(:debug)` (stripped from `-r` release builds).
 - `:private` and `:public` are **reserved words** — they cannot be used as symbol
   literals / dictionary keys. Use other names (we use `:priv` / `:pub`).
 - `ByteArray.add` / `addAll` mutate in place and do **not** reliably return the
@@ -73,10 +79,18 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 - `Toybox.Cryptography` provides: ECDH on **secp256r1**
   (`KEY_PAIR_ELLIPTIC_CURVE_SECP256R1`, `KEY_AGREEMENT_ECDH`), `HASH_SHA1`,
   `HASH_SHA256`, HMAC-SHA256, and `randomBytes`.
-- **No AES-GCM** — `Cipher` only supports AES in `MODE_CBC` / `MODE_ECB`. This is
-  why commands use Tesla's documented **HMAC-SHA256** auth method
-  (`SIGNATURE_TYPE_HMAC_PERSONALIZED`) and we never set `FLAG_ENCRYPT_RESPONSE`
-  (so replies stay plaintext and no GCM is needed to read them).
+- **No AES-GCM** — `Cipher` only supports AES in `MODE_CBC` / `MODE_ECB`. The
+  default stays Tesla's documented **HMAC-SHA256** method
+  (`SIGNATURE_TYPE_HMAC_PERSONALIZED`, no `FLAG_ENCRYPT_RESPONSE`). The
+  `encrypt` app setting (property, default false) switches to AES-GCM
+  commands + encrypted replies, implemented in `TeslaGcm.mc` on AES-ECB.
+- **Connect IQ AES-ECB `encrypt()` only processes the first 16-byte block** of
+  its input; the remaining output bytes are zeros (seen in the simulator, SDK
+  9.3.0). Encrypt one block per call (`TeslaGcm.aesEcb`).
+- GCM replies: `TeslaKey.openReply` decrypts in place and drops replies whose
+  tag fails or whose counter was already seen; the request hash is
+  `sigType || tag` (17 bytes for VCSEC); response metadata always includes
+  flags and the fault (protocol.md "Response metadata", Go `peer.go`).
 - **Connect IQ EC keys are little-endian and have no `0x04` prefix** (see the
   `KeyAgreement` example in the SDK docs; confirmed in the simulator): private
   key = 32-byte scalar reversed; `getPublicKey().getBytes()` = reverse(X) ||
@@ -106,7 +120,18 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   `github.com/teslamotors/vehicle-command`: `pkg/vehicle/vcsec.go` (VCSEC
   reply handling), `internal/dispatcher/` (session refresh),
   `pkg/protocol/error.go` (which faults are retryable).
-- If you change anything in `TeslaCrypto.mc` / `Pb.mc` / `TeslaProto.mc`,
+- AES-GCM vectors: `tools/vectors/gcm_vectors.py` (NIST + random, checked with
+  pyca/cryptography and PyCryptodome) and `tools/vectors/tesla_gcm_vectors.py`
+  (Tesla's published example + encrypted command/replies from the official
+  `.proto` files) write `source/tests/*Vectors.mc`.
+  `tools/vectors/tesla_gcm_vectors.go` runs inside a vehicle-command checkout
+  (copy to `cmd/ciqvectors/main.go`, `go run ./cmd/ciqvectors`): Tesla's
+  vehicle-side `Verifier` must accept our encrypted command, and it encrypts
+  replies for us to decrypt (`TeslaGoVectors.mc`; new random epoch each run).
+  The owner allowed running Tesla's Go code (2026-10-26); the auto-mode
+  classifier blocks it otherwise. Go serializes oneof fields last, so the
+  test compares decoded fields, not raw bytes.
+- If you change anything in `TeslaCrypto.mc` / `Pb.mc` / `TeslaProto.mc` / `TeslaGcm.mc`,
   re-run the tests **in the simulator** (a Python reimplementation cannot catch
   Connect IQ API quirks like the byte-order issue above).
 
@@ -198,9 +223,10 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 - `minApiLevel` is **3.1.0** (was 3.3.0 for no recorded reason): that adds
   vívoactive 3 Music/LTE, FR 645 Music and D2 Air, whose last firmware is
   API 3.1–3.2 but has every API used. Tests pass on vívoactive 3 Music.
-- Unit tests pass (15/15) on fenix7, venu3, venusq2m, fr55, vivoactive3m,
-  instinctcrossover, instincte40mm, instinct3amoled45mm and the Instinct 2
-  family. `tools/build-dist.sh` builds all 118 (~8 min, 3.8 MB).
+- Unit tests (25 since AES-GCM) pass on instinct2, fenix7 and venu3 (23 of
+  them also on instinct2x, venusq2m and vivoactive3m); the earlier 15 also on fr55, instinctcrossover,
+  instincte40mm and instinct3amoled45mm. A GCM command + reply takes ~40 ms
+  in the simulator. `tools/build-dist.sh` builds all 118 (~8 min, 3.8 MB).
 - Simulator quirk: `BluetoothLowEnergy.registerProfile` fails with a fatal
   "System Error" (not the catchable `ProfileRegistrationException`) on about
   the 4th app launch in one simulator session — profiles are never released

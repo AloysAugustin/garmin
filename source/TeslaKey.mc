@@ -28,10 +28,13 @@ class TeslaKey {
     hidden var mPriv;        // ByteArray, 32 bytes
     hidden var mPub;         // ByteArray, 65 bytes (0x04||X||Y)
     hidden var mVin;         // String (17 chars) or null
+    hidden var mEncrypt;     // Boolean: AES-GCM commands + encrypted replies
 
     // Per-domain session state, keyed by domain Number.
     //   { :key, :vehiclePub, :epoch, :counter, :clockTime, :timerMs, :verified,
-    //     :challenge (uuid of the last request, used to verify session info) }
+    //     :challenge (uuid of the last request, used to verify session info),
+    //     :requestHash (binds encrypted replies to the last command),
+    //     :replyCounters (counters of replies accepted for that command) }
     hidden var mSessions;
 
     // The routing address for the current BLE connection (16 random bytes).
@@ -41,6 +44,7 @@ class TeslaKey {
         mSessions = {};
         loadKeyPair();
         loadVin();
+        loadEncrypt();
         newRoutingAddress();
     }
 
@@ -92,6 +96,23 @@ class TeslaKey {
     // Called when the user edits app settings in Garmin Connect.
     function reloadSettings() {
         loadVin();
+        loadEncrypt();
+    }
+
+    // --- Encryption setting -------------------------------------------------
+
+    hidden function loadEncrypt() {
+        var v = null;
+        try {
+            v = Application.Properties.getValue("encrypt");
+        } catch (e) {
+            v = null;
+        }
+        mEncrypt = (v == true);
+    }
+
+    function encrypts() {
+        return mEncrypt;
     }
 
     function setVin(vin) {
@@ -267,6 +288,15 @@ class TeslaKey {
         var counter = sess[:counter];
         var expiresAt = vehicleClockNow(sess) + COMMAND_TTL;
 
+        var uuid = Cryptography.randomBytes(16);
+        sess[:challenge] = uuid;
+        sess[:replyCounters] = [];
+
+        if (mEncrypt) {
+            return buildEncryptedCommand(domain, sess, plaintext, counter, expiresAt,
+                Cryptography.randomBytes(TeslaGcm.NONCE_SIZE), uuid);
+        }
+
         var metadata = TeslaCrypto.commandMetadata(
             TeslaCrypto.SIGNATURE_TYPE_HMAC_PERSONALIZED,
             domain,
@@ -277,12 +307,91 @@ class TeslaKey {
             0 /* flags */);
 
         var tag = TeslaCrypto.commandTag(sess[:key], metadata, plaintext);
-        var uuid = Cryptography.randomBytes(16);
-        sess[:challenge] = uuid;
+        sess[:requestHash] = TeslaCrypto.requestHash(
+            TeslaCrypto.SIGNATURE_TYPE_HMAC_PERSONALIZED, tag, domain);
 
         return TeslaProto.signedCommand(
             domain, plaintext, mPub, mRoutingAddr,
             sess[:epoch], counter, expiresAt, tag, uuid);
+    }
+
+    // AES-GCM variant: P is encrypted under K with AAD = SHA256(M), and the
+    // vehicle is asked to encrypt its reply. `nonce` must be fresh random
+    // bytes for every message (GCM breaks if a nonce is reused under K).
+    function buildEncryptedCommand(domain, sess, plaintext, counter, expiresAt, nonce, uuid) {
+        var flags = TeslaCrypto.FLAG_ENCRYPT_RESPONSE_MASK;
+        var metadata = TeslaCrypto.commandMetadata(
+            TeslaCrypto.SIGNATURE_TYPE_AES_GCM_PERSONALIZED,
+            domain,
+            vinBytes(),
+            sess[:epoch],
+            expiresAt,
+            counter,
+            flags);
+        var sealed = TeslaGcm.encrypt(sess[:key], nonce, plaintext, TeslaCrypto.sha256(metadata));
+        sess[:requestHash] = TeslaCrypto.requestHash(
+            TeslaCrypto.SIGNATURE_TYPE_AES_GCM_PERSONALIZED, sealed[1], domain);
+        return TeslaProto.encryptedCommand(domain, sealed[0], mPub, mRoutingAddr, {
+            :epoch => sess[:epoch], :nonce => nonce, :counter => counter,
+            :expiresAt => expiresAt, :tag => sealed[1]
+        }, uuid, flags);
+    }
+
+    // Decrypt a reply to the last command in place. Plaintext replies pass
+    // through unchanged (vehicles before firmware 2024.38 ignore
+    // FLAG_ENCRYPT_RESPONSE, and the reference client accepts them too).
+    // Returns false if the reply must be dropped: its tag does not verify
+    // against our last request, or its counter was already used (replay).
+    function openReply(domain, routable) {
+        if (!routable.hasKey(:gcmResponse)) {
+            return true;
+        }
+        if (!hasSession(domain) || mSessions[domain][:requestHash] == null) {
+            return false;
+        }
+        var sess = mSessions[domain];
+        var gcm = routable[:gcmResponse];
+        var counter = gcm[:counter];
+        if (sess[:replyCounters].indexOf(counter) >= 0) {
+            return false;
+        }
+        var metadata = TeslaCrypto.responseMetadata(
+            routable.hasKey(:fromDomain) ? routable[:fromDomain] : domain,
+            vinBytes(),
+            counter,
+            routable.hasKey(:flags) ? routable[:flags] : 0,
+            sess[:requestHash],
+            routable.hasKey(:fault) ? routable[:fault] : 0);
+        var ciphertext = routable.hasKey(:payload) ? routable[:payload] : []b;
+        var plaintext = TeslaGcm.decrypt(sess[:key], gcm[:nonce], ciphertext,
+            TeslaCrypto.sha256(metadata), gcm[:tag]);
+        if (plaintext == null) {
+            return false;
+        }
+        sess[:replyCounters].add(counter);
+        if (routable.hasKey(:payload)) {
+            routable[:payload] = plaintext;
+        }
+        return true;
+    }
+
+    // Test hook: install a verified session without a handshake.
+    (:debug)
+    function setTestSession(domain, key, epoch, counter, clockTime) {
+        mSessions[domain] = {
+            :key => key, :epoch => epoch, :counter => counter,
+            :clockTime => clockTime, :timerMs => System.getTimer(),
+            :verified => true, :replyCounters => []
+        };
+        return mSessions[domain];
+    }
+
+    (:debug)
+    function setTestIdentity(priv, vin, routingAddr) {
+        mPriv = priv;
+        mPub = TeslaCrypto.publicKeyFromPrivate(priv);
+        mVin = vin;
+        mRoutingAddr = routingAddr;
     }
 
     // Build the unsigned add-key (pairing) envelope.

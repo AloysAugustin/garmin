@@ -2,4 +2,7 @@
     <setting propertyKey="@Properties.vin" title="@Strings.VinTitle" prompt="@Strings.VinPrompt">
         <settingConfig type="alphaNumeric" maxLength="17" />
     </setting>
+    <setting propertyKey="@Properties.encrypt" title="@Strings.EncryptTitle">
+        <settingConfig type="boolean" />
+    </setting>
 </settings>

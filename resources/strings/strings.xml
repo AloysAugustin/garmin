@@ -2,4 +2,5 @@
     <string id="AppName">Tesla Key</string>
     <string id="VinTitle">Vehicle VIN</string>
     <string id="VinPrompt">17-character VIN</string>
+    <string id="EncryptTitle">Encrypt commands (AES-GCM, beta)</string>
 </strings>

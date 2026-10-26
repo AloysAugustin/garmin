@@ -72,6 +72,7 @@ class TeslaController {
     hidden var mDomain;
     hidden var mAttempts;
     hidden var mPairWaiting;
+    hidden var mRejectedReply; // an encrypted reply failed verification
     hidden var mReplyTimer;
     hidden var mRetryTimer;
 
@@ -81,6 +82,7 @@ class TeslaController {
         mState = STATE_IDLE;
         mAttempts = 0;
         mPairWaiting = false;
+        mRejectedReply = false;
     }
 
     function setup() {
@@ -110,6 +112,7 @@ class TeslaController {
         mDomain = TeslaProto.DOMAIN_VEHICLE_SECURITY;
         mAttempts = 0;
         mPairWaiting = false;
+        mRejectedReply = false;
         mState = STATE_CONNECTING;
         mKey.resetSessions();
         mKey.newRoutingAddress();
@@ -204,6 +207,12 @@ class TeslaController {
             if (mState == STATE_WAIT_SESSION) {
                 handleSessionResponse(routable);
             } else if (mState == STATE_WAIT_RESULT) {
+                // Encrypted replies must verify against our last command;
+                // anything else is dropped (a forged "OK" must not show).
+                if (!mKey.openReply(mDomain, routable)) {
+                    mRejectedReply = true;
+                    return;
+                }
                 handleCommandResponse(routable);
             }
         } catch (e) {
@@ -298,6 +307,7 @@ class TeslaController {
             return;
         }
         mAttempts++;
+        mRejectedReply = false; // late replies to an earlier attempt don't count
         mBle.send(cmd);
         mState = STATE_WAIT_RESULT;
         armReplyTimer();
@@ -507,7 +517,11 @@ class TeslaController {
             }
         } else if (mState == STATE_WAIT_RESULT) {
             // The car may have acted even though no reply arrived.
-            result(false, "No reply. " + intentName() + " may have worked.");
+            if (mRejectedReply) {
+                result(false, "Reply failed verification. " + intentName() + " may have worked.");
+            } else {
+                result(false, "No reply. " + intentName() + " may have worked.");
+            }
         } else {
             result(false, "No response from vehicle");
         }

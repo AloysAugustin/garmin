@@ -113,6 +113,37 @@ module TeslaProto {
         return msg;
     }
 
+    // An AES-GCM encrypted command (protocol.md "AES-GCM encryption").
+    //   ciphertext : P encrypted under K with AAD = SHA256(metadata)
+    //   sig        : { :epoch, :nonce, :counter, :expiresAt, :tag }
+    //   flags      : RoutableMessage.flags (also authenticated in the metadata)
+    function encryptedCommand(domain, ciphertext, ourPublicKey, routingAddr, sig, uuid, flags) {
+        // AES_GCM_Personalized_Signature_Data
+        //   epoch = 1, nonce = 2, counter = 3, expires_at = 4 (fixed32), tag = 5
+        var gcmData = []b;
+        gcmData.addAll(Pb.fieldBytes(1, sig[:epoch]));
+        gcmData.addAll(Pb.fieldBytes(2, sig[:nonce]));
+        gcmData.addAll(Pb.fieldVarint(3, sig[:counter].toLong()));
+        gcmData.addAll(Pb.fieldFixed32(4, sig[:expiresAt].toLong()));
+        gcmData.addAll(Pb.fieldBytes(5, sig[:tag]));
+
+        // SignatureData { signer_identity = 1, AES_GCM_Personalized_data = 5 }
+        var sigData = []b;
+        sigData.addAll(Pb.fieldBytes(1, Pb.fieldBytes(1, ourPublicKey)));
+        sigData.addAll(Pb.fieldBytes(5, gcmData));
+
+        var msg = []b;
+        msg.addAll(Pb.fieldBytes(6, destDomain(domain)));       // to_destination
+        msg.addAll(Pb.fieldBytes(7, destRouting(routingAddr))); // from_destination
+        msg.addAll(Pb.fieldBytes(10, ciphertext));              // protobuf_message_as_bytes
+        msg.addAll(Pb.fieldBytes(13, sigData));                 // signature_data
+        msg.addAll(Pb.fieldBytes(51, uuid));                    // uuid
+        if (flags != 0) {
+            msg.addAll(Pb.fieldVarint(52, flags));              // flags
+        }
+        return msg;
+    }
+
     // ---- VCSEC UnsignedMessage payloads (P) -------------------------------
 
     // UnsignedMessage { RKEAction = 2 }
@@ -199,7 +230,9 @@ module TeslaProto {
     //   :payload (ByteArray, the plaintext protobuf_message_as_bytes),
     //   :toAddress (ByteArray, to_destination.routing_address),
     //   :fromDomain (Number, from_destination.domain),
-    //   :requestUuid (ByteArray)
+    //   :requestUuid (ByteArray), :flags (Number),
+    //   :gcmResponse ({:nonce, :counter, :tag}: AES_GCM_Response_data, present
+    //                 when :payload is encrypted)
     function parseRoutable(bytes) {
         var f = Pb.decode(bytes);
         var result = {};
@@ -220,6 +253,11 @@ module TeslaProto {
             if (dom != null) {
                 result[:fromDomain] = dom.toNumber();
             }
+        }
+
+        var flags = Pb.firstInt(f, 52);
+        if (flags != null) {
+            result[:flags] = flags.toNumber();
         }
 
         var reqUuid = Pb.firstBytes(f, 50);
@@ -248,6 +286,17 @@ module TeslaProto {
                 if (tag != null) {
                     result[:sessionInfoTag] = tag;
                 }
+            }
+            // AES_GCM_Response_data (9) { nonce = 1, counter = 2, tag = 3 }
+            var gcm = Pb.firstBytes(sd, 9);
+            if (gcm != null) {
+                var g = Pb.decode(gcm);
+                var counter = Pb.firstInt(g, 2);
+                result[:gcmResponse] = {
+                    :nonce => Pb.firstBytes(g, 1),
+                    :counter => counter == null ? 0 : counter.toNumber(),
+                    :tag => Pb.firstBytes(g, 3)
+                };
             }
         }
 

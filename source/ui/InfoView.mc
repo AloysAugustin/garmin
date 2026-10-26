@@ -31,7 +31,8 @@ class InfoView extends WatchUi.View {
         if (mMode == MODE_VIN) {
             title = "Vehicle";
             value = mKey.hasVin() ? mKey.vin() : "(not set)";
-            hint = "Set the VIN in the Garmin Connect app (app settings)";
+            hint = (mKey.encrypts() ? "Encryption on (AES-GCM)." : "Encryption off.")
+                + " Set in Garmin Connect.";
         } else {
             title = "My key";
             // Show a short fingerprint; the full key is long. The fingerprint is
@@ -45,7 +46,7 @@ class InfoView extends WatchUi.View {
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
         var y = Layout.drawLine(dc, value, top + 2, fonts);
         dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-        Layout.drawBody(dc, hint, y + 4, h * 0.92);
+        Layout.drawBody(dc, hint, y + 4, h * 0.88);
     }
 }
 
