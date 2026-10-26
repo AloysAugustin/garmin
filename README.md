@@ -31,6 +31,48 @@ never leaves the device.
 
 ---
 
+## Installation
+
+### Option A — install a pre-built `.prg` (quickest)
+
+Pre-built apps are published on the repo's
+[**Releases**](https://github.com/AloysAugustin/garmin/releases) page, and are
+also kept in the [`dist/`](dist/) folder:
+
+| Watch | File |
+| ----- | ---- |
+| Instinct 2  | `TeslaKey-instinct2.prg` |
+| Instinct 2S | `TeslaKey-instinct2s.prg` |
+
+> Instinct 2X: build from source with a current SDK (see Option B) — the 2X
+> postdates the SDK used for these binaries.
+
+1. **Download** the `.prg` that matches your watch (verify it against
+   `dist/SHA256SUMS.txt` if you like).
+2. **Connect the watch to your computer** with the USB cable. It mounts as a USB
+   drive named `GARMIN`.
+3. **Copy** the `.prg` into the **`GARMIN/APPS/`** folder on that drive.
+4. **Eject** the drive and unplug. The app appears in your watch's app list
+   (from the watch face: hold the middle/`MENU` button → look under Connect IQ
+   apps / your activity-and-apps list).
+5. Continue with **Setup & usage** below (set your VIN, then pair).
+
+These binaries are signed with a project build key purely so they install; a
+Connect IQ device runs any validly-signed sideloaded app. If you'd rather sign
+with your own developer key, build from source.
+
+### Option B — build from source
+
+See [Building](#building) below.
+
+### Updating / removing
+
+Replace the `.prg` in `GARMIN/APPS/` with a newer one to update, or delete it to
+remove the app. Your enrolled key stays in the car until you remove it in the
+Tesla app (Controls → Locks → Keys).
+
+---
+
 ## How it works (crypto & protocol)
 
 The app implements the client side of Tesla's protocol on top of Connect IQ's
