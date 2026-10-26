@@ -26,7 +26,12 @@ lock, open the trunk/frunk and wake the car.
 | Trunk  | VCSEC `ClosureMoveRequest { rearTrunk = OPEN }` |
 | Frunk  | VCSEC `ClosureMoveRequest { frontTrunk = OPEN }` |
 | Wake   | VCSEC `RKEAction = RKE_ACTION_WAKE_VEHICLE` |
+| Doors (experimental) | VCSEC `ClosureMoveRequest { <door> = OPEN }` for one of the four doors |
 | Pair   | Unsigned `WhitelistOperation` add-key request (needs NFC card tap) |
+
+*Doors* is experimental: the door fields exist in Tesla's `vcsec.proto`, but
+Tesla's own client never sends them, so the car may ignore the request (most
+Teslas have no door motors; Model X is the likeliest to respond).
 
 All commands are authenticated end-to-end; the watch holds a private key that
 never leaves the device.

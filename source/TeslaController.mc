@@ -14,7 +14,11 @@ class TeslaController {
         INTENT_FRUNK,
         INTENT_WAKE,
         INTENT_PAIR_DRIVER,
-        INTENT_PAIR_OWNER
+        INTENT_PAIR_OWNER,
+        INTENT_DOOR_FRONT_DRIVER,
+        INTENT_DOOR_FRONT_PASSENGER,
+        INTENT_DOOR_REAR_DRIVER,
+        INTENT_DOOR_REAR_PASSENGER
     }
 
     // Internal flow state.
@@ -137,6 +141,14 @@ class TeslaController {
             return TeslaProto.openTrunk();
         } else if (mIntent == INTENT_FRUNK) {
             return TeslaProto.openFrunk();
+        } else if (mIntent == INTENT_DOOR_FRONT_DRIVER) {
+            return TeslaProto.openDoor(TeslaProto.DOOR_FRONT_DRIVER);
+        } else if (mIntent == INTENT_DOOR_FRONT_PASSENGER) {
+            return TeslaProto.openDoor(TeslaProto.DOOR_FRONT_PASSENGER);
+        } else if (mIntent == INTENT_DOOR_REAR_DRIVER) {
+            return TeslaProto.openDoor(TeslaProto.DOOR_REAR_DRIVER);
+        } else if (mIntent == INTENT_DOOR_REAR_PASSENGER) {
+            return TeslaProto.openDoor(TeslaProto.DOOR_REAR_PASSENGER);
         }
         return null;
     }
@@ -147,6 +159,10 @@ class TeslaController {
         if (mIntent == INTENT_WAKE) { return "Wake"; }
         if (mIntent == INTENT_TRUNK) { return "Trunk"; }
         if (mIntent == INTENT_FRUNK) { return "Frunk"; }
+        if (mIntent == INTENT_DOOR_FRONT_DRIVER) { return "Front driver door"; }
+        if (mIntent == INTENT_DOOR_FRONT_PASSENGER) { return "Front passenger door"; }
+        if (mIntent == INTENT_DOOR_REAR_DRIVER) { return "Rear driver door"; }
+        if (mIntent == INTENT_DOOR_REAR_PASSENGER) { return "Rear passenger door"; }
         return "Command";
     }
 

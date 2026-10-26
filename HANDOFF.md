@@ -82,5 +82,8 @@ Device files and fonts are Garmin-licensed: keep them out of git.
 ## Needs hardware (owner)
 
 Sideload, set the VIN in Garmin Connect, pair with an NFC key-card tap, then
-test unlock/lock/trunk/frunk/wake on the car. Bluetooth behaviour varies by
+test unlock/lock/trunk/frunk/wake on the car. Also try **Doors**
+(experimental, added 2026-10-26): it sends `ClosureMoveRequest` with a door
+field set to OPEN, which Tesla's reference client never does. Note what the
+car does (opens, unlatches, ignores, or returns an error) and on which model. Bluetooth behaviour varies by
 watch model, so test on several.

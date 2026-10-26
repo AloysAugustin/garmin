@@ -19,6 +19,12 @@ module TeslaProto {
     const CLOSURE_OPEN = 3;
     const CLOSURE_CLOSE = 4;
 
+    // VCSEC.ClosureMoveRequest door fields
+    const DOOR_FRONT_DRIVER = 1;
+    const DOOR_FRONT_PASSENGER = 2;
+    const DOOR_REAR_DRIVER = 3;
+    const DOOR_REAR_PASSENGER = 4;
+
     // Keys.Role
     const ROLE_OWNER = 2;
     const ROLE_DRIVER = 3;
@@ -126,6 +132,13 @@ module TeslaProto {
 
     function openFrunk() {
         return closureMove(6, CLOSURE_OPEN); // frontTrunk
+    }
+
+    // Experimental: the door fields exist in vcsec.proto, but Tesla's
+    // reference client never sends them, so whether (and on which models) the
+    // car acts on them is unverified. `door` is one of DOOR_*.
+    function openDoor(door) {
+        return closureMove(door, CLOSURE_OPEN);
     }
 
     // ---- Add-key (pairing) envelope ---------------------------------------

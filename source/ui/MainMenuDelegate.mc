@@ -24,6 +24,16 @@ class MainMenuDelegate extends WatchUi.Menu2InputDelegate {
             runCommand(TeslaController.INTENT_FRUNK, "Frunk");
         } else if (id == :wake) {
             runCommand(TeslaController.INTENT_WAKE, "Wake");
+        } else if (id == :doors) {
+            WatchUi.pushView(new DoorMenu(), new MainMenuDelegate(mController, mKey), WatchUi.SLIDE_LEFT);
+        } else if (id == :doorFrontDriver) {
+            runCommand(TeslaController.INTENT_DOOR_FRONT_DRIVER, "Open door");
+        } else if (id == :doorFrontPassenger) {
+            runCommand(TeslaController.INTENT_DOOR_FRONT_PASSENGER, "Open door");
+        } else if (id == :doorRearDriver) {
+            runCommand(TeslaController.INTENT_DOOR_REAR_DRIVER, "Open door");
+        } else if (id == :doorRearPassenger) {
+            runCommand(TeslaController.INTENT_DOOR_REAR_PASSENGER, "Open door");
         } else if (id == :pair) {
             WatchUi.pushView(new PairMenu(), new MainMenuDelegate(mController, mKey), WatchUi.SLIDE_LEFT);
         } else if (id == :pairDriver) {

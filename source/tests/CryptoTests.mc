@@ -164,6 +164,11 @@ module CryptoTests {
     function testClosurePayloads(logger) {
         Test.assertEqual(TeslaCrypto.toHex(TeslaProto.openTrunk()), "22022803");
         Test.assertEqual(TeslaCrypto.toHex(TeslaProto.openFrunk()), "22023003");
+        // closureMoveRequest { frontDriverDoor .. rearPassengerDoor = OPEN }
+        Test.assertEqual(TeslaCrypto.toHex(TeslaProto.openDoor(TeslaProto.DOOR_FRONT_DRIVER)), "22020803");
+        Test.assertEqual(TeslaCrypto.toHex(TeslaProto.openDoor(TeslaProto.DOOR_FRONT_PASSENGER)), "22021003");
+        Test.assertEqual(TeslaCrypto.toHex(TeslaProto.openDoor(TeslaProto.DOOR_REAR_DRIVER)), "22021803");
+        Test.assertEqual(TeslaCrypto.toHex(TeslaProto.openDoor(TeslaProto.DOOR_REAR_PASSENGER)), "22022003");
         return true;
     }
 
