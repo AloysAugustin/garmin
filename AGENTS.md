@@ -87,6 +87,16 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 - **Connect IQ AES-ECB `encrypt()` only processes the first 16-byte block** of
   its input; the remaining output bytes are zeros (seen in the simulator, SDK
   9.3.0). Encrypt one block per call (`TeslaGcm.aesEcb`).
+- **GCM speed:** GHASH is the whole cost (AES blocks are native, ~0.02 ms).
+  The first version (bit-by-bit with Long words) took 5.6 ms per GF(2^128)
+  multiply / 17 ms per command in the simulator; Shoup's 4-bit table with
+  32-bit Numbers (table cached per key) takes 0.34 ms / ~2 ms
+  (`source/tests/GcmBench.mc`). Longs are boxed objects in Monkey C, so
+  avoid them in hot loops. Watches run the VM much slower than the
+  simulator. The watchdog limit is `watchdogCount` in each device's
+  `simulator.json` (Instinct 2: 120,000; most recent watches: 240,000), and
+  the unit-test runner does **not** enforce it, so tests can't measure that
+  headroom.
 - GCM replies: `TeslaKey.openReply` decrypts in place and drops replies whose
   tag fails or whose counter was already seen; the request hash is
   `sigType || tag` (17 bytes for VCSEC); response metadata always includes
