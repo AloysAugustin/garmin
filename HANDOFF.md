@@ -67,7 +67,7 @@ Device files and fonts are Garmin-licensed: keep them out of git.
    - The launcher icon is a generated key glyph (not the Tesla logo); a
      designer might want to redo it.
    - Approach S50/S70/S72 (golf watches) and the "Legacy Hero/Saga" editions
-     are included because their firmware qualifies; drop them if unwanted.
+     stay in: the owner decided to keep them (2026-10-26).
 5. **Permanent signing key:** create once, store outside the repo (store
    updates must use the same key forever). Ask the owner where to keep it.
 6. **AES-GCM (recommended before a public release):** Tesla recommends
