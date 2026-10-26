@@ -46,16 +46,17 @@ class TeslaKey {
 
     // --- Identity / key material -------------------------------------------
 
+    // The private key is stored in Connect IQ's native byte order; the public
+    // key is re-derived from it in Tesla's format on every load (builds before
+    // this one stored a native-format public key, which the car cannot use).
     hidden function loadKeyPair() {
         mPriv = Application.Storage.getValue(STORE_PRIV);
-        mPub = Application.Storage.getValue(STORE_PUB);
-        if (mPriv == null || mPub == null) {
-            var kp = TeslaCrypto.generateKeyPair();
-            mPriv = kp[:priv];
-            mPub = kp[:pub];
+        if (mPriv == null) {
+            mPriv = TeslaCrypto.generatePrivateKey();
             Application.Storage.setValue(STORE_PRIV, mPriv);
-            Application.Storage.setValue(STORE_PUB, mPub);
         }
+        mPub = TeslaCrypto.publicKeyFromPrivate(mPriv);
+        Application.Storage.deleteValue(STORE_PUB);
     }
 
     // Public key bytes (65-byte uncompressed point) - this is the identity the
@@ -107,7 +108,7 @@ class TeslaKey {
     }
 
     hidden function vinBytes() {
-        return mVin.toUtf8Array();
+        return TeslaCrypto.strBytes(mVin);
     }
 
     // The BLE advertisement local name the vehicle broadcasts:
@@ -181,6 +182,9 @@ class TeslaKey {
         }
 
         var key = TeslaCrypto.deriveSharedKey(mPriv, info[:publicKey]);
+        if (key == null) {
+            return SESSION_INVALID;
+        }
 
         // The integrity tag is mandatory: session info without a valid tag
         // must be discarded (protocol.md "Session state").

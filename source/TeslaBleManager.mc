@@ -66,17 +66,25 @@ class TeslaBleManager extends Ble.BleDelegate {
     function setup() {
         Ble.setDelegate(self);
         if (!mRegistered) {
-            Ble.registerProfile({
-                :uuid => mServiceUuid,
-                :characteristics => [
-                    { :uuid => mToUuid },
-                    {
-                        :uuid => mFromUuid,
-                        :descriptors => [ Ble.cccdUuid() ]
-                    }
-                ]
-            });
-            // mRegistered flips true in onProfileRegister.
+            try {
+                Ble.registerProfile({
+                    :uuid => mServiceUuid,
+                    :characteristics => [
+                        { :uuid => mToUuid },
+                        {
+                            :uuid => mFromUuid,
+                            :descriptors => [ Ble.cccdUuid() ]
+                        }
+                    ]
+                });
+                // mRegistered flips true in onProfileRegister.
+            } catch (e instanceof Ble.ProfileRegistrationException) {
+                // The system already holds the maximum number of profiles
+                // (e.g. ours, from an earlier launch). Don't crash at startup;
+                // if the profile really is missing, connecting reports
+                // "Tesla service not found".
+                mRegistered = true;
+            }
         }
     }
 

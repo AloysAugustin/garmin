@@ -39,8 +39,18 @@ module TeslaCrypto {
     const SHARED_KEY_SIZE = 16; // K is a 128-bit key (first 16 bytes of SHA1).
 
     // --- Key management -----------------------------------------------------
+    //
+    // Byte order: Connect IQ represents EC keys LITTLE-endian and without the
+    // 0x04 prefix (see the KeyAgreement example in the SDK docs): a private key
+    // is the 32-byte scalar reversed, a public key is reverse(X) || reverse(Y)
+    // (64 bytes), and KeyAgreement.generateSecret() returns reverse(Sx). Tesla
+    // uses big-endian scalars and 65-byte uncompressed points (0x04 || X || Y).
+    // Private keys stay in Connect IQ's native order; everything that crosses
+    // the wire is converted with the helpers below. Verified in the simulator
+    // against the protocol.md test vectors (see CryptoTests).
 
-    // Build a KeyPair object from a stored 32-byte private scalar.
+    // Build a KeyPair object from a stored 32-byte native (little-endian)
+    // private scalar.
     function keyPairFromPrivate(privBytes) {
         return new Cryptography.KeyPair({
             :algorithm => Cryptography.KEY_PAIR_ELLIPTIC_CURVE_SECP256R1,
@@ -48,22 +58,45 @@ module TeslaCrypto {
         });
     }
 
-    // Generate a brand-new random P-256 key pair. Returns a dictionary with the
-    // raw :private (32 bytes) and :public (65 bytes, 0x04||X||Y) ByteArrays.
-    function generateKeyPair() {
-        // randomBytes gives us a uniformly random scalar. The probability that a
-        // random 32-byte value is >= the curve order is about 2^-32, negligible
-        // for our purposes, and Connect IQ reduces/validates it on use.
-        var priv = Cryptography.randomBytes(32);
-        var kp = keyPairFromPrivate(priv);
-        return {
-            :priv => kp.getPrivateKey().getBytes(),
-            :pub => kp.getPublicKey().getBytes()
-        };
+    // Generate a brand-new random P-256 private key (native byte order).
+    function generatePrivateKey() {
+        var kp = new Cryptography.KeyPair({
+            :algorithm => Cryptography.KEY_PAIR_ELLIPTIC_CURVE_SECP256R1
+        });
+        return kp.getPrivateKey().getBytes();
     }
 
-    // ECDH: derive the shared 128-bit AES key K from our private key and the
-    // vehicle's public key bytes (65-byte uncompressed point).
+    // Tesla-format public key (65 bytes, 0x04 || X || Y) for a native private key.
+    function publicKeyFromPrivate(privBytes) {
+        return publicFromNative(keyPairFromPrivate(privBytes).getPublicKey().getBytes());
+    }
+
+    // Native 64-byte public key -> Tesla 65-byte uncompressed point.
+    function publicFromNative(nativeBytes) {
+        var out = []b;
+        out.add(0x04);
+        out.addAll(reverseBytes(nativeBytes.slice(0, 32)));
+        out.addAll(reverseBytes(nativeBytes.slice(32, 64)));
+        return out;
+    }
+
+    // Tesla 65-byte uncompressed point -> native 64-byte public key.
+    function publicToNative(point) {
+        var out = reverseBytes(point.slice(1, 33));
+        out.addAll(reverseBytes(point.slice(33, 65)));
+        return out;
+    }
+
+    function reverseBytes(bytes) {
+        var out = []b;
+        for (var i = bytes.size() - 1; i >= 0; i--) {
+            out.add(bytes[i]);
+        }
+        return out;
+    }
+
+    // ECDH: derive the shared 128-bit AES key K from our native private key and
+    // the vehicle's public key (Tesla format: 65-byte uncompressed point).
     //   S  = ECDH(c, V)          (shared point)
     //   K  = SHA1(BIG_ENDIAN(Sx, 32))[:16]
     function deriveSharedKey(privBytes, vehiclePubBytes) {
@@ -72,14 +105,15 @@ module TeslaCrypto {
             :protocol => Cryptography.KEY_AGREEMENT_ECDH,
             :privateKey => kp.getPrivateKey()
         });
+        if (vehiclePubBytes.size() != 65 || vehiclePubBytes[0] != 0x04) {
+            return null;
+        }
         var vehicleKey = Cryptography.createPublicKey(
-            Cryptography.KEY_PAIR_ELLIPTIC_CURVE_SECP256R1, vehiclePubBytes);
+            Cryptography.KEY_PAIR_ELLIPTIC_CURVE_SECP256R1, publicToNative(vehiclePubBytes));
         ka.addKey(vehicleKey);
-        var secret = ka.generateSecret(); // 32-byte shared X coordinate
-        var h = new Cryptography.Hash({:algorithm => Cryptography.HASH_SHA1});
-        h.update(secret);
-        var digest = h.digest();
-        return digest.slice(0, SHARED_KEY_SIZE);
+        // generateSecret() returns Sx little-endian; K hashes it big-endian.
+        var secret = reverseBytes(ka.generateSecret());
+        return sha1(secret).slice(0, SHARED_KEY_SIZE);
     }
 
     // --- Hashing / MAC helpers ---------------------------------------------
@@ -202,9 +236,15 @@ module TeslaCrypto {
         return diff == 0;
     }
 
-    // ASCII string -> ByteArray.
+    // String -> UTF-8 ByteArray. (String.toUtf8Array() returns an Array of
+    // Numbers, which Hash/HMAC reject.)
     function strBytes(s) {
-        return s.toUtf8Array();
+        var chars = s.toUtf8Array();
+        var out = []b;
+        for (var i = 0; i < chars.size(); i++) {
+            out.add(chars[i]);
+        }
+        return out;
     }
 
     // Lower-case hex of a ByteArray.

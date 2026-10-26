@@ -26,15 +26,37 @@ module CryptoTests {
     const SESSION_META = "000106021135594a333031323334353637383941424306101588d5a30eabc6f8fc9a951b11f6fd11ff";
     const COMMAND_META = "000105010103021135594a333031323334353637383941424303104c463f9cc0d3d26906e982ed224adde6040400000a5f050400000007070400000002ff";
 
-    // ECDH + SHA1 -> the shared 128-bit key K.
+    // ECDH + SHA1 -> the shared 128-bit key K. CLIENT_PRIV is big-endian (as
+    // in protocol.md); Connect IQ keys are little-endian.
     (:test)
     function testSharedKey(logger) {
-        var priv = TeslaCrypto.fromHex(CLIENT_PRIV);
+        var priv = TeslaCrypto.reverseBytes(TeslaCrypto.fromHex(CLIENT_PRIV));
         var vpub = TeslaCrypto.fromHex(VEHICLE_PUB);
         var k = TeslaCrypto.deriveSharedKey(priv, vpub);
         var got = TeslaCrypto.toHex(k);
         logger.debug("K = " + got);
         Test.assertEqualMessage(got, SHARED_K, "K derivation mismatch");
+        return true;
+    }
+
+    // The public key we enroll/send must be Tesla's 65-byte format; protocol.md
+    // gives the test client's public key for CLIENT_PRIV.
+    (:test)
+    function testPublicKeyFromPrivate(logger) {
+        var priv = TeslaCrypto.reverseBytes(TeslaCrypto.fromHex(CLIENT_PRIV));
+        Test.assertEqualMessage(TeslaCrypto.toHex(TeslaCrypto.publicKeyFromPrivate(priv)),
+            CLIENT_PUB, "public key format mismatch");
+        return true;
+    }
+
+    // A freshly generated key round-trips through both formats.
+    (:test)
+    function testGeneratedKeyFormat(logger) {
+        var priv = TeslaCrypto.generatePrivateKey();
+        Test.assertEqual(priv.size(), 32);
+        var pub = TeslaCrypto.publicKeyFromPrivate(priv);
+        Test.assertEqual(pub.size(), 65);
+        Test.assertEqual(pub[0], 0x04);
         return true;
     }
 
@@ -50,7 +72,7 @@ module CryptoTests {
     // Session-info metadata TLV serialization.
     (:test)
     function testSessionMetadata(logger) {
-        var m = TeslaCrypto.sessionInfoMetadata(VIN.toUtf8Array(), TeslaCrypto.fromHex(CHALLENGE));
+        var m = TeslaCrypto.sessionInfoMetadata(TeslaCrypto.strBytes(VIN), TeslaCrypto.fromHex(CHALLENGE));
         Test.assertEqualMessage(TeslaCrypto.toHex(m), SESSION_META, "session metadata mismatch");
         return true;
     }
@@ -60,7 +82,7 @@ module CryptoTests {
     (:test)
     function testCommandMetadata(logger) {
         var m = TeslaCrypto.commandMetadata(
-            5, 3, VIN.toUtf8Array(), TeslaCrypto.fromHex(EPOCH),
+            5, 3, TeslaCrypto.strBytes(VIN), TeslaCrypto.fromHex(EPOCH),
             2655, 7, 2);
         Test.assertEqualMessage(TeslaCrypto.toHex(m), COMMAND_META, "command metadata mismatch");
         return true;
@@ -71,7 +93,7 @@ module CryptoTests {
     function testVerifySessionInfo(logger) {
         var k = TeslaCrypto.fromHex(SHARED_K);
         var ok = TeslaCrypto.verifySessionInfo(
-            k, VIN.toUtf8Array(), TeslaCrypto.fromHex(CHALLENGE),
+            k, TeslaCrypto.strBytes(VIN), TeslaCrypto.fromHex(CHALLENGE),
             TeslaCrypto.fromHex(SESSION_INFO), TeslaCrypto.fromHex(SESSION_INFO_TAG));
         Test.assertMessage(ok, "session info HMAC did not verify");
         return true;
@@ -123,7 +145,7 @@ module CryptoTests {
         var epoch = TeslaCrypto.fromHex(EPOCH);
         var meta = TeslaCrypto.commandMetadata(
             TeslaCrypto.SIGNATURE_TYPE_HMAC_PERSONALIZED, TeslaProto.DOMAIN_VEHICLE_SECURITY,
-            VIN.toUtf8Array(), epoch, 2655, 7, 0);
+            TeslaCrypto.strBytes(VIN), epoch, 2655, 7, 0);
         var tag = TeslaCrypto.commandTag(TeslaCrypto.fromHex(SHARED_K), meta, p);
         Test.assertEqualMessage(TeslaCrypto.toHex(tag),
             "48469506544f0a1d1f2ef05993ba040fb12968d885a8e8dbcfc4abb9901dbfdf", "unlock tag mismatch");

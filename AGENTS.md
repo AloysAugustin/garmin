@@ -17,8 +17,8 @@ The build needs the Connect IQ SDK **and** the per-device files, which the Garmi
 SDK Manager normally downloads from `developer.garmin.com`.
 
 Both the normal build and the `--unit-test` build compile cleanly for `instinct2`
-and `instinct2s` (verified with SDK 4.1.7 and with SDK **9.3.0** using the 4.1.7
-device files; `dist/` was last built with 9.3.0, release mode `-r`):
+and `instinct2s` (SDK **9.3.0** with the 4.1.7 device files; `dist/` was last
+built with 9.3.0, release mode `-r`). All 15 unit tests pass in the simulator:
 
 ```bash
 monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y certs/developer_key.der -d instinct2
@@ -34,6 +34,11 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 
 ## Monkey C gotchas learned here (these cost build cycles)
 
+- `native` is also reserved (fails as a parameter name with a confusing
+  "expecting 'function'" parse error); avoid `from` too.
+- **Compiling proves little.** Before 2026-10-26 the app compiled cleanly yet
+  every crypto call crashed or produced wrong bytes at runtime (byte order,
+  Array vs ByteArray). Always run the unit tests in the simulator.
 - `:private` and `:public` are **reserved words** — they cannot be used as symbol
   literals / dictionary keys. Use other names (we use `:priv` / `:pub`).
 - `ByteArray.add` / `addAll` mutate in place and do **not** reliably return the
@@ -63,8 +68,16 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   why commands use Tesla's documented **HMAC-SHA256** auth method
   (`SIGNATURE_TYPE_HMAC_PERSONALIZED`) and we never set `FLAG_ENCRYPT_RESPONSE`
   (so replies stay plaintext and no GCM is needed to read them).
-- `KeyAgreement.generateSecret()` returns the **raw shared X coordinate** (32
-  bytes) — matches `K = SHA1(Sx)[:16]`. Verified against test vectors.
+- **Connect IQ EC keys are little-endian and have no `0x04` prefix** (see the
+  `KeyAgreement` example in the SDK docs; confirmed in the simulator): private
+  key = 32-byte scalar reversed; `getPublicKey().getBytes()` = reverse(X) ||
+  reverse(Y) (64 bytes); `createPublicKey` expects the same; and
+  `generateSecret()` returns **reverse(Sx)**. Tesla uses big-endian and 65-byte
+  `0x04||X||Y`. `TeslaCrypto` converts at the boundary (`publicFromNative`,
+  `publicToNative`, `reverseBytes`); private keys are stored natively.
+- `String.toUtf8Array()` returns an **Array of Numbers, not a ByteArray**, and
+  `Hash`/`HMAC` reject it ("Expected ByteArray, given Array"). Use
+  `TeslaCrypto.strBytes`.
 - Confirmed from the instinct2 device VM that it ships both `BluetoothLowEnergy`
   and the `Cryptography` classes (KeyPair/KeyAgreement/Hash/HMAC).
 
@@ -84,9 +97,9 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   `github.com/teslamotors/vehicle-command`: `pkg/vehicle/vcsec.go` (VCSEC
   reply handling), `internal/dispatcher/` (session refresh),
   `pkg/protocol/error.go` (which faults are retryable).
-- The same vectors were also checked with an independent Python reimplementation
-  (pyca/cryptography) using identical byte operations — all pass. If you change
-  anything in `TeslaCrypto.mc` / `Pb.mc` / `TeslaProto.mc`, re-run the tests.
+- If you change anything in `TeslaCrypto.mc` / `Pb.mc` / `TeslaProto.mc`,
+  re-run the tests **in the simulator** (a Python reimplementation cannot catch
+  Connect IQ API quirks like the byte-order issue above).
 
 ## This cloud environment's constraints (so you don't rediscover them)
 
@@ -107,11 +120,32 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   `com.garmin.monkeybrains.Monkeybrains`. Device files must be at
   `$HOME/.Garmin/ConnectIQ/Devices/<device>` (the path is effectively hard-coded;
   running as root with devices under `/root/.Garmin/...` works).
-- The **GUI simulator cannot run on the host**: even SDK 9.3.0 links the EOL
-  `webkit2gtk-4.0`, but this host is Ubuntu 24.04 (only WebKit 4.1). An
-  Ubuntu 22.04 Docker container (has `libwebkit2gtk-4.0-37`) plus Xvfb should
-  work but is untested. Otherwise run in-simulator tests on a normal dev
-  machine; compiling the `--unit-test` build still proves the test code is valid.
+- The **GUI simulator cannot run on the host** (it links the EOL
+  `webkit2gtk-4.0`; the host is Ubuntu 24.04). **It runs in Docker** (verified
+  2026-10-26): `yulrizka/connectiq:latest` is Ubuntu 22.04 with the WebKit 4.0
+  libs; add Xvfb and mount the SDK, `~/.Garmin` and the repo:
+
+  ```bash
+  P=$HTTPS_PROXY   # agent proxy; CONNECT only, so apt must use https mirrors
+  docker run -d --name ciqsim --network host --user root -e HOME=/root \
+    -e https_proxy=$P -e HTTPS_PROXY=$P \
+    -v /root/.ccr/ca-bundle.crt:/usr/local/share/ca-certificates/ccr.crt:ro \
+    -v /root/.Garmin:/root/.Garmin -v <sdk>:/sdk -v $PWD:/proj \
+    --entrypoint sleep yulrizka/connectiq:latest infinity
+  docker exec ciqsim sh -c 'update-ca-certificates; sed -i "s#http://#https://#" /etc/apt/sources.list; apt-get update; apt-get install -y xvfb'
+  docker exec -d ciqsim sh -c "Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1"
+  docker exec -d -e DISPLAY=:99 -w /sdk/bin ciqsim sh -c "./simulator >/tmp/sim.log 2>&1"
+  sleep 15
+  docker exec -e DISPLAY=:99 -w /proj ciqsim /sdk/bin/monkeydo bin/TeslaKey-test.prg instinct2 -t
+  ```
+
+  If it says "Unable to connect to simulator", `docker restart ciqsim` and
+  start Xvfb + simulator again (a killed simulator leaves state that makes the
+  next one exit 255). Docker Hub may rate-limit pulls (429).
+- The simulator has **no device fonts** (`~/.Garmin/ConnectIQ/Fonts` is
+  downloaded by the logged-in SDK Manager; the endpoint returns 401), so
+  launching the app UI fails with "Invalid Font Specified". Unit tests don't
+  draw and are unaffected.
 - Running binaries extracted from a container can be gated by the auto-mode
   safety classifier ("Code from External"); the user may need to grant
   permission to run the SDK/compiler.

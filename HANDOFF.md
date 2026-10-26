@@ -19,10 +19,13 @@ covers what Garmin access additionally unlocks.
 - Source was reviewed against the current `teslamotors/vehicle-command` and
   fixed (handshake challenge = request uuid, mandatory session-info tag,
   VCSEC multi-reply handling, retries, pairing status, BLE framing guards).
-- `dist/` was then rebuilt with SDK 9.3.0 (instinct2/2S) from the fixed
-  source, signed with a **new** developer key (the earlier key was never
-  committed). Unit tests compile but have **not yet been run** in the
-  simulator.
+- The simulator now runs in Docker (recipe in AGENTS.md). Running the tests
+  revealed that the original crypto never worked on Connect IQ: EC keys and
+  the ECDH secret are little-endian there, and `toUtf8Array()` isn't a
+  ByteArray. Both are fixed; **all 15 unit tests pass in the simulator**.
+- `dist/` is rebuilt with SDK 9.3.0 (instinct2/2S) from the fixed source,
+  signed with a **new** developer key (the earlier key was never committed).
+- UI not checked in the simulator: device font files need a Garmin login.
 
 ## Current state (already done)
 
@@ -75,7 +78,7 @@ Optional: with a newer SDK you may be able to relax `project.typecheck = 0` in
 `Cryptography.createPublicKey` / BLE iterators are no longer over-narrow. Rebuild
 and confirm no new errors before changing it.
 
-### 4. Run the unit tests in the simulator
+### 4. Run the unit tests in the simulator (done 2026-10-26 — 15/15 pass)
 
 This needs a **GUI-capable** environment (the simulator links `webkit2gtk`;
 it could not run on the headless Ubuntu 24.04 box used earlier):
