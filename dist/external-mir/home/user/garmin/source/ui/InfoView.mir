@@ -1,0 +1,402 @@
+[ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Graphics,2,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 6; @symbol_classdef = [InfoView,6,6,14]; @symbol_extends<0> = [WatchUi,6,23,30]; @symbol_extends<1> = [View,6,31,35]; ]
+class InfoView extends WatchUi.View {
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 6; ]
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 6; ]
+    static
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 8; ]
+    static
+    enum {
+        [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 9; @position = 8; @symbol_enumdec = [MODE_KEY,9,8,16]; ]
+        MODE_KEY,
+        [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 10; @position = 8; @symbol_enumdec = [MODE_VIN,10,8,16]; ]
+        MODE_VIN
+    }
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 13; @position = 15; @symbol_vardef = [mMode,13,15,20]; ]
+    protected
+    var mMode;
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 14; @position = 15; @symbol_vardef = [mKey,14,15,19]; ]
+    protected
+    var mKey;
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 16; @symbol_functiondef = [initialize,16,13,23]; @symbol_param<0> = [mode,16,24,28]; @symbol_param<1> = [key,16,30,33]; ]
+    function initialize(mode, key) as Void {
+_home_user_garmin_source_ui_InfoView_mc_16_35_20_4_start:
+[ "/home/user/garmin/source/ui/InfoView.mc" 17 8 ]
+        symbol [ View %tmp.2 17 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 17 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/home/user/garmin/source/ui/InfoView.mc" 18 8 ]
+        %tmp.4 = lgetv %mode;
+        symbol [ mode %tmp.4 18 16 20 ];
+        symbol [ mMode ? 18 8 13 ];
+        putv self :mMode %tmp.4;
+[ "/home/user/garmin/source/ui/InfoView.mc" 19 8 ]
+        %tmp.5 = lgetv %key;
+        symbol [ key %tmp.5 19 15 18 ];
+        symbol [ mKey ? 19 8 12 ];
+        putv self :mKey %tmp.5;
+_home_user_garmin_source_ui_InfoView_mc_16_35_20_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 22; @symbol_functiondef = [onUpdate,22,13,21]; @symbol_param<0> = [dc,22,22,24]; ]
+    function onUpdate(dc) {
+_home_user_garmin_source_ui_InfoView_mc_22_26_56_4_start:
+[ "/home/user/garmin/source/ui/InfoView.mc" 23 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 23 8 10 ];
+        symbol [ setColor %tmp.2 23 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ Graphics %tmp.3 23 20 28 ];
+        %tmp.3 = getm $.Toybox.Graphics;
+        symbol [ COLOR_BLACK %tmp.4 23 29 40 ];
+        %tmp.4 = getv %tmp.3 :COLOR_BLACK;
+        symbol [ Graphics %tmp.5 23 42 50 ];
+        %tmp.5 = getm $.Toybox.Graphics;
+        symbol [ COLOR_BLACK %tmp.6 23 51 62 ];
+        %tmp.6 = getv %tmp.5 :COLOR_BLACK;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "/home/user/garmin/source/ui/InfoView.mc" 24 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 24 8 10 ];
+        symbol [ clear %tmp.8 24 11 16 ];
+        %tmp.8 = getv function %tmp.7 :clear;
+        invoke %tmp.7 %tmp.8();
+[ "/home/user/garmin/source/ui/InfoView.mc" 25 8 ]
+        [ "_home_user_garmin_source_ui_InfoView_mc_22_26_56_4_start" "_home_user_garmin_source_ui_InfoView_mc_22_26_56_4_stop" ]
+        %w.1 = local;
+        symbol [ w %w.1 25 12 13 ];
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 25 16 18 ];
+        symbol [ getWidth %tmp.10 25 19 27 ];
+        %tmp.10 = getv function %tmp.9 :getWidth;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        lputv %w.1 %tmp.11;
+        symbol [ w %w.1 25 12 13 ];
+[ "/home/user/garmin/source/ui/InfoView.mc" 26 8 ]
+        [ "_home_user_garmin_source_ui_InfoView_mc_22_26_56_4_start" "_home_user_garmin_source_ui_InfoView_mc_22_26_56_4_stop" ]
+        %h.2 = local;
+        symbol [ h %h.2 26 12 13 ];
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 26 16 18 ];
+        symbol [ getHeight %tmp.13 26 19 28 ];
+        %tmp.13 = getv function %tmp.12 :getHeight;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        lputv %h.2 %tmp.14;
+        symbol [ h %h.2 26 12 13 ];
+[ "/home/user/garmin/source/ui/InfoView.mc" 28 8 ]
+        %tmp.15 = lgetv %dc;
+        symbol [ dc %tmp.15 28 8 10 ];
+        symbol [ setColor %tmp.16 28 11 19 ];
+        %tmp.16 = getv function %tmp.15 :setColor;
+        symbol [ Graphics %tmp.17 28 20 28 ];
+        %tmp.17 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.18 28 29 40 ];
+        %tmp.18 = getv %tmp.17 :COLOR_WHITE;
+        symbol [ Graphics %tmp.19 28 42 50 ];
+        %tmp.19 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.20 28 51 68 ];
+        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
+        invoke %tmp.15 %tmp.16(%tmp.18, %tmp.20);
+[ "/home/user/garmin/source/ui/InfoView.mc" 30 8 ]
+_home_user_garmin_source_ui_InfoView_mc_30_8_55_8_if_stmt:
+        symbol [ mMode %tmp.22 30 12 17 ];
+        %tmp.22 = getv ? :mMode;
+        symbol [ MODE_VIN %tmp.24 30 21 29 ];
+        %tmp.24 = getv ? :MODE_VIN;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        bf %tmp.25 @_home_user_garmin_source_ui_InfoView_mc_30_8_55_8_if_else_false;
+_home_user_garmin_source_ui_InfoView_mc_30_8_55_8_if_true:
+_home_user_garmin_source_ui_InfoView_mc_30_31_40_8_start:
+[ "/home/user/garmin/source/ui/InfoView.mc" 31 12 ]
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 31 12 14 ];
+        symbol [ drawText %tmp.27 31 15 23 ];
+        %tmp.27 = getv function %tmp.26 :drawText;
+        %tmp.28 = lgetv %w.1;
+        symbol [ w %tmp.28 31 24 25 ];
+        %tmp.29 = 2;
+        %tmp.30 = div %tmp.28 %tmp.29;
+        %tmp.31 = lgetv %h.2;
+        symbol [ h %tmp.31 31 31 32 ];
+        %tmp.32 = 0.22;
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        symbol [ Graphics %tmp.34 31 41 49 ];
+        %tmp.34 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.35 31 50 61 ];
+        %tmp.35 = getv %tmp.34 :FONT_MEDIUM;
+        %tmp.36 = "Vehicle";
+        symbol [ Graphics %tmp.37 32 16 24 ];
+        %tmp.37 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.38 32 25 44 ];
+        %tmp.38 = getv %tmp.37 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.26 %tmp.27(%tmp.30, %tmp.33, %tmp.35, %tmp.36, %tmp.38);
+[ "/home/user/garmin/source/ui/InfoView.mc" 33 12 ]
+        [ "_home_user_garmin_source_ui_InfoView_mc_30_31_40_8_start" "_home_user_garmin_source_ui_InfoView_mc_30_31_40_8_stop" ]
+        %vin.3 = local;
+        symbol [ vin %vin.3 33 16 19 ];
+_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_begin:
+        symbol [ mKey %tmp.40 33 22 26 ];
+        %tmp.40 = getv ? :mKey;
+        symbol [ hasVin %tmp.41 33 27 33 ];
+        %tmp.41 = getv function %tmp.40 :hasVin;
+        %tmp.42 = invoke %tmp.40 %tmp.41();
+        bf %tmp.42 @_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_else_false;
+_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_true:
+        symbol [ mKey %tmp.44 33 38 42 ];
+        %tmp.44 = getv ? :mKey;
+        symbol [ vin %tmp.45 33 43 46 ];
+        %tmp.45 = getv function %tmp.44 :vin;
+        %tmp.46 = invoke %tmp.44 %tmp.45();
+        push %tmp.46;
+        goto @_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_end;
+_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_else_false:
+        %tmp.47 = "(not set)";
+        push %tmp.47;
+_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_end:
+        %tmp.48 = phi [%tmp.42 @_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_begin] [%tmp.46 @_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_true] [%tmp.47 @_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_else_false] [%tmp.48 @_home_user_garmin_source_ui_InfoView_mc_33_22_33_51_end];
+        lputv %vin.3 %tmp.48;
+        symbol [ vin %vin.3 33 16 19 ];
+[ "/home/user/garmin/source/ui/InfoView.mc" 34 12 ]
+        %tmp.49 = lgetv %dc;
+        symbol [ dc %tmp.49 34 12 14 ];
+        symbol [ drawText %tmp.50 34 15 23 ];
+        %tmp.50 = getv function %tmp.49 :drawText;
+        %tmp.51 = lgetv %w.1;
+        symbol [ w %tmp.51 34 24 25 ];
+        %tmp.52 = 2;
+        %tmp.53 = div %tmp.51 %tmp.52;
+        %tmp.54 = lgetv %h.2;
+        symbol [ h %tmp.54 34 31 32 ];
+        %tmp.55 = 0.45;
+        %tmp.56 = mul %tmp.54 %tmp.55;
+        symbol [ Graphics %tmp.57 34 41 49 ];
+        %tmp.57 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.58 34 50 60 ];
+        %tmp.58 = getv %tmp.57 :FONT_SMALL;
+        %tmp.59 = lgetv %vin.3;
+        symbol [ vin %tmp.59 34 62 65 ];
+        symbol [ Graphics %tmp.60 35 16 24 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.61 35 25 44 ];
+        %tmp.61 = getv %tmp.60 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.49 %tmp.50(%tmp.53, %tmp.56, %tmp.58, %tmp.59, %tmp.61);
+[ "/home/user/garmin/source/ui/InfoView.mc" 36 12 ]
+        %tmp.62 = lgetv %dc;
+        symbol [ dc %tmp.62 36 12 14 ];
+        symbol [ setColor %tmp.63 36 15 23 ];
+        %tmp.63 = getv function %tmp.62 :setColor;
+        symbol [ Graphics %tmp.64 36 24 32 ];
+        %tmp.64 = getm $.Toybox.Graphics;
+        symbol [ COLOR_LT_GRAY %tmp.65 36 33 46 ];
+        %tmp.65 = getv %tmp.64 :COLOR_LT_GRAY;
+        symbol [ Graphics %tmp.66 36 48 56 ];
+        %tmp.66 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.67 36 57 74 ];
+        %tmp.67 = getv %tmp.66 :COLOR_TRANSPARENT;
+        invoke %tmp.62 %tmp.63(%tmp.65, %tmp.67);
+[ "/home/user/garmin/source/ui/InfoView.mc" 37 12 ]
+        %tmp.68 = lgetv %dc;
+        symbol [ dc %tmp.68 37 12 14 ];
+        symbol [ drawText %tmp.69 37 15 23 ];
+        %tmp.69 = getv function %tmp.68 :drawText;
+        %tmp.70 = lgetv %w.1;
+        symbol [ w %tmp.70 37 24 25 ];
+        %tmp.71 = 2;
+        %tmp.72 = div %tmp.70 %tmp.71;
+        %tmp.73 = lgetv %h.2;
+        symbol [ h %tmp.73 37 31 32 ];
+        %tmp.74 = 0.70;
+        %tmp.75 = mul %tmp.73 %tmp.74;
+        symbol [ Graphics %tmp.76 37 41 49 ];
+        %tmp.76 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.77 37 50 59 ];
+        %tmp.77 = getv %tmp.76 :FONT_TINY;
+        %tmp.78 = "Set VIN in the\nGarmin Connect app\n(app settings)";
+        symbol [ Graphics %tmp.79 39 16 24 ];
+        %tmp.79 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.80 39 25 44 ];
+        %tmp.80 = getv %tmp.79 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.68 %tmp.69(%tmp.72, %tmp.75, %tmp.77, %tmp.78, %tmp.80);
+_home_user_garmin_source_ui_InfoView_mc_30_31_40_8_stop:
+        goto @_home_user_garmin_source_ui_InfoView_mc_30_8_55_8_if_end;
+_home_user_garmin_source_ui_InfoView_mc_30_8_55_8_if_else_false:
+_home_user_garmin_source_ui_InfoView_mc_40_15_55_8_start:
+[ "/home/user/garmin/source/ui/InfoView.mc" 41 12 ]
+        %tmp.81 = lgetv %dc;
+        symbol [ dc %tmp.81 41 12 14 ];
+        symbol [ drawText %tmp.82 41 15 23 ];
+        %tmp.82 = getv function %tmp.81 :drawText;
+        %tmp.83 = lgetv %w.1;
+        symbol [ w %tmp.83 41 24 25 ];
+        %tmp.84 = 2;
+        %tmp.85 = div %tmp.83 %tmp.84;
+        %tmp.86 = lgetv %h.2;
+        symbol [ h %tmp.86 41 31 32 ];
+        %tmp.87 = 0.18;
+        %tmp.88 = mul %tmp.86 %tmp.87;
+        symbol [ Graphics %tmp.89 41 41 49 ];
+        %tmp.89 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.90 41 50 61 ];
+        %tmp.90 = getv %tmp.89 :FONT_MEDIUM;
+        %tmp.91 = "My key";
+        symbol [ Graphics %tmp.92 42 16 24 ];
+        %tmp.92 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.93 42 25 44 ];
+        %tmp.93 = getv %tmp.92 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.81 %tmp.82(%tmp.85, %tmp.88, %tmp.90, %tmp.91, %tmp.93);
+[ "/home/user/garmin/source/ui/InfoView.mc" 46 12 ]
+        [ "_home_user_garmin_source_ui_InfoView_mc_40_15_55_8_start" "_home_user_garmin_source_ui_InfoView_mc_40_15_55_8_stop" ]
+        %hex.4 = local;
+        symbol [ hex %hex.4 46 16 19 ];
+        symbol [ mKey %tmp.95 46 22 26 ];
+        %tmp.95 = getv ? :mKey;
+        symbol [ publicKeyHex %tmp.96 46 27 39 ];
+        %tmp.96 = getv function %tmp.95 :publicKeyHex;
+        %tmp.97 = invoke %tmp.95 %tmp.96();
+        lputv %hex.4 %tmp.97;
+        symbol [ hex %hex.4 46 16 19 ];
+[ "/home/user/garmin/source/ui/InfoView.mc" 47 12 ]
+        [ "_home_user_garmin_source_ui_InfoView_mc_40_15_55_8_start" "_home_user_garmin_source_ui_InfoView_mc_40_15_55_8_stop" ]
+        %fp.5 = local;
+        symbol [ fp %fp.5 47 16 18 ];
+        %tmp.98 = lgetv %hex.4;
+        symbol [ hex %tmp.98 47 21 24 ];
+        symbol [ substring %tmp.99 47 25 34 ];
+        %tmp.99 = getv function %tmp.98 :substring;
+        %tmp.100 = 0;
+        %tmp.101 = 16;
+        %tmp.102 = invoke %tmp.98 %tmp.99(%tmp.100, %tmp.101);
+        lputv %fp.5 %tmp.102;
+        symbol [ fp %fp.5 47 16 18 ];
+[ "/home/user/garmin/source/ui/InfoView.mc" 48 12 ]
+        %tmp.103 = lgetv %dc;
+        symbol [ dc %tmp.103 48 12 14 ];
+        symbol [ setColor %tmp.104 48 15 23 ];
+        %tmp.104 = getv function %tmp.103 :setColor;
+        symbol [ Graphics %tmp.105 48 24 32 ];
+        %tmp.105 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.106 48 33 44 ];
+        %tmp.106 = getv %tmp.105 :COLOR_WHITE;
+        symbol [ Graphics %tmp.107 48 46 54 ];
+        %tmp.107 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.108 48 55 72 ];
+        %tmp.108 = getv %tmp.107 :COLOR_TRANSPARENT;
+        invoke %tmp.103 %tmp.104(%tmp.106, %tmp.108);
+[ "/home/user/garmin/source/ui/InfoView.mc" 49 12 ]
+        %tmp.109 = lgetv %dc;
+        symbol [ dc %tmp.109 49 12 14 ];
+        symbol [ drawText %tmp.110 49 15 23 ];
+        %tmp.110 = getv function %tmp.109 :drawText;
+        %tmp.111 = lgetv %w.1;
+        symbol [ w %tmp.111 49 24 25 ];
+        %tmp.112 = 2;
+        %tmp.113 = div %tmp.111 %tmp.112;
+        %tmp.114 = lgetv %h.2;
+        symbol [ h %tmp.114 49 31 32 ];
+        %tmp.115 = 0.45;
+        %tmp.116 = mul %tmp.114 %tmp.115;
+        symbol [ Graphics %tmp.117 49 41 49 ];
+        %tmp.117 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.118 49 50 60 ];
+        %tmp.118 = getv %tmp.117 :FONT_SMALL;
+        %tmp.119 = lgetv %fp.5;
+        symbol [ fp %tmp.119 49 62 64 ];
+        %tmp.120 = "...";
+        %tmp.121 = add %tmp.119 %tmp.120;
+        symbol [ Graphics %tmp.122 50 16 24 ];
+        %tmp.122 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.123 50 25 44 ];
+        %tmp.123 = getv %tmp.122 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.109 %tmp.110(%tmp.113, %tmp.116, %tmp.118, %tmp.121, %tmp.123);
+[ "/home/user/garmin/source/ui/InfoView.mc" 51 12 ]
+        %tmp.124 = lgetv %dc;
+        symbol [ dc %tmp.124 51 12 14 ];
+        symbol [ setColor %tmp.125 51 15 23 ];
+        %tmp.125 = getv function %tmp.124 :setColor;
+        symbol [ Graphics %tmp.126 51 24 32 ];
+        %tmp.126 = getm $.Toybox.Graphics;
+        symbol [ COLOR_LT_GRAY %tmp.127 51 33 46 ];
+        %tmp.127 = getv %tmp.126 :COLOR_LT_GRAY;
+        symbol [ Graphics %tmp.128 51 48 56 ];
+        %tmp.128 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.129 51 57 74 ];
+        %tmp.129 = getv %tmp.128 :COLOR_TRANSPARENT;
+        invoke %tmp.124 %tmp.125(%tmp.127, %tmp.129);
+[ "/home/user/garmin/source/ui/InfoView.mc" 52 12 ]
+        %tmp.130 = lgetv %dc;
+        symbol [ dc %tmp.130 52 12 14 ];
+        symbol [ drawText %tmp.131 52 15 23 ];
+        %tmp.131 = getv function %tmp.130 :drawText;
+        %tmp.132 = lgetv %w.1;
+        symbol [ w %tmp.132 52 24 25 ];
+        %tmp.133 = 2;
+        %tmp.134 = div %tmp.132 %tmp.133;
+        %tmp.135 = lgetv %h.2;
+        symbol [ h %tmp.135 52 31 32 ];
+        %tmp.136 = 0.70;
+        %tmp.137 = mul %tmp.135 %tmp.136;
+        symbol [ Graphics %tmp.138 52 41 49 ];
+        %tmp.138 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.139 52 50 59 ];
+        %tmp.139 = getv %tmp.138 :FONT_TINY;
+        %tmp.140 = "Pair to enroll\nthis key";
+        symbol [ Graphics %tmp.141 54 16 24 ];
+        %tmp.141 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.142 54 25 44 ];
+        %tmp.142 = getv %tmp.141 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.130 %tmp.131(%tmp.134, %tmp.137, %tmp.139, %tmp.140, %tmp.142);
+_home_user_garmin_source_ui_InfoView_mc_40_15_55_8_stop:
+_home_user_garmin_source_ui_InfoView_mc_30_8_55_8_if_end:
+_home_user_garmin_source_ui_InfoView_mc_22_26_56_4_stop:
+    }
+}
+[ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 60; @symbol_classdef = [InfoDelegate,60,6,18]; @symbol_extends<0> = [WatchUi,60,27,34]; @symbol_extends<1> = [BehaviorDelegate,60,35,51]; ]
+class InfoDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 60; ]
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 60; ]
+    static
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 61; @symbol_functiondef = [initialize,61,13,23]; ]
+    function initialize() as Void {
+_home_user_garmin_source_ui_InfoView_mc_61_26_63_4_start:
+[ "/home/user/garmin/source/ui/InfoView.mc" 62 8 ]
+        symbol [ BehaviorDelegate %tmp.2 62 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 62 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+_home_user_garmin_source_ui_InfoView_mc_61_26_63_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 65; @symbol_functiondef = [onBack,65,13,19]; ]
+    function onBack() {
+_home_user_garmin_source_ui_InfoView_mc_65_22_68_4_start:
+[ "/home/user/garmin/source/ui/InfoView.mc" 66 8 ]
+        symbol [ WatchUi %tmp.1 66 8 15 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.2 66 16 23 ];
+        %tmp.2 = getv function %tmp.1 :popView;
+        symbol [ WatchUi %tmp.3 66 24 31 ];
+        %tmp.3 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_RIGHT %tmp.4 66 32 43 ];
+        %tmp.4 = getv %tmp.3 :SLIDE_RIGHT;
+        invoke %tmp.1 %tmp.2(%tmp.4);
+[ "/home/user/garmin/source/ui/InfoView.mc" 67 8 ]
+        %tmp.5 = true;
+        ret %tmp.5;
+_home_user_garmin_source_ui_InfoView_mc_65_22_68_4_stop:
+    }
+}
+[ @file = "/home/user/garmin/source/ui/InfoView.mc"; @line = 1; ]
+<init> {
+}

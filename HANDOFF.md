@@ -5,9 +5,9 @@ the Docker simulator recipe. This file covers what's next.
 
 ## Where things stand
 
-- App in `source/` builds for `instinct2` / `instinct2s` with SDK **9.3.0**
-  (using the SDK 4.1.7 device files from the `piccobit/docker-connectiq`
-  image). **All 15 unit tests pass in the simulator** (Docker recipe in
+- App in `source/` builds for `instinct2` / `instinct2s` / `instinct2x` with
+  SDK **9.3.0** and Garmin's current device files (`tools/ciq-setup.sh`).
+  **All 15 unit tests pass in the simulator on all three** (Docker recipe in
   AGENTS.md).
 - Protocol code was checked against the current `teslamotors/vehicle-command`
   and fixed: handshake challenge = request uuid, mandatory session-info tag,
@@ -16,7 +16,8 @@ the Docker simulator recipe. This file covers what's next.
 - Running the tests for the first time showed the original crypto never
   worked on Connect IQ (EC keys/secret are little-endian; `toUtf8Array()` is
   not a ByteArray). Fixed and covered by tests.
-- `dist/` holds release builds for instinct2/2S from the fixed source, signed
+- `dist/` holds release builds (`tools/build-dist.sh`) for every manifest
+  product from the fixed source, signed
   with a throwaway developer key (the original key was never committed; no
   permanent key exists yet).
 - **Not verified:** the UI in the simulator (no device fonts until Garmin
@@ -50,8 +51,7 @@ Device files and fonts are Garmin-licensed: keep them out of git.
 ## Next tasks, in order
 
 1. ~~Run `tools/ciq-setup.sh`~~ — done 2026-10-26 (fixed the CLI install).
-2. **Re-enable the Instinct 2X:** add `<iq:product id="instinct2x"/>` to
-   `manifest.xml` (a comment marks the spot), download it, build, run tests.
+2. ~~Re-enable the Instinct 2X~~ — done 2026-10-26; tests pass on it.
 3. **Check the UI in the simulator** now that fonts exist (Menu2 menus,
    `StatusView`, `InfoView`). Screenshots via `import -window root` in the
    container (install `imagemagick`).

@@ -1,0 +1,26 @@
+{
+  "settings" : [ {
+    "key" : "vin",
+    "valueType" : "string",
+    "defaultValue" : "",
+    "configTitle" : "VinTitle",
+    "configPrompt" : "VinPrompt",
+    "configType" : "alphaNumeric",
+    "configError" : null,
+    "configHelpUrl" : null,
+    "configReadonly" : false,
+    "configRequired" : false,
+    "configOptions" : null,
+    "configMin" : null,
+    "configMax" : null,
+    "configMaxLength" : 17
+  } ],
+  "supportsLiveValidation" : false,
+  "languages" : {
+    "valyrian" : {
+      "VinTitle" : "Vehicle VIN",
+      "VinPrompt" : "17-character VIN",
+      "AppName" : "Tesla Key"
+    }
+  }
+}

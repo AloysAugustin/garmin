@@ -1,0 +1,2900 @@
+[ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Timer,1,13,18]; ]
+using Toybox.Timer;
+[ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Lang,2,13,17]; ]
+using Toybox.Lang;
+[ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 7; @symbol_classdef = [TeslaController,7,6,21]; ]
+class TeslaController {
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 7; ]
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 7; ]
+    static
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 10; ]
+    static
+    enum {
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 11; @position = 8; @symbol_enumdec = [INTENT_UNLOCK,11,8,21]; ]
+        INTENT_UNLOCK,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 12; @position = 8; @symbol_enumdec = [INTENT_LOCK,12,8,19]; ]
+        INTENT_LOCK,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 13; @position = 8; @symbol_enumdec = [INTENT_TRUNK,13,8,20]; ]
+        INTENT_TRUNK,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 14; @position = 8; @symbol_enumdec = [INTENT_FRUNK,14,8,20]; ]
+        INTENT_FRUNK,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 15; @position = 8; @symbol_enumdec = [INTENT_WAKE,15,8,19]; ]
+        INTENT_WAKE,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 16; @position = 8; @symbol_enumdec = [INTENT_PAIR_DRIVER,16,8,26]; ]
+        INTENT_PAIR_DRIVER,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 17; @position = 8; @symbol_enumdec = [INTENT_PAIR_OWNER,17,8,25]; ]
+        INTENT_PAIR_OWNER
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 21; ]
+    static
+    enum {
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 22; @position = 8; @symbol_enumdec = [STATE_IDLE,22,8,18]; ]
+        STATE_IDLE,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 23; @position = 8; @symbol_enumdec = [STATE_CONNECTING,23,8,24]; ]
+        STATE_CONNECTING,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 24; @position = 8; @symbol_enumdec = [STATE_WAIT_SESSION,24,8,26]; ]
+        STATE_WAIT_SESSION,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 25; @position = 8; @symbol_enumdec = [STATE_WAIT_RESULT,25,8,25]; ]
+        STATE_WAIT_RESULT,
+        [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 26; @position = 8; @symbol_enumdec = [STATE_WAIT_PAIR,26,8,23]; ]
+        STATE_WAIT_PAIR
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 30; @position = 10; @symbol_constdef = [FAULT_BUSY,30,10,20]; ]
+    const FAULT_BUSY = 1;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 31; @position = 10; @symbol_constdef = [FAULT_TIMEOUT,31,10,23]; ]
+    const FAULT_TIMEOUT = 2;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 32; @position = 10; @symbol_constdef = [FAULT_UNKNOWN_KEY,32,10,27]; ]
+    const FAULT_UNKNOWN_KEY = 3;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 33; @position = 10; @symbol_constdef = [FAULT_INACTIVE_KEY,33,10,28]; ]
+    const FAULT_INACTIVE_KEY = 4;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 34; @position = 10; @symbol_constdef = [FAULT_INVALID_SIGNATURE,34,10,33]; ]
+    const FAULT_INVALID_SIGNATURE = 5;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 35; @position = 10; @symbol_constdef = [FAULT_INVALID_TOKEN_OR_COUNTER,35,10,40]; ]
+    const FAULT_INVALID_TOKEN_OR_COUNTER = 6;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 36; @position = 10; @symbol_constdef = [FAULT_INSUFFICIENT_PRIVILEGES,36,10,39]; ]
+    const FAULT_INSUFFICIENT_PRIVILEGES = 7;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 37; @position = 10; @symbol_constdef = [FAULT_INTERNAL,37,10,24]; ]
+    const FAULT_INTERNAL = 11;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 38; @position = 10; @symbol_constdef = [FAULT_WRONG_PERSONALIZATION,38,10,37]; ]
+    const FAULT_WRONG_PERSONALIZATION = 12;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 39; @position = 10; @symbol_constdef = [FAULT_INCORRECT_EPOCH,39,10,31]; ]
+    const FAULT_INCORRECT_EPOCH = 15;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 40; @position = 10; @symbol_constdef = [FAULT_TIME_EXPIRED,40,10,28]; ]
+    const FAULT_TIME_EXPIRED = 17;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 41; @position = 10; @symbol_constdef = [FAULT_TIME_TO_LIVE_TOO_LONG,41,10,37]; ]
+    const FAULT_TIME_TO_LIVE_TOO_LONG = 20;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 42; @position = 10; @symbol_constdef = [FAULT_REMOTE_ACCESS_DISABLED,42,10,38]; ]
+    const FAULT_REMOTE_ACCESS_DISABLED = 21;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 43; @position = 10; @symbol_constdef = [FAULT_RESPONSE_MTU_EXCEEDED,43,10,37]; ]
+    const FAULT_RESPONSE_MTU_EXCEEDED = 25;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 44; @position = 10; @symbol_constdef = [FAULT_REQUIRES_RESPONSE_ENCRYPTION,44,10,44]; ]
+    const FAULT_REQUIRES_RESPONSE_ENCRYPTION = 28;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 47; @position = 10; @symbol_constdef = [GENERIC_CLOSURES_OPEN,47,10,31]; ]
+    const GENERIC_CLOSURES_OPEN = 2;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 48; @position = 10; @symbol_constdef = [GENERIC_ALREADY_ON,48,10,28]; ]
+    const GENERIC_ALREADY_ON = 3;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 49; @position = 10; @symbol_constdef = [GENERIC_DISABLED_FOR_USER_COMMAND,49,10,43]; ]
+    const GENERIC_DISABLED_FOR_USER_COMMAND = 4;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 50; @position = 10; @symbol_constdef = [GENERIC_VEHICLE_NOT_IN_PARK,50,10,37]; ]
+    const GENERIC_VEHICLE_NOT_IN_PARK = 5;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 51; @position = 10; @symbol_constdef = [GENERIC_UNAUTHORIZED,51,10,30]; ]
+    const GENERIC_UNAUTHORIZED = 6;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 52; @position = 10; @symbol_constdef = [GENERIC_NOT_ALLOWED_OVER_TRANSPORT,52,10,44]; ]
+    const GENERIC_NOT_ALLOWED_OVER_TRANSPORT = 7;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 54; @position = 10; @symbol_constdef = [REPLY_TIMEOUT_MS,54,10,26]; ]
+    const REPLY_TIMEOUT_MS = 12000;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 57; @position = 10; @symbol_constdef = [PAIR_TAP_TIMEOUT_MS,57,10,29]; ]
+    const PAIR_TAP_TIMEOUT_MS = 60000;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 59; @position = 10; @symbol_constdef = [RETRY_DELAY_MS,59,10,24]; ]
+    const RETRY_DELAY_MS = 1000;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 61; @position = 10; @symbol_constdef = [MAX_ATTEMPTS,61,10,22]; ]
+    const MAX_ATTEMPTS = 4;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 63; @position = 15; @symbol_vardef = [mKey,63,15,19]; ]
+    protected
+    var mKey;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 64; @position = 15; @symbol_vardef = [mBle,64,15,19]; ]
+    protected
+    var mBle;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 65; @position = 15; @symbol_vardef = [mSink,65,15,20]; ]
+    protected
+    var mSink;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 66; @position = 15; @symbol_vardef = [mState,66,15,21]; ]
+    protected
+    var mState;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 67; @position = 15; @symbol_vardef = [mIntent,67,15,22]; ]
+    protected
+    var mIntent;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 68; @position = 15; @symbol_vardef = [mDomain,68,15,22]; ]
+    protected
+    var mDomain;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 69; @position = 15; @symbol_vardef = [mAttempts,69,15,24]; ]
+    protected
+    var mAttempts;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 70; @position = 15; @symbol_vardef = [mPairWaiting,70,15,27]; ]
+    protected
+    var mPairWaiting;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 71; @position = 15; @symbol_vardef = [mReplyTimer,71,15,26]; ]
+    protected
+    var mReplyTimer;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 72; @position = 15; @symbol_vardef = [mRetryTimer,72,15,26]; ]
+    protected
+    var mRetryTimer;
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 74; @symbol_functiondef = [initialize,74,13,23]; @symbol_param<0> = [key,74,24,27]; ]
+    function initialize(key) as Void {
+_home_user_garmin_source_TeslaController_mc_74_29_80_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 75 8 ]
+        %tmp.1 = lgetv %key;
+        symbol [ key %tmp.1 75 15 18 ];
+        symbol [ mKey ? 75 8 12 ];
+        putv self :mKey %tmp.1;
+[ "/home/user/garmin/source/TeslaController.mc" 76 8 ]
+        symbol [ TeslaBleManager %tmp.5 76 19 34 ];
+        %tmp.5 = getv ? :TeslaBleManager;
+        %tmp.6 = self;
+        symbol [ self %tmp.6 76 35 39 ];
+        %tmp.2 = newc %tmp.5 (%tmp.6);
+        symbol [ mBle ? 76 8 12 ];
+        putv self :mBle %tmp.2;
+[ "/home/user/garmin/source/TeslaController.mc" 77 8 ]
+        symbol [ STATE_IDLE %tmp.8 77 17 27 ];
+        %tmp.8 = getv ? :STATE_IDLE;
+        symbol [ mState ? 77 8 14 ];
+        putv self :mState %tmp.8;
+[ "/home/user/garmin/source/TeslaController.mc" 78 8 ]
+        %tmp.9 = 0;
+        symbol [ mAttempts ? 78 8 17 ];
+        putv self :mAttempts %tmp.9;
+[ "/home/user/garmin/source/TeslaController.mc" 79 8 ]
+        %tmp.10 = false;
+        symbol [ mPairWaiting ? 79 8 20 ];
+        putv self :mPairWaiting %tmp.10;
+_home_user_garmin_source_TeslaController_mc_74_29_80_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 82; @symbol_functiondef = [setup,82,13,18]; ]
+    function setup() {
+_home_user_garmin_source_TeslaController_mc_82_21_84_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 83 8 ]
+        symbol [ mBle %tmp.2 83 8 12 ];
+        %tmp.2 = getv ? :mBle;
+        symbol [ setup %tmp.3 83 13 18 ];
+        %tmp.3 = getv function %tmp.2 :setup;
+        invoke %tmp.2 %tmp.3();
+_home_user_garmin_source_TeslaController_mc_82_21_84_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 86; @symbol_functiondef = [setSink,86,13,20]; @symbol_param<0> = [sink,86,21,25]; ]
+    function setSink(sink) {
+_home_user_garmin_source_TeslaController_mc_86_27_88_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 87 8 ]
+        %tmp.1 = lgetv %sink;
+        symbol [ sink %tmp.1 87 16 20 ];
+        symbol [ mSink ? 87 8 13 ];
+        putv self :mSink %tmp.1;
+_home_user_garmin_source_TeslaController_mc_86_27_88_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 90; @symbol_functiondef = [isBusy,90,13,19]; ]
+    function isBusy() {
+_home_user_garmin_source_TeslaController_mc_90_22_92_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 91 8 ]
+        symbol [ mState %tmp.2 91 15 21 ];
+        %tmp.2 = getv ? :mState;
+        symbol [ STATE_IDLE %tmp.4 91 25 35 ];
+        %tmp.4 = getv ? :STATE_IDLE;
+        %tmp.5 = ne %tmp.2 %tmp.4;
+        ret %tmp.5;
+_home_user_garmin_source_TeslaController_mc_90_22_92_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 96; @symbol_functiondef = [start,96,13,18]; @symbol_param<0> = [intent,96,19,25]; ]
+    function start(intent) {
+_home_user_garmin_source_TeslaController_mc_96_27_114_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 97 8 ]
+_home_user_garmin_source_TeslaController_mc_97_8_100_8_if_stmt:
+        %tmp.1 = self;
+        symbol [ isBusy %tmp.2 97 12 18 ];
+        %tmp.2 = getv function %tmp.1 :isBusy;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        bf %tmp.3 @_home_user_garmin_source_TeslaController_mc_97_8_100_8_if_end;
+_home_user_garmin_source_TeslaController_mc_97_8_100_8_if_true:
+_home_user_garmin_source_TeslaController_mc_97_22_100_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 98 12 ]
+        %tmp.4 = self;
+        symbol [ report %tmp.5 98 12 18 ];
+        %tmp.5 = getv function %tmp.4 :report;
+        %tmp.6 = "Busy, please wait";
+        invoke %tmp.4 %tmp.5(%tmp.6);
+[ "/home/user/garmin/source/TeslaController.mc" 99 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_97_22_100_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_97_8_100_8_if_end;
+_home_user_garmin_source_TeslaController_mc_97_8_100_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 101 8 ]
+_home_user_garmin_source_TeslaController_mc_101_8_104_8_if_stmt:
+        symbol [ mKey %tmp.8 101 13 17 ];
+        %tmp.8 = getv ? :mKey;
+        symbol [ hasVin %tmp.9 101 18 24 ];
+        %tmp.9 = getv function %tmp.8 :hasVin;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = not %tmp.10;
+        bf %tmp.11 @_home_user_garmin_source_TeslaController_mc_101_8_104_8_if_end;
+_home_user_garmin_source_TeslaController_mc_101_8_104_8_if_true:
+_home_user_garmin_source_TeslaController_mc_101_28_104_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 102 12 ]
+        %tmp.12 = self;
+        symbol [ result %tmp.13 102 12 18 ];
+        %tmp.13 = getv function %tmp.12 :result;
+        %tmp.14 = false;
+        %tmp.15 = "Set your VIN first";
+        invoke %tmp.12 %tmp.13(%tmp.14, %tmp.15);
+[ "/home/user/garmin/source/TeslaController.mc" 103 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_101_28_104_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_101_8_104_8_if_end;
+_home_user_garmin_source_TeslaController_mc_101_8_104_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 105 8 ]
+        %tmp.16 = lgetv %intent;
+        symbol [ intent %tmp.16 105 18 24 ];
+        symbol [ mIntent ? 105 8 15 ];
+        putv self :mIntent %tmp.16;
+[ "/home/user/garmin/source/TeslaController.mc" 106 8 ]
+        symbol [ TeslaProto %tmp.18 106 18 28 ];
+        %tmp.18 = getv ? :TeslaProto;
+        symbol [ DOMAIN_VEHICLE_SECURITY %tmp.19 106 29 52 ];
+        %tmp.19 = getv %tmp.18 :DOMAIN_VEHICLE_SECURITY;
+        symbol [ mDomain ? 106 8 15 ];
+        putv self :mDomain %tmp.19;
+[ "/home/user/garmin/source/TeslaController.mc" 107 8 ]
+        %tmp.20 = 0;
+        symbol [ mAttempts ? 107 8 17 ];
+        putv self :mAttempts %tmp.20;
+[ "/home/user/garmin/source/TeslaController.mc" 108 8 ]
+        %tmp.21 = false;
+        symbol [ mPairWaiting ? 108 8 20 ];
+        putv self :mPairWaiting %tmp.21;
+[ "/home/user/garmin/source/TeslaController.mc" 109 8 ]
+        symbol [ STATE_CONNECTING %tmp.23 109 17 33 ];
+        %tmp.23 = getv ? :STATE_CONNECTING;
+        symbol [ mState ? 109 8 14 ];
+        putv self :mState %tmp.23;
+[ "/home/user/garmin/source/TeslaController.mc" 110 8 ]
+        symbol [ mKey %tmp.25 110 8 12 ];
+        %tmp.25 = getv ? :mKey;
+        symbol [ resetSessions %tmp.26 110 13 26 ];
+        %tmp.26 = getv function %tmp.25 :resetSessions;
+        invoke %tmp.25 %tmp.26();
+[ "/home/user/garmin/source/TeslaController.mc" 111 8 ]
+        symbol [ mKey %tmp.28 111 8 12 ];
+        %tmp.28 = getv ? :mKey;
+        symbol [ newRoutingAddress %tmp.29 111 13 30 ];
+        %tmp.29 = getv function %tmp.28 :newRoutingAddress;
+        invoke %tmp.28 %tmp.29();
+[ "/home/user/garmin/source/TeslaController.mc" 112 8 ]
+        %tmp.30 = self;
+        symbol [ report %tmp.31 112 8 14 ];
+        %tmp.31 = getv function %tmp.30 :report;
+        %tmp.32 = "Searching for vehicle...";
+        invoke %tmp.30 %tmp.31(%tmp.32);
+[ "/home/user/garmin/source/TeslaController.mc" 113 8 ]
+        symbol [ mBle %tmp.34 113 8 12 ];
+        %tmp.34 = getv ? :mBle;
+        symbol [ connect %tmp.35 113 13 20 ];
+        %tmp.35 = getv function %tmp.34 :connect;
+        symbol [ mKey %tmp.37 113 21 25 ];
+        %tmp.37 = getv ? :mKey;
+        symbol [ localName %tmp.38 113 26 35 ];
+        %tmp.38 = getv function %tmp.37 :localName;
+        %tmp.39 = invoke %tmp.37 %tmp.38();
+        invoke %tmp.34 %tmp.35(%tmp.39);
+_home_user_garmin_source_TeslaController_mc_96_27_114_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 116; @symbol_functiondef = [cancel,116,13,19]; ]
+    function cancel() {
+_home_user_garmin_source_TeslaController_mc_116_22_121_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 117 8 ]
+        %tmp.1 = self;
+        symbol [ clearReplyTimer %tmp.2 117 8 23 ];
+        %tmp.2 = getv function %tmp.1 :clearReplyTimer;
+        invoke %tmp.1 %tmp.2();
+[ "/home/user/garmin/source/TeslaController.mc" 118 8 ]
+        %tmp.3 = self;
+        symbol [ clearRetryTimer %tmp.4 118 8 23 ];
+        %tmp.4 = getv function %tmp.3 :clearRetryTimer;
+        invoke %tmp.3 %tmp.4();
+[ "/home/user/garmin/source/TeslaController.mc" 119 8 ]
+        symbol [ mBle %tmp.6 119 8 12 ];
+        %tmp.6 = getv ? :mBle;
+        symbol [ disconnect %tmp.7 119 13 23 ];
+        %tmp.7 = getv function %tmp.6 :disconnect;
+        invoke %tmp.6 %tmp.7();
+[ "/home/user/garmin/source/TeslaController.mc" 120 8 ]
+        symbol [ STATE_IDLE %tmp.9 120 17 27 ];
+        %tmp.9 = getv ? :STATE_IDLE;
+        symbol [ mState ? 120 8 14 ];
+        putv self :mState %tmp.9;
+_home_user_garmin_source_TeslaController_mc_116_22_121_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 125; @symbol_functiondef = [isPairing,125,20,29]; ]
+    protected
+    function isPairing() {
+_home_user_garmin_source_TeslaController_mc_125_32_127_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 126 8 ]
+_home_user_garmin_source_TeslaController_mc_126_15_126_59_begin:
+        symbol [ mIntent %tmp.2 126 15 22 ];
+        %tmp.2 = getv ? :mIntent;
+        symbol [ INTENT_PAIR_DRIVER %tmp.4 126 26 44 ];
+        %tmp.4 = getv ? :INTENT_PAIR_DRIVER;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        %tmp.6 = dup %tmp.5;
+        bt %tmp.6 @_home_user_garmin_source_TeslaController_mc_126_48_126_59_end;
+_home_user_garmin_source_TeslaController_mc_126_48_126_59_false:
+        symbol [ mIntent %tmp.8 126 48 55 ];
+        %tmp.8 = getv ? :mIntent;
+        symbol [ INTENT_PAIR_OWNER %tmp.10 126 59 76 ];
+        %tmp.10 = getv ? :INTENT_PAIR_OWNER;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        %tmp.12 = or %tmp.5 %tmp.11;
+        push %tmp.12;
+_home_user_garmin_source_TeslaController_mc_126_48_126_59_end:
+        %tmp.13 = phi [%tmp.6 @_home_user_garmin_source_TeslaController_mc_126_15_126_59_begin] [%tmp.12 @_home_user_garmin_source_TeslaController_mc_126_48_126_59_false] [%tmp.13 @_home_user_garmin_source_TeslaController_mc_126_48_126_59_end];
+        ret %tmp.13;
+_home_user_garmin_source_TeslaController_mc_125_32_127_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 129; @symbol_functiondef = [payloadForIntent,129,20,36]; ]
+    protected
+    function payloadForIntent() {
+_home_user_garmin_source_TeslaController_mc_129_39_142_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 130 8 ]
+_home_user_garmin_source_TeslaController_mc_130_8_140_8_if_stmt:
+        symbol [ mIntent %tmp.2 130 12 19 ];
+        %tmp.2 = getv ? :mIntent;
+        symbol [ INTENT_UNLOCK %tmp.4 130 23 36 ];
+        %tmp.4 = getv ? :INTENT_UNLOCK;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_home_user_garmin_source_TeslaController_mc_130_8_140_8_if_false;
+_home_user_garmin_source_TeslaController_mc_130_8_140_8_if_true:
+_home_user_garmin_source_TeslaController_mc_130_38_132_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 131 12 ]
+        symbol [ TeslaProto %tmp.7 131 19 29 ];
+        %tmp.7 = getv ? :TeslaProto;
+        symbol [ rkeAction %tmp.8 131 30 39 ];
+        %tmp.8 = getv function %tmp.7 :rkeAction;
+        symbol [ TeslaProto %tmp.10 131 40 50 ];
+        %tmp.10 = getv ? :TeslaProto;
+        symbol [ RKE_UNLOCK %tmp.11 131 51 61 ];
+        %tmp.11 = getv %tmp.10 :RKE_UNLOCK;
+        %tmp.12 = invoke %tmp.7 %tmp.8(%tmp.11);
+        ret %tmp.12;
+_home_user_garmin_source_TeslaController_mc_130_38_132_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_130_8_140_8_if_end;
+_home_user_garmin_source_TeslaController_mc_130_8_140_8_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 132 15 ]
+_home_user_garmin_source_TeslaController_mc_132_15_140_8_if_stmt:
+        symbol [ mIntent %tmp.14 132 19 26 ];
+        %tmp.14 = getv ? :mIntent;
+        symbol [ INTENT_LOCK %tmp.16 132 30 41 ];
+        %tmp.16 = getv ? :INTENT_LOCK;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bf %tmp.17 @_home_user_garmin_source_TeslaController_mc_132_15_140_8_if_false;
+_home_user_garmin_source_TeslaController_mc_132_15_140_8_if_true:
+_home_user_garmin_source_TeslaController_mc_132_43_134_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 133 12 ]
+        symbol [ TeslaProto %tmp.19 133 19 29 ];
+        %tmp.19 = getv ? :TeslaProto;
+        symbol [ rkeAction %tmp.20 133 30 39 ];
+        %tmp.20 = getv function %tmp.19 :rkeAction;
+        symbol [ TeslaProto %tmp.22 133 40 50 ];
+        %tmp.22 = getv ? :TeslaProto;
+        symbol [ RKE_LOCK %tmp.23 133 51 59 ];
+        %tmp.23 = getv %tmp.22 :RKE_LOCK;
+        %tmp.24 = invoke %tmp.19 %tmp.20(%tmp.23);
+        ret %tmp.24;
+_home_user_garmin_source_TeslaController_mc_132_43_134_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_132_15_140_8_if_end;
+_home_user_garmin_source_TeslaController_mc_132_15_140_8_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 134 15 ]
+_home_user_garmin_source_TeslaController_mc_134_15_140_8_if_stmt:
+        symbol [ mIntent %tmp.26 134 19 26 ];
+        %tmp.26 = getv ? :mIntent;
+        symbol [ INTENT_WAKE %tmp.28 134 30 41 ];
+        %tmp.28 = getv ? :INTENT_WAKE;
+        %tmp.29 = eq %tmp.26 %tmp.28;
+        bf %tmp.29 @_home_user_garmin_source_TeslaController_mc_134_15_140_8_if_false;
+_home_user_garmin_source_TeslaController_mc_134_15_140_8_if_true:
+_home_user_garmin_source_TeslaController_mc_134_43_136_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 135 12 ]
+        symbol [ TeslaProto %tmp.31 135 19 29 ];
+        %tmp.31 = getv ? :TeslaProto;
+        symbol [ rkeAction %tmp.32 135 30 39 ];
+        %tmp.32 = getv function %tmp.31 :rkeAction;
+        symbol [ TeslaProto %tmp.34 135 40 50 ];
+        %tmp.34 = getv ? :TeslaProto;
+        symbol [ RKE_WAKE %tmp.35 135 51 59 ];
+        %tmp.35 = getv %tmp.34 :RKE_WAKE;
+        %tmp.36 = invoke %tmp.31 %tmp.32(%tmp.35);
+        ret %tmp.36;
+_home_user_garmin_source_TeslaController_mc_134_43_136_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_134_15_140_8_if_end;
+_home_user_garmin_source_TeslaController_mc_134_15_140_8_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 136 15 ]
+_home_user_garmin_source_TeslaController_mc_136_15_140_8_if_stmt:
+        symbol [ mIntent %tmp.38 136 19 26 ];
+        %tmp.38 = getv ? :mIntent;
+        symbol [ INTENT_TRUNK %tmp.40 136 30 42 ];
+        %tmp.40 = getv ? :INTENT_TRUNK;
+        %tmp.41 = eq %tmp.38 %tmp.40;
+        bf %tmp.41 @_home_user_garmin_source_TeslaController_mc_136_15_140_8_if_false;
+_home_user_garmin_source_TeslaController_mc_136_15_140_8_if_true:
+_home_user_garmin_source_TeslaController_mc_136_44_138_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 137 12 ]
+        symbol [ TeslaProto %tmp.43 137 19 29 ];
+        %tmp.43 = getv ? :TeslaProto;
+        symbol [ openTrunk %tmp.44 137 30 39 ];
+        %tmp.44 = getv function %tmp.43 :openTrunk;
+        %tmp.45 = invoke %tmp.43 %tmp.44();
+        ret %tmp.45;
+_home_user_garmin_source_TeslaController_mc_136_44_138_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_136_15_140_8_if_end;
+_home_user_garmin_source_TeslaController_mc_136_15_140_8_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 138 15 ]
+_home_user_garmin_source_TeslaController_mc_138_15_140_8_if_stmt:
+        symbol [ mIntent %tmp.47 138 19 26 ];
+        %tmp.47 = getv ? :mIntent;
+        symbol [ INTENT_FRUNK %tmp.49 138 30 42 ];
+        %tmp.49 = getv ? :INTENT_FRUNK;
+        %tmp.50 = eq %tmp.47 %tmp.49;
+        bf %tmp.50 @_home_user_garmin_source_TeslaController_mc_138_15_140_8_if_end;
+_home_user_garmin_source_TeslaController_mc_138_15_140_8_if_true:
+_home_user_garmin_source_TeslaController_mc_138_44_140_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 139 12 ]
+        symbol [ TeslaProto %tmp.52 139 19 29 ];
+        %tmp.52 = getv ? :TeslaProto;
+        symbol [ openFrunk %tmp.53 139 30 39 ];
+        %tmp.53 = getv function %tmp.52 :openFrunk;
+        %tmp.54 = invoke %tmp.52 %tmp.53();
+        ret %tmp.54;
+_home_user_garmin_source_TeslaController_mc_138_44_140_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_138_15_140_8_if_end;
+_home_user_garmin_source_TeslaController_mc_138_15_140_8_if_end:
+_home_user_garmin_source_TeslaController_mc_136_15_140_8_if_end:
+_home_user_garmin_source_TeslaController_mc_134_15_140_8_if_end:
+_home_user_garmin_source_TeslaController_mc_132_15_140_8_if_end:
+_home_user_garmin_source_TeslaController_mc_130_8_140_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 141 8 ]
+        %tmp.55 = null;
+        ret %tmp.55;
+_home_user_garmin_source_TeslaController_mc_129_39_142_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 144; @symbol_functiondef = [intentName,144,20,30]; ]
+    protected
+    function intentName() {
+_home_user_garmin_source_TeslaController_mc_144_33_151_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 145 8 ]
+_home_user_garmin_source_TeslaController_mc_145_8_145_57_if_stmt:
+        symbol [ mIntent %tmp.2 145 12 19 ];
+        %tmp.2 = getv ? :mIntent;
+        symbol [ INTENT_UNLOCK %tmp.4 145 23 36 ];
+        %tmp.4 = getv ? :INTENT_UNLOCK;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_home_user_garmin_source_TeslaController_mc_145_8_145_57_if_end;
+_home_user_garmin_source_TeslaController_mc_145_8_145_57_if_true:
+_home_user_garmin_source_TeslaController_mc_145_38_145_57_start:
+[ "/home/user/garmin/source/TeslaController.mc" 145 40 ]
+        %tmp.6 = "Unlock";
+        ret %tmp.6;
+_home_user_garmin_source_TeslaController_mc_145_38_145_57_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_145_8_145_57_if_end;
+_home_user_garmin_source_TeslaController_mc_145_8_145_57_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 146 8 ]
+_home_user_garmin_source_TeslaController_mc_146_8_146_53_if_stmt:
+        symbol [ mIntent %tmp.8 146 12 19 ];
+        %tmp.8 = getv ? :mIntent;
+        symbol [ INTENT_LOCK %tmp.10 146 23 34 ];
+        %tmp.10 = getv ? :INTENT_LOCK;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_home_user_garmin_source_TeslaController_mc_146_8_146_53_if_end;
+_home_user_garmin_source_TeslaController_mc_146_8_146_53_if_true:
+_home_user_garmin_source_TeslaController_mc_146_36_146_53_start:
+[ "/home/user/garmin/source/TeslaController.mc" 146 38 ]
+        %tmp.12 = "Lock";
+        ret %tmp.12;
+_home_user_garmin_source_TeslaController_mc_146_36_146_53_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_146_8_146_53_if_end;
+_home_user_garmin_source_TeslaController_mc_146_8_146_53_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 147 8 ]
+_home_user_garmin_source_TeslaController_mc_147_8_147_53_if_stmt:
+        symbol [ mIntent %tmp.14 147 12 19 ];
+        %tmp.14 = getv ? :mIntent;
+        symbol [ INTENT_WAKE %tmp.16 147 23 34 ];
+        %tmp.16 = getv ? :INTENT_WAKE;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bf %tmp.17 @_home_user_garmin_source_TeslaController_mc_147_8_147_53_if_end;
+_home_user_garmin_source_TeslaController_mc_147_8_147_53_if_true:
+_home_user_garmin_source_TeslaController_mc_147_36_147_53_start:
+[ "/home/user/garmin/source/TeslaController.mc" 147 38 ]
+        %tmp.18 = "Wake";
+        ret %tmp.18;
+_home_user_garmin_source_TeslaController_mc_147_36_147_53_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_147_8_147_53_if_end;
+_home_user_garmin_source_TeslaController_mc_147_8_147_53_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 148 8 ]
+_home_user_garmin_source_TeslaController_mc_148_8_148_55_if_stmt:
+        symbol [ mIntent %tmp.20 148 12 19 ];
+        %tmp.20 = getv ? :mIntent;
+        symbol [ INTENT_TRUNK %tmp.22 148 23 35 ];
+        %tmp.22 = getv ? :INTENT_TRUNK;
+        %tmp.23 = eq %tmp.20 %tmp.22;
+        bf %tmp.23 @_home_user_garmin_source_TeslaController_mc_148_8_148_55_if_end;
+_home_user_garmin_source_TeslaController_mc_148_8_148_55_if_true:
+_home_user_garmin_source_TeslaController_mc_148_37_148_55_start:
+[ "/home/user/garmin/source/TeslaController.mc" 148 39 ]
+        %tmp.24 = "Trunk";
+        ret %tmp.24;
+_home_user_garmin_source_TeslaController_mc_148_37_148_55_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_148_8_148_55_if_end;
+_home_user_garmin_source_TeslaController_mc_148_8_148_55_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 149 8 ]
+_home_user_garmin_source_TeslaController_mc_149_8_149_55_if_stmt:
+        symbol [ mIntent %tmp.26 149 12 19 ];
+        %tmp.26 = getv ? :mIntent;
+        symbol [ INTENT_FRUNK %tmp.28 149 23 35 ];
+        %tmp.28 = getv ? :INTENT_FRUNK;
+        %tmp.29 = eq %tmp.26 %tmp.28;
+        bf %tmp.29 @_home_user_garmin_source_TeslaController_mc_149_8_149_55_if_end;
+_home_user_garmin_source_TeslaController_mc_149_8_149_55_if_true:
+_home_user_garmin_source_TeslaController_mc_149_37_149_55_start:
+[ "/home/user/garmin/source/TeslaController.mc" 149 39 ]
+        %tmp.30 = "Frunk";
+        ret %tmp.30;
+_home_user_garmin_source_TeslaController_mc_149_37_149_55_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_149_8_149_55_if_end;
+_home_user_garmin_source_TeslaController_mc_149_8_149_55_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 150 8 ]
+        %tmp.31 = "Command";
+        ret %tmp.31;
+_home_user_garmin_source_TeslaController_mc_144_33_151_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 155; @symbol_functiondef = [onBleReady,155,13,23]; ]
+    function onBleReady() {
+_home_user_garmin_source_TeslaController_mc_155_26_170_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 157 8 ]
+_home_user_garmin_source_TeslaController_mc_157_8_169_8_if_stmt:
+        %tmp.1 = self;
+        symbol [ isPairing %tmp.2 157 12 21 ];
+        %tmp.2 = getv function %tmp.1 :isPairing;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        bf %tmp.3 @_home_user_garmin_source_TeslaController_mc_157_8_169_8_if_else_false;
+_home_user_garmin_source_TeslaController_mc_157_8_169_8_if_true:
+_home_user_garmin_source_TeslaController_mc_157_25_164_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 158 12 ]
+        %tmp.4 = self;
+        symbol [ report %tmp.5 158 12 18 ];
+        %tmp.5 = getv function %tmp.4 :report;
+        %tmp.6 = "Sending pairing request...";
+        invoke %tmp.4 %tmp.5(%tmp.6);
+[ "/home/user/garmin/source/TeslaController.mc" 159 12 ]
+        [ "_home_user_garmin_source_TeslaController_mc_157_25_164_8_start" "_home_user_garmin_source_TeslaController_mc_157_25_164_8_stop" ]
+        %role.1 = local;
+        symbol [ role %role.1 159 16 20 ];
+_home_user_garmin_source_TeslaController_mc_159_23_160_53_begin:
+        symbol [ mIntent %tmp.8 159 24 31 ];
+        %tmp.8 = getv ? :mIntent;
+        symbol [ INTENT_PAIR_OWNER %tmp.10 159 35 52 ];
+        %tmp.10 = getv ? :INTENT_PAIR_OWNER;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_home_user_garmin_source_TeslaController_mc_159_23_160_53_else_false;
+_home_user_garmin_source_TeslaController_mc_159_23_160_53_true:
+        symbol [ TeslaProto %tmp.13 160 18 28 ];
+        %tmp.13 = getv ? :TeslaProto;
+        symbol [ ROLE_OWNER %tmp.14 160 29 39 ];
+        %tmp.14 = getv %tmp.13 :ROLE_OWNER;
+        push %tmp.14;
+        goto @_home_user_garmin_source_TeslaController_mc_159_23_160_53_end;
+_home_user_garmin_source_TeslaController_mc_159_23_160_53_else_false:
+        symbol [ TeslaProto %tmp.16 160 42 52 ];
+        %tmp.16 = getv ? :TeslaProto;
+        symbol [ ROLE_DRIVER %tmp.17 160 53 64 ];
+        %tmp.17 = getv %tmp.16 :ROLE_DRIVER;
+        push %tmp.17;
+_home_user_garmin_source_TeslaController_mc_159_23_160_53_end:
+        %tmp.18 = phi [%tmp.11 @_home_user_garmin_source_TeslaController_mc_159_23_160_53_begin] [%tmp.14 @_home_user_garmin_source_TeslaController_mc_159_23_160_53_true] [%tmp.17 @_home_user_garmin_source_TeslaController_mc_159_23_160_53_else_false] [%tmp.18 @_home_user_garmin_source_TeslaController_mc_159_23_160_53_end];
+        lputv %role.1 %tmp.18;
+        symbol [ role %role.1 159 16 20 ];
+[ "/home/user/garmin/source/TeslaController.mc" 161 12 ]
+        symbol [ mBle %tmp.20 161 12 16 ];
+        %tmp.20 = getv ? :mBle;
+        symbol [ send %tmp.21 161 17 21 ];
+        %tmp.21 = getv function %tmp.20 :send;
+        symbol [ mKey %tmp.23 161 22 26 ];
+        %tmp.23 = getv ? :mKey;
+        symbol [ buildAddKey %tmp.24 161 27 38 ];
+        %tmp.24 = getv function %tmp.23 :buildAddKey;
+        %tmp.25 = lgetv %role.1;
+        symbol [ role %tmp.25 161 39 43 ];
+        %tmp.26 = invoke %tmp.23 %tmp.24(%tmp.25);
+        invoke %tmp.20 %tmp.21(%tmp.26);
+[ "/home/user/garmin/source/TeslaController.mc" 162 12 ]
+        symbol [ STATE_WAIT_PAIR %tmp.28 162 21 36 ];
+        %tmp.28 = getv ? :STATE_WAIT_PAIR;
+        symbol [ mState ? 162 12 18 ];
+        putv self :mState %tmp.28;
+[ "/home/user/garmin/source/TeslaController.mc" 163 12 ]
+        %tmp.29 = self;
+        symbol [ armReplyTimer %tmp.30 163 12 25 ];
+        %tmp.30 = getv function %tmp.29 :armReplyTimer;
+        invoke %tmp.29 %tmp.30();
+_home_user_garmin_source_TeslaController_mc_157_25_164_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_157_8_169_8_if_end;
+_home_user_garmin_source_TeslaController_mc_157_8_169_8_if_else_false:
+_home_user_garmin_source_TeslaController_mc_164_15_169_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 165 12 ]
+        %tmp.31 = self;
+        symbol [ report %tmp.32 165 12 18 ];
+        %tmp.32 = getv function %tmp.31 :report;
+        %tmp.33 = "Authenticating...";
+        invoke %tmp.31 %tmp.32(%tmp.33);
+[ "/home/user/garmin/source/TeslaController.mc" 166 12 ]
+        symbol [ mBle %tmp.35 166 12 16 ];
+        %tmp.35 = getv ? :mBle;
+        symbol [ send %tmp.36 166 17 21 ];
+        %tmp.36 = getv function %tmp.35 :send;
+        symbol [ mKey %tmp.38 166 22 26 ];
+        %tmp.38 = getv ? :mKey;
+        symbol [ buildHandshake %tmp.39 166 27 41 ];
+        %tmp.39 = getv function %tmp.38 :buildHandshake;
+        symbol [ mDomain %tmp.41 166 42 49 ];
+        %tmp.41 = getv ? :mDomain;
+        %tmp.42 = invoke %tmp.38 %tmp.39(%tmp.41);
+        invoke %tmp.35 %tmp.36(%tmp.42);
+[ "/home/user/garmin/source/TeslaController.mc" 167 12 ]
+        symbol [ STATE_WAIT_SESSION %tmp.44 167 21 39 ];
+        %tmp.44 = getv ? :STATE_WAIT_SESSION;
+        symbol [ mState ? 167 12 18 ];
+        putv self :mState %tmp.44;
+[ "/home/user/garmin/source/TeslaController.mc" 168 12 ]
+        %tmp.45 = self;
+        symbol [ armReplyTimer %tmp.46 168 12 25 ];
+        %tmp.46 = getv function %tmp.45 :armReplyTimer;
+        invoke %tmp.45 %tmp.46();
+_home_user_garmin_source_TeslaController_mc_164_15_169_8_stop:
+_home_user_garmin_source_TeslaController_mc_157_8_169_8_if_end:
+_home_user_garmin_source_TeslaController_mc_155_26_170_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 172; @symbol_functiondef = [onBleMessage,172,13,25]; @symbol_param<0> = [message,172,26,33]; ]
+    function onBleMessage(message) {
+_home_user_garmin_source_TeslaController_mc_172_35_196_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 173 8 ]
+_home_user_garmin_source_TeslaController_mc_173_8_175_8_if_stmt:
+_home_user_garmin_source_TeslaController_mc_173_12_173_46_begin:
+        symbol [ mState %tmp.2 173 12 18 ];
+        %tmp.2 = getv ? :mState;
+        symbol [ STATE_IDLE %tmp.4 173 22 32 ];
+        %tmp.4 = getv ? :STATE_IDLE;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bt %tmp.5 @_home_user_garmin_source_TeslaController_mc_173_8_175_8_if_true;
+_home_user_garmin_source_TeslaController_mc_173_36_173_46_false:
+        symbol [ mState %tmp.7 173 36 42 ];
+        %tmp.7 = getv ? :mState;
+        symbol [ STATE_CONNECTING %tmp.9 173 46 62 ];
+        %tmp.9 = getv ? :STATE_CONNECTING;
+        %tmp.10 = eq %tmp.7 %tmp.9;
+        push %tmp.10;
+_home_user_garmin_source_TeslaController_mc_173_36_173_46_end:
+        %tmp.11 = phi [%tmp.5 @_home_user_garmin_source_TeslaController_mc_173_12_173_46_begin] [%tmp.10 @_home_user_garmin_source_TeslaController_mc_173_36_173_46_false] [%tmp.11 @_home_user_garmin_source_TeslaController_mc_173_36_173_46_end];
+        bf %tmp.11 @_home_user_garmin_source_TeslaController_mc_173_8_175_8_if_end;
+_home_user_garmin_source_TeslaController_mc_173_8_175_8_if_true:
+_home_user_garmin_source_TeslaController_mc_173_64_175_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 174 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_173_64_175_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_173_8_175_8_if_end;
+_home_user_garmin_source_TeslaController_mc_173_8_175_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 178 8 ]
+        try @_home_user_garmin_source_TeslaController_mc_178_8_195_8_beginTry @_home_user_garmin_source_TeslaController_mc_178_8_195_8_endTry @_home_user_garmin_source_TeslaController_mc_178_8_195_8_catch @_home_user_garmin_source_TeslaController_mc_178_8_195_8_finally;
+_home_user_garmin_source_TeslaController_mc_178_8_195_8_beginTry:
+_home_user_garmin_source_TeslaController_mc_178_12_193_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 179 12 ]
+_home_user_garmin_source_TeslaController_mc_179_12_182_12_if_stmt:
+        symbol [ mState %tmp.13 179 16 22 ];
+        %tmp.13 = getv ? :mState;
+        symbol [ STATE_WAIT_PAIR %tmp.15 179 26 41 ];
+        %tmp.15 = getv ? :STATE_WAIT_PAIR;
+        %tmp.16 = eq %tmp.13 %tmp.15;
+        bf %tmp.16 @_home_user_garmin_source_TeslaController_mc_179_12_182_12_if_end;
+_home_user_garmin_source_TeslaController_mc_179_12_182_12_if_true:
+_home_user_garmin_source_TeslaController_mc_179_43_182_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 180 16 ]
+        %tmp.17 = self;
+        symbol [ handlePairResponse %tmp.18 180 16 34 ];
+        %tmp.18 = getv function %tmp.17 :handlePairResponse;
+        %tmp.19 = lgetv %message;
+        symbol [ message %tmp.19 180 35 42 ];
+        invoke %tmp.17 %tmp.18(%tmp.19);
+[ "/home/user/garmin/source/TeslaController.mc" 181 16 ]
+        jsr @_home_user_garmin_source_TeslaController_mc_178_8_195_8_finally;
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_179_43_182_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_179_12_182_12_if_end;
+_home_user_garmin_source_TeslaController_mc_179_12_182_12_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 183 12 ]
+        [ "_home_user_garmin_source_TeslaController_mc_178_12_193_8_start" "_home_user_garmin_source_TeslaController_mc_178_12_193_8_stop" ]
+        %routable.1 = local;
+        symbol [ routable %routable.1 183 16 24 ];
+        symbol [ TeslaProto %tmp.21 183 27 37 ];
+        %tmp.21 = getv ? :TeslaProto;
+        symbol [ parseRoutable %tmp.22 183 38 51 ];
+        %tmp.22 = getv function %tmp.21 :parseRoutable;
+        %tmp.23 = lgetv %message;
+        symbol [ message %tmp.23 183 52 59 ];
+        %tmp.24 = invoke %tmp.21 %tmp.22(%tmp.23);
+        lputv %routable.1 %tmp.24;
+        symbol [ routable %routable.1 183 16 24 ];
+[ "/home/user/garmin/source/TeslaController.mc" 184 12 ]
+_home_user_garmin_source_TeslaController_mc_184_12_187_12_if_stmt:
+_home_user_garmin_source_TeslaController_mc_184_16_185_88_begin:
+        symbol [ mKey %tmp.26 184 17 21 ];
+        %tmp.26 = getv ? :mKey;
+        symbol [ isForUs %tmp.27 184 22 29 ];
+        %tmp.27 = getv function %tmp.26 :isForUs;
+        %tmp.28 = lgetv %routable.1;
+        symbol [ routable %tmp.28 184 30 38 ];
+        %tmp.29 = invoke %tmp.26 %tmp.27(%tmp.28);
+        %tmp.30 = not %tmp.29;
+        bt %tmp.30 @_home_user_garmin_source_TeslaController_mc_184_12_187_12_if_true;
+_home_user_garmin_source_TeslaController_mc_185_23_185_88_false:
+_home_user_garmin_source_TeslaController_mc_185_24_185_81_begin:
+        %tmp.31 = lgetv %routable.1;
+        symbol [ routable %tmp.31 185 24 32 ];
+        symbol [ hasKey %tmp.32 185 33 39 ];
+        %tmp.32 = getv function %tmp.31 :hasKey;
+        %tmp.34 = const :fromDomain;
+        symbol [ fromDomain %tmp.34 185 41 51 const ];
+        %tmp.35 = invoke %tmp.31 %tmp.32(%tmp.34);
+        bf %tmp.35 @_home_user_garmin_source_TeslaController_mc_184_12_187_12_if_end;
+_home_user_garmin_source_TeslaController_mc_185_56_185_81_true:
+        %tmp.36 = lgetv %routable.1;
+        symbol [ routable %tmp.36 185 56 64 ];
+        %tmp.38 = const :fromDomain;
+        symbol [ fromDomain %tmp.38 185 66 76 const ];
+        %tmp.39 = agetv %tmp.36 %tmp.38;
+        symbol [ mDomain %tmp.41 185 81 88 ];
+        %tmp.41 = getv ? :mDomain;
+        %tmp.42 = ne %tmp.39 %tmp.41;
+        push %tmp.42;
+_home_user_garmin_source_TeslaController_mc_185_56_185_81_end:
+        %tmp.43 = phi [%tmp.35 @_home_user_garmin_source_TeslaController_mc_185_24_185_81_begin] [%tmp.42 @_home_user_garmin_source_TeslaController_mc_185_56_185_81_true] [%tmp.43 @_home_user_garmin_source_TeslaController_mc_185_56_185_81_end];
+        push %tmp.43;
+_home_user_garmin_source_TeslaController_mc_185_23_185_88_end:
+        %tmp.44 = phi [%tmp.30 @_home_user_garmin_source_TeslaController_mc_184_16_185_88_begin] [%tmp.43 @_home_user_garmin_source_TeslaController_mc_185_23_185_88_false] [%tmp.44 @_home_user_garmin_source_TeslaController_mc_185_23_185_88_end];
+        bf %tmp.44 @_home_user_garmin_source_TeslaController_mc_184_12_187_12_if_end;
+_home_user_garmin_source_TeslaController_mc_184_12_187_12_if_true:
+_home_user_garmin_source_TeslaController_mc_185_91_187_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 186 16 ]
+        jsr @_home_user_garmin_source_TeslaController_mc_178_8_195_8_finally;
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_185_91_187_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_184_12_187_12_if_end;
+_home_user_garmin_source_TeslaController_mc_184_12_187_12_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 188 12 ]
+_home_user_garmin_source_TeslaController_mc_188_12_192_12_if_stmt:
+        symbol [ mState %tmp.46 188 16 22 ];
+        %tmp.46 = getv ? :mState;
+        symbol [ STATE_WAIT_SESSION %tmp.48 188 26 44 ];
+        %tmp.48 = getv ? :STATE_WAIT_SESSION;
+        %tmp.49 = eq %tmp.46 %tmp.48;
+        bf %tmp.49 @_home_user_garmin_source_TeslaController_mc_188_12_192_12_if_false;
+_home_user_garmin_source_TeslaController_mc_188_12_192_12_if_true:
+_home_user_garmin_source_TeslaController_mc_188_46_190_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 189 16 ]
+        %tmp.50 = self;
+        symbol [ handleSessionResponse %tmp.51 189 16 37 ];
+        %tmp.51 = getv function %tmp.50 :handleSessionResponse;
+        %tmp.52 = lgetv %routable.1;
+        symbol [ routable %tmp.52 189 38 46 ];
+        invoke %tmp.50 %tmp.51(%tmp.52);
+_home_user_garmin_source_TeslaController_mc_188_46_190_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_188_12_192_12_if_end;
+_home_user_garmin_source_TeslaController_mc_188_12_192_12_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 190 19 ]
+_home_user_garmin_source_TeslaController_mc_190_19_192_12_if_stmt:
+        symbol [ mState %tmp.54 190 23 29 ];
+        %tmp.54 = getv ? :mState;
+        symbol [ STATE_WAIT_RESULT %tmp.56 190 33 50 ];
+        %tmp.56 = getv ? :STATE_WAIT_RESULT;
+        %tmp.57 = eq %tmp.54 %tmp.56;
+        bf %tmp.57 @_home_user_garmin_source_TeslaController_mc_190_19_192_12_if_end;
+_home_user_garmin_source_TeslaController_mc_190_19_192_12_if_true:
+_home_user_garmin_source_TeslaController_mc_190_52_192_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 191 16 ]
+        %tmp.58 = self;
+        symbol [ handleCommandResponse %tmp.59 191 16 37 ];
+        %tmp.59 = getv function %tmp.58 :handleCommandResponse;
+        %tmp.60 = lgetv %routable.1;
+        symbol [ routable %tmp.60 191 38 46 ];
+        invoke %tmp.58 %tmp.59(%tmp.60);
+_home_user_garmin_source_TeslaController_mc_190_52_192_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_190_19_192_12_if_end;
+_home_user_garmin_source_TeslaController_mc_190_19_192_12_if_end:
+_home_user_garmin_source_TeslaController_mc_188_12_192_12_if_end:
+_home_user_garmin_source_TeslaController_mc_178_12_193_8_stop:
+_home_user_garmin_source_TeslaController_mc_178_8_195_8_endTry:
+        jsr @_home_user_garmin_source_TeslaController_mc_178_8_195_8_finally;
+        goto @_home_user_garmin_source_TeslaController_mc_178_8_195_8_end;
+_home_user_garmin_source_TeslaController_mc_178_8_195_8_catch:
+        %tmp.61 = exception;
+        push %tmp.61;
+[ "/home/user/garmin/source/TeslaController.mc" 193 10 ]
+        [ "_home_user_garmin_source_TeslaController_mc_178_8_195_8_catch" "_home_user_garmin_source_TeslaController_mc_193_10_195_8_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 193 17 18 ];
+        %tmp.62 = dup %tmp.61;
+        lputv %e.2 %tmp.62;
+        symbol [ e %e.2 193 17 18 ];
+_home_user_garmin_source_TeslaController_mc_193_20_195_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 194 12 ]
+        pop;
+        jsr @_home_user_garmin_source_TeslaController_mc_178_8_195_8_finally;
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_193_20_195_8_stop:
+        jsr @_home_user_garmin_source_TeslaController_mc_178_8_195_8_finally;
+        pop;
+        goto @_home_user_garmin_source_TeslaController_mc_178_8_195_8_end;
+_home_user_garmin_source_TeslaController_mc_193_10_195_8_end:
+        try @_home_user_garmin_source_TeslaController_mc_178_8_195_8_catch @_home_user_garmin_source_TeslaController_mc_193_10_195_8_end @_home_user_garmin_source_TeslaController_mc_193_10_195_8_end @_home_user_garmin_source_TeslaController_mc_178_8_195_8_finally;
+        jsr @_home_user_garmin_source_TeslaController_mc_178_8_195_8_finally;
+        throw %tmp.61;
+_home_user_garmin_source_TeslaController_mc_178_8_195_8_finally:
+        jsrret;
+_home_user_garmin_source_TeslaController_mc_178_8_195_8_end:
+_home_user_garmin_source_TeslaController_mc_172_35_196_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 204; @symbol_functiondef = [handlePairResponse,204,20,38]; @symbol_param<0> = [message,204,39,46]; ]
+    protected
+    function handlePairResponse(message) {
+_home_user_garmin_source_TeslaController_mc_204_48_241_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 205 8 ]
+        [ "_home_user_garmin_source_TeslaController_mc_204_48_241_4_start" "_home_user_garmin_source_TeslaController_mc_204_48_241_4_stop" ]
+        %vc.1 = local;
+        symbol [ vc %vc.1 205 12 14 ];
+[ "/home/user/garmin/source/TeslaController.mc" 206 8 ]
+_home_user_garmin_source_TeslaController_mc_206_8_218_8_if_stmt:
+        symbol [ TeslaProto %tmp.2 206 12 22 ];
+        %tmp.2 = getv ? :TeslaProto;
+        symbol [ isRoutable %tmp.3 206 23 33 ];
+        %tmp.3 = getv function %tmp.2 :isRoutable;
+        %tmp.4 = lgetv %message;
+        symbol [ message %tmp.4 206 34 41 ];
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        bf %tmp.5 @_home_user_garmin_source_TeslaController_mc_206_8_218_8_if_else_false;
+_home_user_garmin_source_TeslaController_mc_206_8_218_8_if_true:
+_home_user_garmin_source_TeslaController_mc_206_44_216_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 207 12 ]
+        [ "_home_user_garmin_source_TeslaController_mc_206_44_216_8_start" "_home_user_garmin_source_TeslaController_mc_206_44_216_8_stop" ]
+        %routable.2 = local;
+        symbol [ routable %routable.2 207 16 24 ];
+        symbol [ TeslaProto %tmp.7 207 27 37 ];
+        %tmp.7 = getv ? :TeslaProto;
+        symbol [ parseRoutable %tmp.8 207 38 51 ];
+        %tmp.8 = getv function %tmp.7 :parseRoutable;
+        %tmp.9 = lgetv %message;
+        symbol [ message %tmp.9 207 52 59 ];
+        %tmp.10 = invoke %tmp.7 %tmp.8(%tmp.9);
+        lputv %routable.2 %tmp.10;
+        symbol [ routable %routable.2 207 16 24 ];
+[ "/home/user/garmin/source/TeslaController.mc" 208 12 ]
+_home_user_garmin_source_TeslaController_mc_208_12_211_12_if_stmt:
+_home_user_garmin_source_TeslaController_mc_208_16_208_63_begin:
+        %tmp.11 = lgetv %routable.2;
+        symbol [ routable %tmp.11 208 16 24 ];
+        symbol [ hasKey %tmp.12 208 25 31 ];
+        %tmp.12 = getv function %tmp.11 :hasKey;
+        %tmp.14 = const :fault;
+        symbol [ fault %tmp.14 208 33 38 const ];
+        %tmp.15 = invoke %tmp.11 %tmp.12(%tmp.14);
+        bf %tmp.15 @_home_user_garmin_source_TeslaController_mc_208_12_211_12_if_end;
+_home_user_garmin_source_TeslaController_mc_208_43_208_63_true:
+        %tmp.16 = lgetv %routable.2;
+        symbol [ routable %tmp.16 208 43 51 ];
+        %tmp.18 = const :fault;
+        symbol [ fault %tmp.18 208 53 58 const ];
+        %tmp.19 = agetv %tmp.16 %tmp.18;
+        %tmp.20 = 0;
+        %tmp.21 = ne %tmp.19 %tmp.20;
+        push %tmp.21;
+_home_user_garmin_source_TeslaController_mc_208_43_208_63_end:
+        %tmp.22 = phi [%tmp.15 @_home_user_garmin_source_TeslaController_mc_208_16_208_63_begin] [%tmp.21 @_home_user_garmin_source_TeslaController_mc_208_43_208_63_true] [%tmp.22 @_home_user_garmin_source_TeslaController_mc_208_43_208_63_end];
+        bf %tmp.22 @_home_user_garmin_source_TeslaController_mc_208_12_211_12_if_end;
+_home_user_garmin_source_TeslaController_mc_208_12_211_12_if_true:
+_home_user_garmin_source_TeslaController_mc_208_66_211_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 209 16 ]
+        %tmp.23 = self;
+        symbol [ result %tmp.24 209 16 22 ];
+        %tmp.24 = getv function %tmp.23 :result;
+        %tmp.25 = false;
+        %tmp.26 = self;
+        symbol [ faultMessage %tmp.27 209 30 42 ];
+        %tmp.27 = getv function %tmp.26 :faultMessage;
+        %tmp.28 = lgetv %routable.2;
+        symbol [ routable %tmp.28 209 43 51 ];
+        %tmp.30 = const :fault;
+        symbol [ fault %tmp.30 209 53 58 const ];
+        %tmp.31 = agetv %tmp.28 %tmp.30;
+        %tmp.32 = invoke %tmp.26 %tmp.27(%tmp.31);
+        invoke %tmp.23 %tmp.24(%tmp.25, %tmp.32);
+[ "/home/user/garmin/source/TeslaController.mc" 210 16 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_208_66_211_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_208_12_211_12_if_end;
+_home_user_garmin_source_TeslaController_mc_208_12_211_12_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 212 12 ]
+_home_user_garmin_source_TeslaController_mc_212_12_214_12_if_stmt:
+        %tmp.33 = lgetv %routable.2;
+        symbol [ routable %tmp.33 212 17 25 ];
+        symbol [ hasKey %tmp.34 212 26 32 ];
+        %tmp.34 = getv function %tmp.33 :hasKey;
+        %tmp.36 = const :payload;
+        symbol [ payload %tmp.36 212 34 41 const ];
+        %tmp.37 = invoke %tmp.33 %tmp.34(%tmp.36);
+        %tmp.38 = not %tmp.37;
+        bf %tmp.38 @_home_user_garmin_source_TeslaController_mc_212_12_214_12_if_end;
+_home_user_garmin_source_TeslaController_mc_212_12_214_12_if_true:
+_home_user_garmin_source_TeslaController_mc_212_44_214_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 213 16 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_212_44_214_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_212_12_214_12_if_end;
+_home_user_garmin_source_TeslaController_mc_212_12_214_12_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 215 12 ]
+        symbol [ TeslaProto %tmp.40 215 17 27 ];
+        %tmp.40 = getv ? :TeslaProto;
+        symbol [ parseFromVcsec %tmp.41 215 28 42 ];
+        %tmp.41 = getv function %tmp.40 :parseFromVcsec;
+        %tmp.42 = lgetv %routable.2;
+        symbol [ routable %tmp.42 215 43 51 ];
+        %tmp.44 = const :payload;
+        symbol [ payload %tmp.44 215 53 60 const ];
+        %tmp.45 = agetv %tmp.42 %tmp.44;
+        %tmp.46 = invoke %tmp.40 %tmp.41(%tmp.45);
+        lputv %vc.1 %tmp.46;
+        symbol [ vc %vc.1 215 12 14 ];
+_home_user_garmin_source_TeslaController_mc_206_44_216_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_206_8_218_8_if_end;
+_home_user_garmin_source_TeslaController_mc_206_8_218_8_if_else_false:
+_home_user_garmin_source_TeslaController_mc_216_15_218_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 217 12 ]
+        symbol [ TeslaProto %tmp.48 217 17 27 ];
+        %tmp.48 = getv ? :TeslaProto;
+        symbol [ parseFromVcsec %tmp.49 217 28 42 ];
+        %tmp.49 = getv function %tmp.48 :parseFromVcsec;
+        %tmp.50 = lgetv %message;
+        symbol [ message %tmp.50 217 43 50 ];
+        %tmp.51 = invoke %tmp.48 %tmp.49(%tmp.50);
+        lputv %vc.1 %tmp.51;
+        symbol [ vc %vc.1 217 12 14 ];
+_home_user_garmin_source_TeslaController_mc_216_15_218_8_stop:
+_home_user_garmin_source_TeslaController_mc_206_8_218_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 220 8 ]
+_home_user_garmin_source_TeslaController_mc_220_8_230_8_if_stmt:
+        %tmp.52 = lgetv %vc.1;
+        symbol [ vc %tmp.52 220 12 14 ];
+        symbol [ hasKey %tmp.53 220 15 21 ];
+        %tmp.53 = getv function %tmp.52 :hasKey;
+        %tmp.55 = const :whitelistInfo;
+        symbol [ whitelistInfo %tmp.55 220 23 36 const ];
+        %tmp.56 = invoke %tmp.52 %tmp.53(%tmp.55);
+        bf %tmp.56 @_home_user_garmin_source_TeslaController_mc_220_8_230_8_if_end;
+_home_user_garmin_source_TeslaController_mc_220_8_230_8_if_true:
+_home_user_garmin_source_TeslaController_mc_220_39_230_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 221 12 ]
+        [ "_home_user_garmin_source_TeslaController_mc_220_39_230_8_start" "_home_user_garmin_source_TeslaController_mc_220_39_230_8_stop" ]
+        %info.3 = local;
+        symbol [ info %info.3 221 16 20 ];
+        %tmp.57 = lgetv %vc.1;
+        symbol [ vc %tmp.57 221 23 25 ];
+        %tmp.59 = const :whitelistInfo;
+        symbol [ whitelistInfo %tmp.59 221 27 40 const ];
+        %tmp.60 = agetv %tmp.57 %tmp.59;
+        lputv %info.3 %tmp.60;
+        symbol [ info %info.3 221 16 20 ];
+[ "/home/user/garmin/source/TeslaController.mc" 222 12 ]
+_home_user_garmin_source_TeslaController_mc_222_12_228_12_if_stmt:
+        %tmp.61 = lgetv %info.3;
+        symbol [ info %tmp.61 222 16 20 ];
+        symbol [ TeslaProto %tmp.63 222 24 34 ];
+        %tmp.63 = getv ? :TeslaProto;
+        symbol [ WL_INFO_NONE %tmp.64 222 35 47 ];
+        %tmp.64 = getv %tmp.63 :WL_INFO_NONE;
+        %tmp.65 = eq %tmp.61 %tmp.64;
+        bf %tmp.65 @_home_user_garmin_source_TeslaController_mc_222_12_228_12_if_false;
+_home_user_garmin_source_TeslaController_mc_222_12_228_12_if_true:
+_home_user_garmin_source_TeslaController_mc_222_49_224_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 223 16 ]
+        %tmp.66 = self;
+        symbol [ result %tmp.67 223 16 22 ];
+        %tmp.67 = getv function %tmp.66 :result;
+        %tmp.68 = true;
+        %tmp.69 = "Watch paired!";
+        invoke %tmp.66 %tmp.67(%tmp.68, %tmp.69);
+_home_user_garmin_source_TeslaController_mc_222_49_224_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_222_12_228_12_if_end;
+_home_user_garmin_source_TeslaController_mc_222_12_228_12_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 224 19 ]
+_home_user_garmin_source_TeslaController_mc_224_19_228_12_if_stmt:
+        %tmp.70 = lgetv %info.3;
+        symbol [ info %tmp.70 224 23 27 ];
+        symbol [ TeslaProto %tmp.72 224 31 41 ];
+        %tmp.72 = getv ? :TeslaProto;
+        symbol [ WL_INFO_ALREADY_ON_WHITELIST %tmp.73 224 42 70 ];
+        %tmp.73 = getv %tmp.72 :WL_INFO_ALREADY_ON_WHITELIST;
+        %tmp.74 = eq %tmp.70 %tmp.73;
+        bf %tmp.74 @_home_user_garmin_source_TeslaController_mc_224_19_228_12_if_else_false;
+_home_user_garmin_source_TeslaController_mc_224_19_228_12_if_true:
+_home_user_garmin_source_TeslaController_mc_224_72_226_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 225 16 ]
+        %tmp.75 = self;
+        symbol [ result %tmp.76 225 16 22 ];
+        %tmp.76 = getv function %tmp.75 :result;
+        %tmp.77 = true;
+        %tmp.78 = "This watch is already paired.";
+        invoke %tmp.75 %tmp.76(%tmp.77, %tmp.78);
+_home_user_garmin_source_TeslaController_mc_224_72_226_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_224_19_228_12_if_end;
+_home_user_garmin_source_TeslaController_mc_224_19_228_12_if_else_false:
+_home_user_garmin_source_TeslaController_mc_226_19_228_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 227 16 ]
+        %tmp.79 = self;
+        symbol [ result %tmp.80 227 16 22 ];
+        %tmp.80 = getv function %tmp.79 :result;
+        %tmp.81 = false;
+        %tmp.82 = self;
+        symbol [ whitelistMessage %tmp.83 227 30 46 ];
+        %tmp.83 = getv function %tmp.82 :whitelistMessage;
+        %tmp.84 = lgetv %info.3;
+        symbol [ info %tmp.84 227 47 51 ];
+        %tmp.85 = invoke %tmp.82 %tmp.83(%tmp.84);
+        invoke %tmp.79 %tmp.80(%tmp.81, %tmp.85);
+_home_user_garmin_source_TeslaController_mc_226_19_228_12_stop:
+_home_user_garmin_source_TeslaController_mc_224_19_228_12_if_end:
+_home_user_garmin_source_TeslaController_mc_222_12_228_12_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 229 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_220_39_230_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_220_8_230_8_if_end;
+_home_user_garmin_source_TeslaController_mc_220_8_230_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 231 8 ]
+_home_user_garmin_source_TeslaController_mc_231_8_234_8_if_stmt:
+        %tmp.86 = lgetv %vc.1;
+        symbol [ vc %tmp.86 231 12 14 ];
+        symbol [ hasKey %tmp.87 231 15 21 ];
+        %tmp.87 = getv function %tmp.86 :hasKey;
+        %tmp.89 = const :nominalError;
+        symbol [ nominalError %tmp.89 231 23 35 const ];
+        %tmp.90 = invoke %tmp.86 %tmp.87(%tmp.89);
+        bf %tmp.90 @_home_user_garmin_source_TeslaController_mc_231_8_234_8_if_end;
+_home_user_garmin_source_TeslaController_mc_231_8_234_8_if_true:
+_home_user_garmin_source_TeslaController_mc_231_38_234_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 232 12 ]
+        %tmp.91 = self;
+        symbol [ result %tmp.92 232 12 18 ];
+        %tmp.92 = getv function %tmp.91 :result;
+        %tmp.93 = false;
+        %tmp.94 = self;
+        symbol [ nominalMessage %tmp.95 232 26 40 ];
+        %tmp.95 = getv function %tmp.94 :nominalMessage;
+        %tmp.96 = lgetv %vc.1;
+        symbol [ vc %tmp.96 232 41 43 ];
+        %tmp.98 = const :nominalError;
+        symbol [ nominalError %tmp.98 232 45 57 const ];
+        %tmp.99 = agetv %tmp.96 %tmp.98;
+        %tmp.100 = invoke %tmp.94 %tmp.95(%tmp.99);
+        invoke %tmp.91 %tmp.92(%tmp.93, %tmp.100);
+[ "/home/user/garmin/source/TeslaController.mc" 233 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_231_38_234_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_231_8_234_8_if_end;
+_home_user_garmin_source_TeslaController_mc_231_8_234_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 235 8 ]
+_home_user_garmin_source_TeslaController_mc_235_8_239_8_if_stmt:
+_home_user_garmin_source_TeslaController_mc_235_12_235_82_begin:
+_home_user_garmin_source_TeslaController_mc_235_12_235_64_begin:
+        %tmp.101 = lgetv %vc.1;
+        symbol [ vc %tmp.101 235 12 14 ];
+        symbol [ hasKey %tmp.102 235 15 21 ];
+        %tmp.102 = getv function %tmp.101 :hasKey;
+        %tmp.104 = const :opStatus;
+        symbol [ opStatus %tmp.104 235 23 31 const ];
+        %tmp.105 = invoke %tmp.101 %tmp.102(%tmp.104);
+        bf %tmp.105 @_home_user_garmin_source_TeslaController_mc_235_8_239_8_if_end;
+_home_user_garmin_source_TeslaController_mc_235_36_235_64_true:
+        %tmp.106 = lgetv %vc.1;
+        symbol [ vc %tmp.106 235 36 38 ];
+        %tmp.108 = const :opStatus;
+        symbol [ opStatus %tmp.108 235 40 48 const ];
+        %tmp.109 = agetv %tmp.106 %tmp.108;
+        symbol [ TeslaProto %tmp.111 235 53 63 ];
+        %tmp.111 = getv ? :TeslaProto;
+        symbol [ OPSTATUS_WAIT %tmp.112 235 64 77 ];
+        %tmp.112 = getv %tmp.111 :OPSTATUS_WAIT;
+        %tmp.113 = eq %tmp.109 %tmp.112;
+        push %tmp.113;
+_home_user_garmin_source_TeslaController_mc_235_36_235_64_end:
+        %tmp.114 = phi [%tmp.105 @_home_user_garmin_source_TeslaController_mc_235_12_235_64_begin] [%tmp.113 @_home_user_garmin_source_TeslaController_mc_235_36_235_64_true] [%tmp.114 @_home_user_garmin_source_TeslaController_mc_235_36_235_64_end];
+        bf %tmp.114 @_home_user_garmin_source_TeslaController_mc_235_8_239_8_if_end;
+_home_user_garmin_source_TeslaController_mc_235_81_235_82_true:
+        symbol [ mPairWaiting %tmp.116 235 82 94 ];
+        %tmp.116 = getv ? :mPairWaiting;
+        %tmp.117 = not %tmp.116;
+        push %tmp.117;
+_home_user_garmin_source_TeslaController_mc_235_81_235_82_end:
+        %tmp.118 = phi [%tmp.114 @_home_user_garmin_source_TeslaController_mc_235_12_235_82_begin] [%tmp.117 @_home_user_garmin_source_TeslaController_mc_235_81_235_82_true] [%tmp.118 @_home_user_garmin_source_TeslaController_mc_235_81_235_82_end];
+        bf %tmp.118 @_home_user_garmin_source_TeslaController_mc_235_8_239_8_if_end;
+_home_user_garmin_source_TeslaController_mc_235_8_239_8_if_true:
+_home_user_garmin_source_TeslaController_mc_235_96_239_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 236 12 ]
+        %tmp.119 = true;
+        symbol [ mPairWaiting ? 236 12 24 ];
+        putv self :mPairWaiting %tmp.119;
+[ "/home/user/garmin/source/TeslaController.mc" 237 12 ]
+        %tmp.120 = self;
+        symbol [ report %tmp.121 237 12 18 ];
+        %tmp.121 = getv function %tmp.120 :report;
+        %tmp.122 = "Tap your key card on the console, then confirm on screen.";
+        invoke %tmp.120 %tmp.121(%tmp.122);
+[ "/home/user/garmin/source/TeslaController.mc" 238 12 ]
+        %tmp.123 = self;
+        symbol [ armReplyTimerFor %tmp.124 238 12 28 ];
+        %tmp.124 = getv function %tmp.123 :armReplyTimerFor;
+        symbol [ PAIR_TAP_TIMEOUT_MS %tmp.126 238 29 48 ];
+        %tmp.126 = getv ? :PAIR_TAP_TIMEOUT_MS;
+        invoke %tmp.123 %tmp.124(%tmp.126);
+_home_user_garmin_source_TeslaController_mc_235_96_239_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_235_8_239_8_if_end;
+_home_user_garmin_source_TeslaController_mc_235_8_239_8_if_end:
+_home_user_garmin_source_TeslaController_mc_204_48_241_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 245; @symbol_functiondef = [handleSessionResponse,245,20,41]; @symbol_param<0> = [routable,245,42,50]; ]
+    protected
+    function handleSessionResponse(routable) {
+_home_user_garmin_source_TeslaController_mc_245_52_265_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 246 8 ]
+_home_user_garmin_source_TeslaController_mc_246_8_249_8_if_stmt:
+_home_user_garmin_source_TeslaController_mc_246_12_246_59_begin:
+        %tmp.1 = lgetv %routable;
+        symbol [ routable %tmp.1 246 12 20 ];
+        symbol [ hasKey %tmp.2 246 21 27 ];
+        %tmp.2 = getv function %tmp.1 :hasKey;
+        %tmp.4 = const :fault;
+        symbol [ fault %tmp.4 246 29 34 const ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        bf %tmp.5 @_home_user_garmin_source_TeslaController_mc_246_8_249_8_if_end;
+_home_user_garmin_source_TeslaController_mc_246_39_246_59_true:
+        %tmp.6 = lgetv %routable;
+        symbol [ routable %tmp.6 246 39 47 ];
+        %tmp.8 = const :fault;
+        symbol [ fault %tmp.8 246 49 54 const ];
+        %tmp.9 = agetv %tmp.6 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        push %tmp.11;
+_home_user_garmin_source_TeslaController_mc_246_39_246_59_end:
+        %tmp.12 = phi [%tmp.5 @_home_user_garmin_source_TeslaController_mc_246_12_246_59_begin] [%tmp.11 @_home_user_garmin_source_TeslaController_mc_246_39_246_59_true] [%tmp.12 @_home_user_garmin_source_TeslaController_mc_246_39_246_59_end];
+        bf %tmp.12 @_home_user_garmin_source_TeslaController_mc_246_8_249_8_if_end;
+_home_user_garmin_source_TeslaController_mc_246_8_249_8_if_true:
+_home_user_garmin_source_TeslaController_mc_246_62_249_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 247 12 ]
+        %tmp.13 = self;
+        symbol [ failOrRetryHandshake %tmp.14 247 12 32 ];
+        %tmp.14 = getv function %tmp.13 :failOrRetryHandshake;
+        %tmp.15 = lgetv %routable;
+        symbol [ routable %tmp.15 247 33 41 ];
+        %tmp.17 = const :fault;
+        symbol [ fault %tmp.17 247 43 48 const ];
+        %tmp.18 = agetv %tmp.15 %tmp.17;
+        invoke %tmp.13 %tmp.14(%tmp.18);
+[ "/home/user/garmin/source/TeslaController.mc" 248 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_246_62_249_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_246_8_249_8_if_end;
+_home_user_garmin_source_TeslaController_mc_246_8_249_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 250 8 ]
+_home_user_garmin_source_TeslaController_mc_250_8_252_8_if_stmt:
+        %tmp.19 = lgetv %routable;
+        symbol [ routable %tmp.19 250 13 21 ];
+        symbol [ hasKey %tmp.20 250 22 28 ];
+        %tmp.20 = getv function %tmp.19 :hasKey;
+        %tmp.22 = const :sessionInfo;
+        symbol [ sessionInfo %tmp.22 250 30 41 const ];
+        %tmp.23 = invoke %tmp.19 %tmp.20(%tmp.22);
+        %tmp.24 = not %tmp.23;
+        bf %tmp.24 @_home_user_garmin_source_TeslaController_mc_250_8_252_8_if_end;
+_home_user_garmin_source_TeslaController_mc_250_8_252_8_if_true:
+_home_user_garmin_source_TeslaController_mc_250_44_252_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 251 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_250_44_252_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_250_8_252_8_if_end;
+_home_user_garmin_source_TeslaController_mc_250_8_252_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 253 8 ]
+        [ "_home_user_garmin_source_TeslaController_mc_245_52_265_4_start" "_home_user_garmin_source_TeslaController_mc_245_52_265_4_stop" ]
+        %status.1 = local;
+        symbol [ status %status.1 253 12 18 ];
+        symbol [ mKey %tmp.26 253 21 25 ];
+        %tmp.26 = getv ? :mKey;
+        symbol [ applySessionInfo %tmp.27 253 26 42 ];
+        %tmp.27 = getv function %tmp.26 :applySessionInfo;
+        symbol [ mDomain %tmp.29 253 43 50 ];
+        %tmp.29 = getv ? :mDomain;
+        %tmp.30 = lgetv %routable;
+        symbol [ routable %tmp.30 253 52 60 ];
+        %tmp.31 = invoke %tmp.26 %tmp.27(%tmp.29, %tmp.30);
+        lputv %status.1 %tmp.31;
+        symbol [ status %status.1 253 12 18 ];
+[ "/home/user/garmin/source/TeslaController.mc" 254 8 ]
+_home_user_garmin_source_TeslaController_mc_254_8_257_8_if_stmt:
+        %tmp.32 = lgetv %status.1;
+        symbol [ status %tmp.32 254 12 18 ];
+        symbol [ TeslaKey %tmp.34 254 22 30 ];
+        %tmp.34 = getv ? :TeslaKey;
+        symbol [ SESSION_NOT_PAIRED %tmp.35 254 31 49 ];
+        %tmp.35 = getv %tmp.34 :SESSION_NOT_PAIRED;
+        %tmp.36 = eq %tmp.32 %tmp.35;
+        bf %tmp.36 @_home_user_garmin_source_TeslaController_mc_254_8_257_8_if_end;
+_home_user_garmin_source_TeslaController_mc_254_8_257_8_if_true:
+_home_user_garmin_source_TeslaController_mc_254_51_257_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 255 12 ]
+        %tmp.37 = self;
+        symbol [ result %tmp.38 255 12 18 ];
+        %tmp.38 = getv function %tmp.37 :result;
+        %tmp.39 = false;
+        %tmp.40 = "Watch not paired with this car. Pair it first.";
+        invoke %tmp.37 %tmp.38(%tmp.39, %tmp.40);
+[ "/home/user/garmin/source/TeslaController.mc" 256 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_254_51_257_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_254_8_257_8_if_end;
+_home_user_garmin_source_TeslaController_mc_254_8_257_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 258 8 ]
+_home_user_garmin_source_TeslaController_mc_258_8_261_8_if_stmt:
+        %tmp.41 = lgetv %status.1;
+        symbol [ status %tmp.41 258 12 18 ];
+        symbol [ TeslaKey %tmp.43 258 22 30 ];
+        %tmp.43 = getv ? :TeslaKey;
+        symbol [ SESSION_OK %tmp.44 258 31 41 ];
+        %tmp.44 = getv %tmp.43 :SESSION_OK;
+        %tmp.45 = ne %tmp.41 %tmp.44;
+        bf %tmp.45 @_home_user_garmin_source_TeslaController_mc_258_8_261_8_if_end;
+_home_user_garmin_source_TeslaController_mc_258_8_261_8_if_true:
+_home_user_garmin_source_TeslaController_mc_258_43_261_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 259 12 ]
+        %tmp.46 = self;
+        symbol [ result %tmp.47 259 12 18 ];
+        %tmp.47 = getv function %tmp.46 :result;
+        %tmp.48 = false;
+        %tmp.49 = "Handshake failed (check VIN)";
+        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.49);
+[ "/home/user/garmin/source/TeslaController.mc" 260 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_258_43_261_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_258_8_261_8_if_end;
+_home_user_garmin_source_TeslaController_mc_258_8_261_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 262 8 ]
+        %tmp.50 = self;
+        symbol [ clearReplyTimer %tmp.51 262 8 23 ];
+        %tmp.51 = getv function %tmp.50 :clearReplyTimer;
+        invoke %tmp.50 %tmp.51();
+[ "/home/user/garmin/source/TeslaController.mc" 263 8 ]
+        %tmp.52 = self;
+        symbol [ report %tmp.53 263 8 14 ];
+        %tmp.53 = getv function %tmp.52 :report;
+        %tmp.54 = self;
+        symbol [ intentName %tmp.55 263 15 25 ];
+        %tmp.55 = getv function %tmp.54 :intentName;
+        %tmp.56 = invoke %tmp.54 %tmp.55();
+        %tmp.57 = "...";
+        %tmp.58 = add %tmp.56 %tmp.57;
+        invoke %tmp.52 %tmp.53(%tmp.58);
+[ "/home/user/garmin/source/TeslaController.mc" 264 8 ]
+        %tmp.59 = self;
+        symbol [ sendCommand %tmp.60 264 8 19 ];
+        %tmp.60 = getv function %tmp.59 :sendCommand;
+        invoke %tmp.59 %tmp.60();
+_home_user_garmin_source_TeslaController_mc_245_52_265_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 267; @symbol_functiondef = [failOrRetryHandshake,267,20,40]; @symbol_param<0> = [fault,267,41,46]; ]
+    protected
+    function failOrRetryHandshake(fault) {
+_home_user_garmin_source_TeslaController_mc_267_48_275_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 268 8 ]
+_home_user_garmin_source_TeslaController_mc_268_8_273_8_if_stmt:
+_home_user_garmin_source_TeslaController_mc_268_12_268_46_begin:
+        %tmp.1 = self;
+        symbol [ isTransient %tmp.2 268 12 23 ];
+        %tmp.2 = getv function %tmp.1 :isTransient;
+        %tmp.3 = lgetv %fault;
+        symbol [ fault %tmp.3 268 24 29 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        bf %tmp.4 @_home_user_garmin_source_TeslaController_mc_268_8_273_8_if_end;
+_home_user_garmin_source_TeslaController_mc_268_34_268_46_true:
+        symbol [ mAttempts %tmp.6 268 34 43 ];
+        %tmp.6 = getv ? :mAttempts;
+        symbol [ MAX_ATTEMPTS %tmp.8 268 46 58 ];
+        %tmp.8 = getv ? :MAX_ATTEMPTS;
+        %tmp.9 = lt %tmp.6 %tmp.8;
+        push %tmp.9;
+_home_user_garmin_source_TeslaController_mc_268_34_268_46_end:
+        %tmp.10 = phi [%tmp.4 @_home_user_garmin_source_TeslaController_mc_268_12_268_46_begin] [%tmp.9 @_home_user_garmin_source_TeslaController_mc_268_34_268_46_true] [%tmp.10 @_home_user_garmin_source_TeslaController_mc_268_34_268_46_end];
+        bf %tmp.10 @_home_user_garmin_source_TeslaController_mc_268_8_273_8_if_end;
+_home_user_garmin_source_TeslaController_mc_268_8_273_8_if_true:
+_home_user_garmin_source_TeslaController_mc_268_60_273_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 269 12 ]
+        symbol [ mAttempts %tmp.13 269 12 21 ];
+        %tmp.13 = getv ? :mAttempts;
+        %tmp.14 = add %tmp.13 1;
+        symbol [ mAttempts ? 269 12 21 ];
+        putv self :mAttempts dup %tmp.14;
+[ "/home/user/garmin/source/TeslaController.mc" 270 12 ]
+        %tmp.15 = self;
+        symbol [ report %tmp.16 270 12 18 ];
+        %tmp.16 = getv function %tmp.15 :report;
+        %tmp.17 = "Vehicle busy, retrying...";
+        invoke %tmp.15 %tmp.16(%tmp.17);
+[ "/home/user/garmin/source/TeslaController.mc" 271 12 ]
+        %tmp.18 = self;
+        symbol [ scheduleRetry %tmp.19 271 12 25 ];
+        %tmp.19 = getv function %tmp.18 :scheduleRetry;
+        invoke %tmp.18 %tmp.19();
+[ "/home/user/garmin/source/TeslaController.mc" 272 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_268_60_273_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_268_8_273_8_if_end;
+_home_user_garmin_source_TeslaController_mc_268_8_273_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 274 8 ]
+        %tmp.20 = self;
+        symbol [ result %tmp.21 274 8 14 ];
+        %tmp.21 = getv function %tmp.20 :result;
+        %tmp.22 = false;
+        %tmp.23 = self;
+        symbol [ faultMessage %tmp.24 274 22 34 ];
+        %tmp.24 = getv function %tmp.23 :faultMessage;
+        %tmp.25 = lgetv %fault;
+        symbol [ fault %tmp.25 274 35 40 ];
+        %tmp.26 = invoke %tmp.23 %tmp.24(%tmp.25);
+        invoke %tmp.20 %tmp.21(%tmp.22, %tmp.26);
+_home_user_garmin_source_TeslaController_mc_267_48_275_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 277; @symbol_functiondef = [sendCommand,277,20,31]; ]
+    protected
+    function sendCommand() {
+_home_user_garmin_source_TeslaController_mc_277_34_288_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 278 8 ]
+        [ "_home_user_garmin_source_TeslaController_mc_277_34_288_4_start" "_home_user_garmin_source_TeslaController_mc_277_34_288_4_stop" ]
+        %payload.1 = local;
+        symbol [ payload %payload.1 278 12 19 ];
+        %tmp.1 = self;
+        symbol [ payloadForIntent %tmp.2 278 22 38 ];
+        %tmp.2 = getv function %tmp.1 :payloadForIntent;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %payload.1 %tmp.3;
+        symbol [ payload %payload.1 278 12 19 ];
+[ "/home/user/garmin/source/TeslaController.mc" 279 8 ]
+        [ "_home_user_garmin_source_TeslaController_mc_277_34_288_4_start" "_home_user_garmin_source_TeslaController_mc_277_34_288_4_stop" ]
+        %cmd.2 = local;
+        symbol [ cmd %cmd.2 279 12 15 ];
+        symbol [ mKey %tmp.5 279 18 22 ];
+        %tmp.5 = getv ? :mKey;
+        symbol [ buildCommand %tmp.6 279 23 35 ];
+        %tmp.6 = getv function %tmp.5 :buildCommand;
+        symbol [ mDomain %tmp.8 279 36 43 ];
+        %tmp.8 = getv ? :mDomain;
+        %tmp.9 = lgetv %payload.1;
+        symbol [ payload %tmp.9 279 45 52 ];
+        %tmp.10 = invoke %tmp.5 %tmp.6(%tmp.8, %tmp.9);
+        lputv %cmd.2 %tmp.10;
+        symbol [ cmd %cmd.2 279 12 15 ];
+[ "/home/user/garmin/source/TeslaController.mc" 280 8 ]
+_home_user_garmin_source_TeslaController_mc_280_8_283_8_if_stmt:
+        %tmp.11 = lgetv %cmd.2;
+        symbol [ cmd %tmp.11 280 12 15 ];
+        %tmp.12 = null;
+        %tmp.13 = eq %tmp.11 %tmp.12;
+        bf %tmp.13 @_home_user_garmin_source_TeslaController_mc_280_8_283_8_if_end;
+_home_user_garmin_source_TeslaController_mc_280_8_283_8_if_true:
+_home_user_garmin_source_TeslaController_mc_280_25_283_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 281 12 ]
+        %tmp.14 = self;
+        symbol [ result %tmp.15 281 12 18 ];
+        %tmp.15 = getv function %tmp.14 :result;
+        %tmp.16 = false;
+        %tmp.17 = "No session";
+        invoke %tmp.14 %tmp.15(%tmp.16, %tmp.17);
+[ "/home/user/garmin/source/TeslaController.mc" 282 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_280_25_283_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_280_8_283_8_if_end;
+_home_user_garmin_source_TeslaController_mc_280_8_283_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 284 8 ]
+        symbol [ mAttempts %tmp.20 284 8 17 ];
+        %tmp.20 = getv ? :mAttempts;
+        %tmp.21 = add %tmp.20 1;
+        symbol [ mAttempts ? 284 8 17 ];
+        putv self :mAttempts dup %tmp.21;
+[ "/home/user/garmin/source/TeslaController.mc" 285 8 ]
+        symbol [ mBle %tmp.23 285 8 12 ];
+        %tmp.23 = getv ? :mBle;
+        symbol [ send %tmp.24 285 13 17 ];
+        %tmp.24 = getv function %tmp.23 :send;
+        %tmp.25 = lgetv %cmd.2;
+        symbol [ cmd %tmp.25 285 18 21 ];
+        invoke %tmp.23 %tmp.24(%tmp.25);
+[ "/home/user/garmin/source/TeslaController.mc" 286 8 ]
+        symbol [ STATE_WAIT_RESULT %tmp.27 286 17 34 ];
+        %tmp.27 = getv ? :STATE_WAIT_RESULT;
+        symbol [ mState ? 286 8 14 ];
+        putv self :mState %tmp.27;
+[ "/home/user/garmin/source/TeslaController.mc" 287 8 ]
+        %tmp.28 = self;
+        symbol [ armReplyTimer %tmp.29 287 8 21 ];
+        %tmp.29 = getv function %tmp.28 :armReplyTimer;
+        invoke %tmp.28 %tmp.29();
+_home_user_garmin_source_TeslaController_mc_277_34_288_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 294; @symbol_functiondef = [handleCommandResponse,294,20,41]; @symbol_param<0> = [routable,294,42,50]; ]
+    protected
+    function handleCommandResponse(routable) {
+_home_user_garmin_source_TeslaController_mc_294_52_357_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 295 8 ]
+        [ "_home_user_garmin_source_TeslaController_mc_294_52_357_4_start" "_home_user_garmin_source_TeslaController_mc_294_52_357_4_stop" ]
+        %hasInfo.1 = local;
+        symbol [ hasInfo %hasInfo.1 295 12 19 ];
+        %tmp.1 = lgetv %routable;
+        symbol [ routable %tmp.1 295 22 30 ];
+        symbol [ hasKey %tmp.2 295 31 37 ];
+        %tmp.2 = getv function %tmp.1 :hasKey;
+        %tmp.4 = const :sessionInfo;
+        symbol [ sessionInfo %tmp.4 295 39 50 const ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        lputv %hasInfo.1 %tmp.5;
+        symbol [ hasInfo %hasInfo.1 295 12 19 ];
+[ "/home/user/garmin/source/TeslaController.mc" 296 8 ]
+_home_user_garmin_source_TeslaController_mc_296_8_299_8_if_stmt:
+        %tmp.6 = lgetv %hasInfo.1;
+        symbol [ hasInfo %tmp.6 296 12 19 ];
+        bf %tmp.6 @_home_user_garmin_source_TeslaController_mc_296_8_299_8_if_end;
+_home_user_garmin_source_TeslaController_mc_296_8_299_8_if_true:
+_home_user_garmin_source_TeslaController_mc_296_21_299_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 298 12 ]
+        symbol [ mKey %tmp.8 298 12 16 ];
+        %tmp.8 = getv ? :mKey;
+        symbol [ refreshFromResponse %tmp.9 298 17 36 ];
+        %tmp.9 = getv function %tmp.8 :refreshFromResponse;
+        symbol [ mDomain %tmp.11 298 37 44 ];
+        %tmp.11 = getv ? :mDomain;
+        %tmp.12 = lgetv %routable;
+        symbol [ routable %tmp.12 298 46 54 ];
+        invoke %tmp.8 %tmp.9(%tmp.11, %tmp.12);
+_home_user_garmin_source_TeslaController_mc_296_21_299_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_296_8_299_8_if_end;
+_home_user_garmin_source_TeslaController_mc_296_8_299_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 301 8 ]
+        [ "_home_user_garmin_source_TeslaController_mc_294_52_357_4_start" "_home_user_garmin_source_TeslaController_mc_294_52_357_4_stop" ]
+        %fault.2 = local;
+        symbol [ fault %fault.2 301 12 17 ];
+_home_user_garmin_source_TeslaController_mc_301_20_301_65_begin:
+        %tmp.13 = lgetv %routable;
+        symbol [ routable %tmp.13 301 20 28 ];
+        symbol [ hasKey %tmp.14 301 29 35 ];
+        %tmp.14 = getv function %tmp.13 :hasKey;
+        %tmp.16 = const :fault;
+        symbol [ fault %tmp.16 301 37 42 const ];
+        %tmp.17 = invoke %tmp.13 %tmp.14(%tmp.16);
+        bf %tmp.17 @_home_user_garmin_source_TeslaController_mc_301_20_301_65_else_false;
+_home_user_garmin_source_TeslaController_mc_301_20_301_65_true:
+        %tmp.18 = lgetv %routable;
+        symbol [ routable %tmp.18 301 46 54 ];
+        %tmp.20 = const :fault;
+        symbol [ fault %tmp.20 301 56 61 const ];
+        %tmp.21 = agetv %tmp.18 %tmp.20;
+        push %tmp.21;
+        goto @_home_user_garmin_source_TeslaController_mc_301_20_301_65_end;
+_home_user_garmin_source_TeslaController_mc_301_20_301_65_else_false:
+        %tmp.22 = 0;
+        push %tmp.22;
+_home_user_garmin_source_TeslaController_mc_301_20_301_65_end:
+        %tmp.23 = phi [%tmp.17 @_home_user_garmin_source_TeslaController_mc_301_20_301_65_begin] [%tmp.21 @_home_user_garmin_source_TeslaController_mc_301_20_301_65_true] [%tmp.22 @_home_user_garmin_source_TeslaController_mc_301_20_301_65_else_false] [%tmp.23 @_home_user_garmin_source_TeslaController_mc_301_20_301_65_end];
+        lputv %fault.2 %tmp.23;
+        symbol [ fault %fault.2 301 12 17 ];
+[ "/home/user/garmin/source/TeslaController.mc" 302 8 ]
+_home_user_garmin_source_TeslaController_mc_302_8_316_8_if_stmt:
+        %tmp.24 = lgetv %fault.2;
+        symbol [ fault %tmp.24 302 12 17 ];
+        %tmp.25 = 0;
+        %tmp.26 = ne %tmp.24 %tmp.25;
+        bf %tmp.26 @_home_user_garmin_source_TeslaController_mc_302_8_316_8_if_end;
+_home_user_garmin_source_TeslaController_mc_302_8_316_8_if_true:
+_home_user_garmin_source_TeslaController_mc_302_24_316_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 303 12 ]
+_home_user_garmin_source_TeslaController_mc_303_12_314_12_if_stmt:
+        %tmp.27 = lgetv %fault.2;
+        symbol [ fault %tmp.27 303 16 21 ];
+        symbol [ FAULT_RESPONSE_MTU_EXCEEDED %tmp.29 303 25 52 ];
+        %tmp.29 = getv ? :FAULT_RESPONSE_MTU_EXCEEDED;
+        %tmp.30 = eq %tmp.27 %tmp.29;
+        bf %tmp.30 @_home_user_garmin_source_TeslaController_mc_303_12_314_12_if_false;
+_home_user_garmin_source_TeslaController_mc_303_12_314_12_if_true:
+_home_user_garmin_source_TeslaController_mc_303_54_305_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 304 16 ]
+        %tmp.31 = self;
+        symbol [ result %tmp.32 304 16 22 ];
+        %tmp.32 = getv function %tmp.31 :result;
+        %tmp.33 = true;
+        %tmp.34 = self;
+        symbol [ intentName %tmp.35 304 29 39 ];
+        %tmp.35 = getv function %tmp.34 :intentName;
+        %tmp.36 = invoke %tmp.34 %tmp.35();
+        %tmp.37 = " sent";
+        %tmp.38 = add %tmp.36 %tmp.37;
+        invoke %tmp.31 %tmp.32(%tmp.33, %tmp.38);
+_home_user_garmin_source_TeslaController_mc_303_54_305_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_303_12_314_12_if_end;
+_home_user_garmin_source_TeslaController_mc_303_12_314_12_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 305 19 ]
+_home_user_garmin_source_TeslaController_mc_305_19_314_12_if_stmt:
+_home_user_garmin_source_TeslaController_mc_305_23_305_57_begin:
+        %tmp.39 = self;
+        symbol [ isRetryable %tmp.40 305 23 34 ];
+        %tmp.40 = getv function %tmp.39 :isRetryable;
+        %tmp.41 = lgetv %fault.2;
+        symbol [ fault %tmp.41 305 35 40 ];
+        %tmp.42 = invoke %tmp.39 %tmp.40(%tmp.41);
+        bf %tmp.42 @_home_user_garmin_source_TeslaController_mc_305_19_314_12_if_else_false;
+_home_user_garmin_source_TeslaController_mc_305_45_305_57_true:
+        symbol [ mAttempts %tmp.44 305 45 54 ];
+        %tmp.44 = getv ? :mAttempts;
+        symbol [ MAX_ATTEMPTS %tmp.46 305 57 69 ];
+        %tmp.46 = getv ? :MAX_ATTEMPTS;
+        %tmp.47 = lt %tmp.44 %tmp.46;
+        push %tmp.47;
+_home_user_garmin_source_TeslaController_mc_305_45_305_57_end:
+        %tmp.48 = phi [%tmp.42 @_home_user_garmin_source_TeslaController_mc_305_23_305_57_begin] [%tmp.47 @_home_user_garmin_source_TeslaController_mc_305_45_305_57_true] [%tmp.48 @_home_user_garmin_source_TeslaController_mc_305_45_305_57_end];
+        bf %tmp.48 @_home_user_garmin_source_TeslaController_mc_305_19_314_12_if_else_false;
+_home_user_garmin_source_TeslaController_mc_305_19_314_12_if_true:
+_home_user_garmin_source_TeslaController_mc_305_71_312_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 306 16 ]
+        %tmp.49 = self;
+        symbol [ report %tmp.50 306 16 22 ];
+        %tmp.50 = getv function %tmp.49 :report;
+        %tmp.51 = "Retrying...";
+        invoke %tmp.49 %tmp.50(%tmp.51);
+[ "/home/user/garmin/source/TeslaController.mc" 307 16 ]
+_home_user_garmin_source_TeslaController_mc_307_16_311_16_if_stmt:
+        %tmp.52 = self;
+        symbol [ isTransient %tmp.53 307 20 31 ];
+        %tmp.53 = getv function %tmp.52 :isTransient;
+        %tmp.54 = lgetv %fault.2;
+        symbol [ fault %tmp.54 307 32 37 ];
+        %tmp.55 = invoke %tmp.52 %tmp.53(%tmp.54);
+        bf %tmp.55 @_home_user_garmin_source_TeslaController_mc_307_16_311_16_if_else_false;
+_home_user_garmin_source_TeslaController_mc_307_16_311_16_if_true:
+_home_user_garmin_source_TeslaController_mc_307_40_309_16_start:
+[ "/home/user/garmin/source/TeslaController.mc" 308 20 ]
+        %tmp.56 = self;
+        symbol [ scheduleRetry %tmp.57 308 20 33 ];
+        %tmp.57 = getv function %tmp.56 :scheduleRetry;
+        invoke %tmp.56 %tmp.57();
+_home_user_garmin_source_TeslaController_mc_307_40_309_16_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_307_16_311_16_if_end;
+_home_user_garmin_source_TeslaController_mc_307_16_311_16_if_else_false:
+_home_user_garmin_source_TeslaController_mc_309_23_311_16_start:
+[ "/home/user/garmin/source/TeslaController.mc" 310 20 ]
+        %tmp.58 = self;
+        symbol [ sendCommand %tmp.59 310 20 31 ];
+        %tmp.59 = getv function %tmp.58 :sendCommand;
+        invoke %tmp.58 %tmp.59();
+_home_user_garmin_source_TeslaController_mc_309_23_311_16_stop:
+_home_user_garmin_source_TeslaController_mc_307_16_311_16_if_end:
+_home_user_garmin_source_TeslaController_mc_305_71_312_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_305_19_314_12_if_end;
+_home_user_garmin_source_TeslaController_mc_305_19_314_12_if_else_false:
+_home_user_garmin_source_TeslaController_mc_312_19_314_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 313 16 ]
+        %tmp.60 = self;
+        symbol [ result %tmp.61 313 16 22 ];
+        %tmp.61 = getv function %tmp.60 :result;
+        %tmp.62 = false;
+        %tmp.63 = self;
+        symbol [ faultMessage %tmp.64 313 30 42 ];
+        %tmp.64 = getv function %tmp.63 :faultMessage;
+        %tmp.65 = lgetv %fault.2;
+        symbol [ fault %tmp.65 313 43 48 ];
+        %tmp.66 = invoke %tmp.63 %tmp.64(%tmp.65);
+        invoke %tmp.60 %tmp.61(%tmp.62, %tmp.66);
+_home_user_garmin_source_TeslaController_mc_312_19_314_12_stop:
+_home_user_garmin_source_TeslaController_mc_305_19_314_12_if_end:
+_home_user_garmin_source_TeslaController_mc_303_12_314_12_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 315 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_302_24_316_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_302_8_316_8_if_end;
+_home_user_garmin_source_TeslaController_mc_302_8_316_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 318 8 ]
+        [ "_home_user_garmin_source_TeslaController_mc_294_52_357_4_start" "_home_user_garmin_source_TeslaController_mc_294_52_357_4_stop" ]
+        %op.3 = local;
+        symbol [ op %op.3 318 12 14 ];
+_home_user_garmin_source_TeslaController_mc_318_17_318_93_begin:
+        %tmp.67 = lgetv %routable;
+        symbol [ routable %tmp.67 318 17 25 ];
+        symbol [ hasKey %tmp.68 318 26 32 ];
+        %tmp.68 = getv function %tmp.67 :hasKey;
+        %tmp.70 = const :operationStatus;
+        symbol [ operationStatus %tmp.70 318 34 49 const ];
+        %tmp.71 = invoke %tmp.67 %tmp.68(%tmp.70);
+        bf %tmp.71 @_home_user_garmin_source_TeslaController_mc_318_17_318_93_else_false;
+_home_user_garmin_source_TeslaController_mc_318_17_318_93_true:
+        %tmp.72 = lgetv %routable;
+        symbol [ routable %tmp.72 318 53 61 ];
+        %tmp.74 = const :operationStatus;
+        symbol [ operationStatus %tmp.74 318 63 78 const ];
+        %tmp.75 = agetv %tmp.72 %tmp.74;
+        push %tmp.75;
+        goto @_home_user_garmin_source_TeslaController_mc_318_17_318_93_end;
+_home_user_garmin_source_TeslaController_mc_318_17_318_93_else_false:
+        symbol [ TeslaProto %tmp.77 318 82 92 ];
+        %tmp.77 = getv ? :TeslaProto;
+        symbol [ OPSTATUS_OK %tmp.78 318 93 104 ];
+        %tmp.78 = getv %tmp.77 :OPSTATUS_OK;
+        push %tmp.78;
+_home_user_garmin_source_TeslaController_mc_318_17_318_93_end:
+        %tmp.79 = phi [%tmp.71 @_home_user_garmin_source_TeslaController_mc_318_17_318_93_begin] [%tmp.75 @_home_user_garmin_source_TeslaController_mc_318_17_318_93_true] [%tmp.78 @_home_user_garmin_source_TeslaController_mc_318_17_318_93_else_false] [%tmp.79 @_home_user_garmin_source_TeslaController_mc_318_17_318_93_end];
+        lputv %op.3 %tmp.79;
+        symbol [ op %op.3 318 12 14 ];
+[ "/home/user/garmin/source/TeslaController.mc" 319 8 ]
+_home_user_garmin_source_TeslaController_mc_319_8_322_8_if_stmt:
+        %tmp.80 = lgetv %op.3;
+        symbol [ op %tmp.80 319 12 14 ];
+        symbol [ TeslaProto %tmp.82 319 18 28 ];
+        %tmp.82 = getv ? :TeslaProto;
+        symbol [ OPSTATUS_WAIT %tmp.83 319 29 42 ];
+        %tmp.83 = getv %tmp.82 :OPSTATUS_WAIT;
+        %tmp.84 = eq %tmp.80 %tmp.83;
+        bf %tmp.84 @_home_user_garmin_source_TeslaController_mc_319_8_322_8_if_end;
+_home_user_garmin_source_TeslaController_mc_319_8_322_8_if_true:
+_home_user_garmin_source_TeslaController_mc_319_44_322_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 320 12 ]
+        %tmp.85 = self;
+        symbol [ retryBusy %tmp.86 320 12 21 ];
+        %tmp.86 = getv function %tmp.85 :retryBusy;
+        invoke %tmp.85 %tmp.86();
+[ "/home/user/garmin/source/TeslaController.mc" 321 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_319_44_322_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_319_8_322_8_if_end;
+_home_user_garmin_source_TeslaController_mc_319_8_322_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 323 8 ]
+_home_user_garmin_source_TeslaController_mc_323_8_326_8_if_stmt:
+        %tmp.87 = lgetv %op.3;
+        symbol [ op %tmp.87 323 12 14 ];
+        symbol [ TeslaProto %tmp.89 323 18 28 ];
+        %tmp.89 = getv ? :TeslaProto;
+        symbol [ OPSTATUS_ERROR %tmp.90 323 29 43 ];
+        %tmp.90 = getv %tmp.89 :OPSTATUS_ERROR;
+        %tmp.91 = eq %tmp.87 %tmp.90;
+        bf %tmp.91 @_home_user_garmin_source_TeslaController_mc_323_8_326_8_if_end;
+_home_user_garmin_source_TeslaController_mc_323_8_326_8_if_true:
+_home_user_garmin_source_TeslaController_mc_323_45_326_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 324 12 ]
+        %tmp.92 = self;
+        symbol [ result %tmp.93 324 12 18 ];
+        %tmp.93 = getv function %tmp.92 :result;
+        %tmp.94 = false;
+        %tmp.95 = "Vehicle reported an error";
+        invoke %tmp.92 %tmp.93(%tmp.94, %tmp.95);
+[ "/home/user/garmin/source/TeslaController.mc" 325 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_323_45_326_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_323_8_326_8_if_end;
+_home_user_garmin_source_TeslaController_mc_323_8_326_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 328 8 ]
+_home_user_garmin_source_TeslaController_mc_328_8_334_8_if_stmt:
+        %tmp.96 = lgetv %routable;
+        symbol [ routable %tmp.96 328 13 21 ];
+        symbol [ hasKey %tmp.97 328 22 28 ];
+        %tmp.97 = getv function %tmp.96 :hasKey;
+        %tmp.99 = const :payload;
+        symbol [ payload %tmp.99 328 30 37 const ];
+        %tmp.100 = invoke %tmp.96 %tmp.97(%tmp.99);
+        %tmp.101 = not %tmp.100;
+        bf %tmp.101 @_home_user_garmin_source_TeslaController_mc_328_8_334_8_if_end;
+_home_user_garmin_source_TeslaController_mc_328_8_334_8_if_true:
+_home_user_garmin_source_TeslaController_mc_328_40_334_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 329 12 ]
+_home_user_garmin_source_TeslaController_mc_329_12_331_12_if_stmt:
+        %tmp.102 = lgetv %hasInfo.1;
+        symbol [ hasInfo %tmp.102 329 16 23 ];
+        bf %tmp.102 @_home_user_garmin_source_TeslaController_mc_329_12_331_12_if_end;
+_home_user_garmin_source_TeslaController_mc_329_12_331_12_if_true:
+_home_user_garmin_source_TeslaController_mc_329_25_331_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 330 16 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_329_25_331_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_329_12_331_12_if_end;
+_home_user_garmin_source_TeslaController_mc_329_12_331_12_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 332 12 ]
+        %tmp.103 = self;
+        symbol [ result %tmp.104 332 12 18 ];
+        %tmp.104 = getv function %tmp.103 :result;
+        %tmp.105 = true;
+        %tmp.106 = self;
+        symbol [ intentName %tmp.107 332 25 35 ];
+        %tmp.107 = getv function %tmp.106 :intentName;
+        %tmp.108 = invoke %tmp.106 %tmp.107();
+        %tmp.109 = " OK";
+        %tmp.110 = add %tmp.108 %tmp.109;
+        invoke %tmp.103 %tmp.104(%tmp.105, %tmp.110);
+[ "/home/user/garmin/source/TeslaController.mc" 333 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_328_40_334_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_328_8_334_8_if_end;
+_home_user_garmin_source_TeslaController_mc_328_8_334_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 336 8 ]
+        [ "_home_user_garmin_source_TeslaController_mc_294_52_357_4_start" "_home_user_garmin_source_TeslaController_mc_294_52_357_4_stop" ]
+        %vc.4 = local;
+        symbol [ vc %vc.4 336 12 14 ];
+        symbol [ TeslaProto %tmp.112 336 17 27 ];
+        %tmp.112 = getv ? :TeslaProto;
+        symbol [ parseFromVcsec %tmp.113 336 28 42 ];
+        %tmp.113 = getv function %tmp.112 :parseFromVcsec;
+        %tmp.114 = lgetv %routable;
+        symbol [ routable %tmp.114 336 43 51 ];
+        %tmp.116 = const :payload;
+        symbol [ payload %tmp.116 336 53 60 const ];
+        %tmp.117 = agetv %tmp.114 %tmp.116;
+        %tmp.118 = invoke %tmp.112 %tmp.113(%tmp.117);
+        lputv %vc.4 %tmp.118;
+        symbol [ vc %vc.4 336 12 14 ];
+[ "/home/user/garmin/source/TeslaController.mc" 337 8 ]
+_home_user_garmin_source_TeslaController_mc_337_8_340_8_if_stmt:
+        %tmp.119 = lgetv %vc.4;
+        symbol [ vc %tmp.119 337 12 14 ];
+        symbol [ hasKey %tmp.120 337 15 21 ];
+        %tmp.120 = getv function %tmp.119 :hasKey;
+        %tmp.122 = const :nominalError;
+        symbol [ nominalError %tmp.122 337 23 35 const ];
+        %tmp.123 = invoke %tmp.119 %tmp.120(%tmp.122);
+        bf %tmp.123 @_home_user_garmin_source_TeslaController_mc_337_8_340_8_if_end;
+_home_user_garmin_source_TeslaController_mc_337_8_340_8_if_true:
+_home_user_garmin_source_TeslaController_mc_337_38_340_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 338 12 ]
+        %tmp.124 = self;
+        symbol [ result %tmp.125 338 12 18 ];
+        %tmp.125 = getv function %tmp.124 :result;
+        %tmp.126 = false;
+        %tmp.127 = self;
+        symbol [ nominalMessage %tmp.128 338 26 40 ];
+        %tmp.128 = getv function %tmp.127 :nominalMessage;
+        %tmp.129 = lgetv %vc.4;
+        symbol [ vc %tmp.129 338 41 43 ];
+        %tmp.131 = const :nominalError;
+        symbol [ nominalError %tmp.131 338 45 57 const ];
+        %tmp.132 = agetv %tmp.129 %tmp.131;
+        %tmp.133 = invoke %tmp.127 %tmp.128(%tmp.132);
+        invoke %tmp.124 %tmp.125(%tmp.126, %tmp.133);
+[ "/home/user/garmin/source/TeslaController.mc" 339 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_337_38_340_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_337_8_340_8_if_end;
+_home_user_garmin_source_TeslaController_mc_337_8_340_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 341 8 ]
+_home_user_garmin_source_TeslaController_mc_341_8_344_8_if_stmt:
+        %tmp.134 = lgetv %vc.4;
+        symbol [ vc %tmp.134 341 13 15 ];
+        symbol [ hasKey %tmp.135 341 16 22 ];
+        %tmp.135 = getv function %tmp.134 :hasKey;
+        %tmp.137 = const :opStatus;
+        symbol [ opStatus %tmp.137 341 24 32 const ];
+        %tmp.138 = invoke %tmp.134 %tmp.135(%tmp.137);
+        %tmp.139 = not %tmp.138;
+        bf %tmp.139 @_home_user_garmin_source_TeslaController_mc_341_8_344_8_if_end;
+_home_user_garmin_source_TeslaController_mc_341_8_344_8_if_true:
+_home_user_garmin_source_TeslaController_mc_341_35_344_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 342 12 ]
+        %tmp.140 = self;
+        symbol [ result %tmp.141 342 12 18 ];
+        %tmp.141 = getv function %tmp.140 :result;
+        %tmp.142 = true;
+        %tmp.143 = self;
+        symbol [ intentName %tmp.144 342 25 35 ];
+        %tmp.144 = getv function %tmp.143 :intentName;
+        %tmp.145 = invoke %tmp.143 %tmp.144();
+        %tmp.146 = " OK";
+        %tmp.147 = add %tmp.145 %tmp.146;
+        invoke %tmp.140 %tmp.141(%tmp.142, %tmp.147);
+[ "/home/user/garmin/source/TeslaController.mc" 343 12 ]
+        ret ?;
+_home_user_garmin_source_TeslaController_mc_341_35_344_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_341_8_344_8_if_end;
+_home_user_garmin_source_TeslaController_mc_341_8_344_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 345 8 ]
+        [ "_home_user_garmin_source_TeslaController_mc_294_52_357_4_start" "_home_user_garmin_source_TeslaController_mc_294_52_357_4_stop" ]
+        %vop.5 = local;
+        symbol [ vop %vop.5 345 12 15 ];
+        %tmp.148 = lgetv %vc.4;
+        symbol [ vc %tmp.148 345 18 20 ];
+        %tmp.150 = const :opStatus;
+        symbol [ opStatus %tmp.150 345 22 30 const ];
+        %tmp.151 = agetv %tmp.148 %tmp.150;
+        lputv %vop.5 %tmp.151;
+        symbol [ vop %vop.5 345 12 15 ];
+[ "/home/user/garmin/source/TeslaController.mc" 346 8 ]
+_home_user_garmin_source_TeslaController_mc_346_8_355_8_if_stmt:
+        %tmp.152 = lgetv %vop.5;
+        symbol [ vop %tmp.152 346 12 15 ];
+        symbol [ TeslaProto %tmp.154 346 19 29 ];
+        %tmp.154 = getv ? :TeslaProto;
+        symbol [ OPSTATUS_WAIT %tmp.155 346 30 43 ];
+        %tmp.155 = getv %tmp.154 :OPSTATUS_WAIT;
+        %tmp.156 = eq %tmp.152 %tmp.155;
+        bf %tmp.156 @_home_user_garmin_source_TeslaController_mc_346_8_355_8_if_false;
+_home_user_garmin_source_TeslaController_mc_346_8_355_8_if_true:
+_home_user_garmin_source_TeslaController_mc_346_45_348_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 347 12 ]
+        %tmp.157 = self;
+        symbol [ retryBusy %tmp.158 347 12 21 ];
+        %tmp.158 = getv function %tmp.157 :retryBusy;
+        invoke %tmp.157 %tmp.158();
+_home_user_garmin_source_TeslaController_mc_346_45_348_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_346_8_355_8_if_end;
+_home_user_garmin_source_TeslaController_mc_346_8_355_8_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 348 15 ]
+_home_user_garmin_source_TeslaController_mc_348_15_355_8_if_stmt:
+        %tmp.159 = lgetv %vop.5;
+        symbol [ vop %tmp.159 348 19 22 ];
+        symbol [ TeslaProto %tmp.161 348 26 36 ];
+        %tmp.161 = getv ? :TeslaProto;
+        symbol [ OPSTATUS_ERROR %tmp.162 348 37 51 ];
+        %tmp.162 = getv %tmp.161 :OPSTATUS_ERROR;
+        %tmp.163 = eq %tmp.159 %tmp.162;
+        bf %tmp.163 @_home_user_garmin_source_TeslaController_mc_348_15_355_8_if_end;
+_home_user_garmin_source_TeslaController_mc_348_15_355_8_if_true:
+_home_user_garmin_source_TeslaController_mc_348_53_355_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 349 12 ]
+_home_user_garmin_source_TeslaController_mc_349_12_353_12_if_stmt:
+_home_user_garmin_source_TeslaController_mc_349_16_349_78_begin:
+        %tmp.164 = lgetv %vc.4;
+        symbol [ vc %tmp.164 349 16 18 ];
+        symbol [ hasKey %tmp.165 349 19 25 ];
+        %tmp.165 = getv function %tmp.164 :hasKey;
+        %tmp.167 = const :whitelistInfo;
+        symbol [ whitelistInfo %tmp.167 349 27 40 const ];
+        %tmp.168 = invoke %tmp.164 %tmp.165(%tmp.167);
+        bf %tmp.168 @_home_user_garmin_source_TeslaController_mc_349_12_353_12_if_false;
+_home_user_garmin_source_TeslaController_mc_349_45_349_78_true:
+        %tmp.169 = lgetv %vc.4;
+        symbol [ vc %tmp.169 349 45 47 ];
+        %tmp.171 = const :whitelistInfo;
+        symbol [ whitelistInfo %tmp.171 349 49 62 const ];
+        %tmp.172 = agetv %tmp.169 %tmp.171;
+        symbol [ TeslaProto %tmp.174 349 67 77 ];
+        %tmp.174 = getv ? :TeslaProto;
+        symbol [ WL_INFO_NONE %tmp.175 349 78 90 ];
+        %tmp.175 = getv %tmp.174 :WL_INFO_NONE;
+        %tmp.176 = ne %tmp.172 %tmp.175;
+        push %tmp.176;
+_home_user_garmin_source_TeslaController_mc_349_45_349_78_end:
+        %tmp.177 = phi [%tmp.168 @_home_user_garmin_source_TeslaController_mc_349_16_349_78_begin] [%tmp.176 @_home_user_garmin_source_TeslaController_mc_349_45_349_78_true] [%tmp.177 @_home_user_garmin_source_TeslaController_mc_349_45_349_78_end];
+        bf %tmp.177 @_home_user_garmin_source_TeslaController_mc_349_12_353_12_if_false;
+_home_user_garmin_source_TeslaController_mc_349_12_353_12_if_true:
+_home_user_garmin_source_TeslaController_mc_349_92_351_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 350 16 ]
+        %tmp.178 = self;
+        symbol [ result %tmp.179 350 16 22 ];
+        %tmp.179 = getv function %tmp.178 :result;
+        %tmp.180 = false;
+        %tmp.181 = self;
+        symbol [ whitelistMessage %tmp.182 350 30 46 ];
+        %tmp.182 = getv function %tmp.181 :whitelistMessage;
+        %tmp.183 = lgetv %vc.4;
+        symbol [ vc %tmp.183 350 47 49 ];
+        %tmp.185 = const :whitelistInfo;
+        symbol [ whitelistInfo %tmp.185 350 51 64 const ];
+        %tmp.186 = agetv %tmp.183 %tmp.185;
+        %tmp.187 = invoke %tmp.181 %tmp.182(%tmp.186);
+        invoke %tmp.178 %tmp.179(%tmp.180, %tmp.187);
+_home_user_garmin_source_TeslaController_mc_349_92_351_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_349_12_353_12_if_end;
+_home_user_garmin_source_TeslaController_mc_349_12_353_12_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 351 19 ]
+_home_user_garmin_source_TeslaController_mc_351_19_353_12_if_stmt:
+        %tmp.188 = lgetv %vc.4;
+        symbol [ vc %tmp.188 351 24 26 ];
+        symbol [ hasKey %tmp.189 351 27 33 ];
+        %tmp.189 = getv function %tmp.188 :hasKey;
+        %tmp.191 = const :signedStatus;
+        symbol [ signedStatus %tmp.191 351 35 47 const ];
+        %tmp.192 = invoke %tmp.188 %tmp.189(%tmp.191);
+        %tmp.193 = not %tmp.192;
+        bf %tmp.193 @_home_user_garmin_source_TeslaController_mc_351_19_353_12_if_end;
+_home_user_garmin_source_TeslaController_mc_351_19_353_12_if_true:
+_home_user_garmin_source_TeslaController_mc_351_50_353_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 352 16 ]
+        %tmp.194 = self;
+        symbol [ result %tmp.195 352 16 22 ];
+        %tmp.195 = getv function %tmp.194 :result;
+        %tmp.196 = false;
+        %tmp.197 = "Vehicle reported an error";
+        invoke %tmp.194 %tmp.195(%tmp.196, %tmp.197);
+_home_user_garmin_source_TeslaController_mc_351_50_353_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_351_19_353_12_if_end;
+_home_user_garmin_source_TeslaController_mc_351_19_353_12_if_end:
+_home_user_garmin_source_TeslaController_mc_349_12_353_12_if_end:
+_home_user_garmin_source_TeslaController_mc_348_53_355_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_348_15_355_8_if_end;
+_home_user_garmin_source_TeslaController_mc_348_15_355_8_if_end:
+_home_user_garmin_source_TeslaController_mc_346_8_355_8_if_end:
+_home_user_garmin_source_TeslaController_mc_294_52_357_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 359; @symbol_functiondef = [retryBusy,359,20,29]; ]
+    protected
+    function retryBusy() {
+_home_user_garmin_source_TeslaController_mc_359_32_366_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 360 8 ]
+_home_user_garmin_source_TeslaController_mc_360_8_365_8_if_stmt:
+        symbol [ mAttempts %tmp.2 360 12 21 ];
+        %tmp.2 = getv ? :mAttempts;
+        symbol [ MAX_ATTEMPTS %tmp.4 360 24 36 ];
+        %tmp.4 = getv ? :MAX_ATTEMPTS;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_home_user_garmin_source_TeslaController_mc_360_8_365_8_if_else_false;
+_home_user_garmin_source_TeslaController_mc_360_8_365_8_if_true:
+_home_user_garmin_source_TeslaController_mc_360_38_363_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 361 12 ]
+        %tmp.6 = self;
+        symbol [ report %tmp.7 361 12 18 ];
+        %tmp.7 = getv function %tmp.6 :report;
+        %tmp.8 = "Vehicle busy, retrying...";
+        invoke %tmp.6 %tmp.7(%tmp.8);
+[ "/home/user/garmin/source/TeslaController.mc" 362 12 ]
+        %tmp.9 = self;
+        symbol [ scheduleRetry %tmp.10 362 12 25 ];
+        %tmp.10 = getv function %tmp.9 :scheduleRetry;
+        invoke %tmp.9 %tmp.10();
+_home_user_garmin_source_TeslaController_mc_360_38_363_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_360_8_365_8_if_end;
+_home_user_garmin_source_TeslaController_mc_360_8_365_8_if_else_false:
+_home_user_garmin_source_TeslaController_mc_363_15_365_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 364 12 ]
+        %tmp.11 = self;
+        symbol [ result %tmp.12 364 12 18 ];
+        %tmp.12 = getv function %tmp.11 :result;
+        %tmp.13 = false;
+        %tmp.14 = "Vehicle busy. Try again.";
+        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.14);
+_home_user_garmin_source_TeslaController_mc_363_15_365_8_stop:
+_home_user_garmin_source_TeslaController_mc_360_8_365_8_if_end:
+_home_user_garmin_source_TeslaController_mc_359_32_366_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 369; @symbol_functiondef = [isRetryable,369,20,31]; @symbol_param<0> = [fault,369,32,37]; ]
+    protected
+    function isRetryable(fault) {
+_home_user_garmin_source_TeslaController_mc_369_39_376_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 370 8 ]
+_home_user_garmin_source_TeslaController_mc_370_15_375_24_begin:
+_home_user_garmin_source_TeslaController_mc_370_15_374_24_begin:
+_home_user_garmin_source_TeslaController_mc_370_15_373_24_begin:
+_home_user_garmin_source_TeslaController_mc_370_15_372_24_begin:
+_home_user_garmin_source_TeslaController_mc_370_15_371_24_begin:
+        %tmp.1 = self;
+        symbol [ isTransient %tmp.2 370 15 26 ];
+        %tmp.2 = getv function %tmp.1 :isTransient;
+        %tmp.3 = lgetv %fault;
+        symbol [ fault %tmp.3 370 27 32 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        %tmp.5 = dup %tmp.4;
+        bt %tmp.5 @_home_user_garmin_source_TeslaController_mc_371_15_371_24_end;
+_home_user_garmin_source_TeslaController_mc_371_15_371_24_false:
+        %tmp.6 = lgetv %fault;
+        symbol [ fault %tmp.6 371 15 20 ];
+        symbol [ FAULT_INVALID_SIGNATURE %tmp.8 371 24 47 ];
+        %tmp.8 = getv ? :FAULT_INVALID_SIGNATURE;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        %tmp.10 = or %tmp.4 %tmp.9;
+        push %tmp.10;
+_home_user_garmin_source_TeslaController_mc_371_15_371_24_end:
+        %tmp.11 = phi [%tmp.5 @_home_user_garmin_source_TeslaController_mc_370_15_371_24_begin] [%tmp.10 @_home_user_garmin_source_TeslaController_mc_371_15_371_24_false] [%tmp.11 @_home_user_garmin_source_TeslaController_mc_371_15_371_24_end];
+        %tmp.12 = dup %tmp.11;
+        bt %tmp.12 @_home_user_garmin_source_TeslaController_mc_372_15_372_24_end;
+_home_user_garmin_source_TeslaController_mc_372_15_372_24_false:
+        %tmp.13 = lgetv %fault;
+        symbol [ fault %tmp.13 372 15 20 ];
+        symbol [ FAULT_INVALID_TOKEN_OR_COUNTER %tmp.15 372 24 54 ];
+        %tmp.15 = getv ? :FAULT_INVALID_TOKEN_OR_COUNTER;
+        %tmp.16 = eq %tmp.13 %tmp.15;
+        %tmp.17 = or %tmp.11 %tmp.16;
+        push %tmp.17;
+_home_user_garmin_source_TeslaController_mc_372_15_372_24_end:
+        %tmp.18 = phi [%tmp.12 @_home_user_garmin_source_TeslaController_mc_370_15_372_24_begin] [%tmp.17 @_home_user_garmin_source_TeslaController_mc_372_15_372_24_false] [%tmp.18 @_home_user_garmin_source_TeslaController_mc_372_15_372_24_end];
+        %tmp.19 = dup %tmp.18;
+        bt %tmp.19 @_home_user_garmin_source_TeslaController_mc_373_15_373_24_end;
+_home_user_garmin_source_TeslaController_mc_373_15_373_24_false:
+        %tmp.20 = lgetv %fault;
+        symbol [ fault %tmp.20 373 15 20 ];
+        symbol [ FAULT_INCORRECT_EPOCH %tmp.22 373 24 45 ];
+        %tmp.22 = getv ? :FAULT_INCORRECT_EPOCH;
+        %tmp.23 = eq %tmp.20 %tmp.22;
+        %tmp.24 = or %tmp.18 %tmp.23;
+        push %tmp.24;
+_home_user_garmin_source_TeslaController_mc_373_15_373_24_end:
+        %tmp.25 = phi [%tmp.19 @_home_user_garmin_source_TeslaController_mc_370_15_373_24_begin] [%tmp.24 @_home_user_garmin_source_TeslaController_mc_373_15_373_24_false] [%tmp.25 @_home_user_garmin_source_TeslaController_mc_373_15_373_24_end];
+        %tmp.26 = dup %tmp.25;
+        bt %tmp.26 @_home_user_garmin_source_TeslaController_mc_374_15_374_24_end;
+_home_user_garmin_source_TeslaController_mc_374_15_374_24_false:
+        %tmp.27 = lgetv %fault;
+        symbol [ fault %tmp.27 374 15 20 ];
+        symbol [ FAULT_TIME_EXPIRED %tmp.29 374 24 42 ];
+        %tmp.29 = getv ? :FAULT_TIME_EXPIRED;
+        %tmp.30 = eq %tmp.27 %tmp.29;
+        %tmp.31 = or %tmp.25 %tmp.30;
+        push %tmp.31;
+_home_user_garmin_source_TeslaController_mc_374_15_374_24_end:
+        %tmp.32 = phi [%tmp.26 @_home_user_garmin_source_TeslaController_mc_370_15_374_24_begin] [%tmp.31 @_home_user_garmin_source_TeslaController_mc_374_15_374_24_false] [%tmp.32 @_home_user_garmin_source_TeslaController_mc_374_15_374_24_end];
+        %tmp.33 = dup %tmp.32;
+        bt %tmp.33 @_home_user_garmin_source_TeslaController_mc_375_15_375_24_end;
+_home_user_garmin_source_TeslaController_mc_375_15_375_24_false:
+        %tmp.34 = lgetv %fault;
+        symbol [ fault %tmp.34 375 15 20 ];
+        symbol [ FAULT_TIME_TO_LIVE_TOO_LONG %tmp.36 375 24 51 ];
+        %tmp.36 = getv ? :FAULT_TIME_TO_LIVE_TOO_LONG;
+        %tmp.37 = eq %tmp.34 %tmp.36;
+        %tmp.38 = or %tmp.32 %tmp.37;
+        push %tmp.38;
+_home_user_garmin_source_TeslaController_mc_375_15_375_24_end:
+        %tmp.39 = phi [%tmp.33 @_home_user_garmin_source_TeslaController_mc_370_15_375_24_begin] [%tmp.38 @_home_user_garmin_source_TeslaController_mc_375_15_375_24_false] [%tmp.39 @_home_user_garmin_source_TeslaController_mc_375_15_375_24_end];
+        ret %tmp.39;
+_home_user_garmin_source_TeslaController_mc_369_39_376_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 379; @symbol_functiondef = [isTransient,379,20,31]; @symbol_param<0> = [fault,379,32,37]; ]
+    protected
+    function isTransient(fault) {
+_home_user_garmin_source_TeslaController_mc_379_39_381_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 380 8 ]
+_home_user_garmin_source_TeslaController_mc_380_15_380_73_begin:
+_home_user_garmin_source_TeslaController_mc_380_15_380_47_begin:
+        %tmp.1 = lgetv %fault;
+        symbol [ fault %tmp.1 380 15 20 ];
+        symbol [ FAULT_BUSY %tmp.3 380 24 34 ];
+        %tmp.3 = getv ? :FAULT_BUSY;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        %tmp.5 = dup %tmp.4;
+        bt %tmp.5 @_home_user_garmin_source_TeslaController_mc_380_38_380_47_end;
+_home_user_garmin_source_TeslaController_mc_380_38_380_47_false:
+        %tmp.6 = lgetv %fault;
+        symbol [ fault %tmp.6 380 38 43 ];
+        symbol [ FAULT_TIMEOUT %tmp.8 380 47 60 ];
+        %tmp.8 = getv ? :FAULT_TIMEOUT;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        %tmp.10 = or %tmp.4 %tmp.9;
+        push %tmp.10;
+_home_user_garmin_source_TeslaController_mc_380_38_380_47_end:
+        %tmp.11 = phi [%tmp.5 @_home_user_garmin_source_TeslaController_mc_380_15_380_47_begin] [%tmp.10 @_home_user_garmin_source_TeslaController_mc_380_38_380_47_false] [%tmp.11 @_home_user_garmin_source_TeslaController_mc_380_38_380_47_end];
+        %tmp.12 = dup %tmp.11;
+        bt %tmp.12 @_home_user_garmin_source_TeslaController_mc_380_64_380_73_end;
+_home_user_garmin_source_TeslaController_mc_380_64_380_73_false:
+        %tmp.13 = lgetv %fault;
+        symbol [ fault %tmp.13 380 64 69 ];
+        symbol [ FAULT_INTERNAL %tmp.15 380 73 87 ];
+        %tmp.15 = getv ? :FAULT_INTERNAL;
+        %tmp.16 = eq %tmp.13 %tmp.15;
+        %tmp.17 = or %tmp.11 %tmp.16;
+        push %tmp.17;
+_home_user_garmin_source_TeslaController_mc_380_64_380_73_end:
+        %tmp.18 = phi [%tmp.12 @_home_user_garmin_source_TeslaController_mc_380_15_380_73_begin] [%tmp.17 @_home_user_garmin_source_TeslaController_mc_380_64_380_73_false] [%tmp.18 @_home_user_garmin_source_TeslaController_mc_380_64_380_73_end];
+        ret %tmp.18;
+_home_user_garmin_source_TeslaController_mc_379_39_381_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 383; @symbol_functiondef = [scheduleRetry,383,20,33]; ]
+    protected
+    function scheduleRetry() {
+_home_user_garmin_source_TeslaController_mc_383_36_388_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 384 8 ]
+        %tmp.1 = self;
+        symbol [ clearReplyTimer %tmp.2 384 8 23 ];
+        %tmp.2 = getv function %tmp.1 :clearReplyTimer;
+        invoke %tmp.1 %tmp.2();
+[ "/home/user/garmin/source/TeslaController.mc" 385 8 ]
+        %tmp.3 = self;
+        symbol [ clearRetryTimer %tmp.4 385 8 23 ];
+        %tmp.4 = getv function %tmp.3 :clearRetryTimer;
+        invoke %tmp.3 %tmp.4();
+[ "/home/user/garmin/source/TeslaController.mc" 386 8 ]
+        symbol [ Timer %tmp.7 386 26 31 ];
+        %tmp.7 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.8 386 32 37 ];
+        %tmp.8 = getv function ? %tmp.7 :Timer;
+        %tmp.5 = newc %tmp.8 ();
+        symbol [ mRetryTimer ? 386 8 19 ];
+        putv self :mRetryTimer %tmp.5;
+[ "/home/user/garmin/source/TeslaController.mc" 387 8 ]
+        symbol [ mRetryTimer %tmp.10 387 8 19 ];
+        %tmp.10 = getv ? :mRetryTimer;
+        symbol [ start %tmp.11 387 20 25 ];
+        %tmp.11 = getv function %tmp.10 :start;
+        %tmp.12 = self;
+        symbol [ method %tmp.13 387 26 32 ];
+        %tmp.13 = getv function %tmp.12 :method;
+        %tmp.15 = const :onRetryTimer;
+        symbol [ onRetryTimer %tmp.15 387 34 46 const ];
+        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.15);
+        symbol [ RETRY_DELAY_MS %tmp.18 387 49 63 ];
+        %tmp.18 = getv ? :RETRY_DELAY_MS;
+        %tmp.19 = false;
+        invoke %tmp.10 %tmp.11(%tmp.16, %tmp.18, %tmp.19);
+_home_user_garmin_source_TeslaController_mc_383_36_388_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 390; @symbol_functiondef = [onRetryTimer,390,13,25]; ]
+    function onRetryTimer() {
+_home_user_garmin_source_TeslaController_mc_390_28_398_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 391 8 ]
+        %tmp.1 = null;
+        symbol [ mRetryTimer ? 391 8 19 ];
+        putv self :mRetryTimer %tmp.1;
+[ "/home/user/garmin/source/TeslaController.mc" 392 8 ]
+_home_user_garmin_source_TeslaController_mc_392_8_397_8_if_stmt:
+        symbol [ mState %tmp.3 392 12 18 ];
+        %tmp.3 = getv ? :mState;
+        symbol [ STATE_WAIT_SESSION %tmp.5 392 22 40 ];
+        %tmp.5 = getv ? :STATE_WAIT_SESSION;
+        %tmp.6 = eq %tmp.3 %tmp.5;
+        bf %tmp.6 @_home_user_garmin_source_TeslaController_mc_392_8_397_8_if_false;
+_home_user_garmin_source_TeslaController_mc_392_8_397_8_if_true:
+_home_user_garmin_source_TeslaController_mc_392_42_395_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 393 12 ]
+        symbol [ mBle %tmp.8 393 12 16 ];
+        %tmp.8 = getv ? :mBle;
+        symbol [ send %tmp.9 393 17 21 ];
+        %tmp.9 = getv function %tmp.8 :send;
+        symbol [ mKey %tmp.11 393 22 26 ];
+        %tmp.11 = getv ? :mKey;
+        symbol [ buildHandshake %tmp.12 393 27 41 ];
+        %tmp.12 = getv function %tmp.11 :buildHandshake;
+        symbol [ mDomain %tmp.14 393 42 49 ];
+        %tmp.14 = getv ? :mDomain;
+        %tmp.15 = invoke %tmp.11 %tmp.12(%tmp.14);
+        invoke %tmp.8 %tmp.9(%tmp.15);
+[ "/home/user/garmin/source/TeslaController.mc" 394 12 ]
+        %tmp.16 = self;
+        symbol [ armReplyTimer %tmp.17 394 12 25 ];
+        %tmp.17 = getv function %tmp.16 :armReplyTimer;
+        invoke %tmp.16 %tmp.17();
+_home_user_garmin_source_TeslaController_mc_392_42_395_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_392_8_397_8_if_end;
+_home_user_garmin_source_TeslaController_mc_392_8_397_8_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 395 15 ]
+_home_user_garmin_source_TeslaController_mc_395_15_397_8_if_stmt:
+        symbol [ mState %tmp.19 395 19 25 ];
+        %tmp.19 = getv ? :mState;
+        symbol [ STATE_WAIT_RESULT %tmp.21 395 29 46 ];
+        %tmp.21 = getv ? :STATE_WAIT_RESULT;
+        %tmp.22 = eq %tmp.19 %tmp.21;
+        bf %tmp.22 @_home_user_garmin_source_TeslaController_mc_395_15_397_8_if_end;
+_home_user_garmin_source_TeslaController_mc_395_15_397_8_if_true:
+_home_user_garmin_source_TeslaController_mc_395_48_397_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 396 12 ]
+        %tmp.23 = self;
+        symbol [ sendCommand %tmp.24 396 12 23 ];
+        %tmp.24 = getv function %tmp.23 :sendCommand;
+        invoke %tmp.23 %tmp.24();
+_home_user_garmin_source_TeslaController_mc_395_48_397_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_395_15_397_8_if_end;
+_home_user_garmin_source_TeslaController_mc_395_15_397_8_if_end:
+_home_user_garmin_source_TeslaController_mc_392_8_397_8_if_end:
+_home_user_garmin_source_TeslaController_mc_390_28_398_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 400; @symbol_functiondef = [clearRetryTimer,400,20,35]; ]
+    protected
+    function clearRetryTimer() {
+_home_user_garmin_source_TeslaController_mc_400_38_405_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 401 8 ]
+_home_user_garmin_source_TeslaController_mc_401_8_404_8_if_stmt:
+        symbol [ mRetryTimer %tmp.2 401 12 23 ];
+        %tmp.2 = getv ? :mRetryTimer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_home_user_garmin_source_TeslaController_mc_401_8_404_8_if_end;
+_home_user_garmin_source_TeslaController_mc_401_8_404_8_if_true:
+_home_user_garmin_source_TeslaController_mc_401_33_404_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 402 12 ]
+        symbol [ mRetryTimer %tmp.6 402 12 23 ];
+        %tmp.6 = getv ? :mRetryTimer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 402 24 28 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "/home/user/garmin/source/TeslaController.mc" 403 12 ]
+        %tmp.9 = null;
+        symbol [ mRetryTimer ? 403 12 23 ];
+        putv self :mRetryTimer %tmp.9;
+_home_user_garmin_source_TeslaController_mc_401_33_404_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_401_8_404_8_if_end;
+_home_user_garmin_source_TeslaController_mc_401_8_404_8_if_end:
+_home_user_garmin_source_TeslaController_mc_400_38_405_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 409; @symbol_functiondef = [faultMessage,409,20,32]; @symbol_param<0> = [fault,409,33,38]; ]
+    protected
+    function faultMessage(fault) {
+_home_user_garmin_source_TeslaController_mc_409_40_422_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 410 8 ]
+_home_user_garmin_source_TeslaController_mc_410_8_410_95_if_stmt:
+        %tmp.1 = lgetv %fault;
+        symbol [ fault %tmp.1 410 12 17 ];
+        symbol [ FAULT_UNKNOWN_KEY %tmp.3 410 21 38 ];
+        %tmp.3 = getv ? :FAULT_UNKNOWN_KEY;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_home_user_garmin_source_TeslaController_mc_410_8_410_95_if_end;
+_home_user_garmin_source_TeslaController_mc_410_8_410_95_if_true:
+_home_user_garmin_source_TeslaController_mc_410_40_410_95_start:
+[ "/home/user/garmin/source/TeslaController.mc" 410 42 ]
+        %tmp.5 = "Key not recognized. Pair this watch first.";
+        ret %tmp.5;
+_home_user_garmin_source_TeslaController_mc_410_40_410_95_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_410_8_410_95_if_end;
+_home_user_garmin_source_TeslaController_mc_410_8_410_95_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 411 8 ]
+_home_user_garmin_source_TeslaController_mc_411_8_411_81_if_stmt:
+        %tmp.6 = lgetv %fault;
+        symbol [ fault %tmp.6 411 12 17 ];
+        symbol [ FAULT_INACTIVE_KEY %tmp.8 411 21 39 ];
+        %tmp.8 = getv ? :FAULT_INACTIVE_KEY;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_home_user_garmin_source_TeslaController_mc_411_8_411_81_if_end;
+_home_user_garmin_source_TeslaController_mc_411_8_411_81_if_true:
+_home_user_garmin_source_TeslaController_mc_411_41_411_81_start:
+[ "/home/user/garmin/source/TeslaController.mc" 411 43 ]
+        %tmp.10 = "This key has been disabled.";
+        ret %tmp.10;
+_home_user_garmin_source_TeslaController_mc_411_41_411_81_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_411_8_411_81_if_end;
+_home_user_garmin_source_TeslaController_mc_411_8_411_81_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 412 8 ]
+_home_user_garmin_source_TeslaController_mc_412_8_412_97_if_stmt:
+        %tmp.11 = lgetv %fault;
+        symbol [ fault %tmp.11 412 12 17 ];
+        symbol [ FAULT_INSUFFICIENT_PRIVILEGES %tmp.13 412 21 50 ];
+        %tmp.13 = getv ? :FAULT_INSUFFICIENT_PRIVILEGES;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        bf %tmp.14 @_home_user_garmin_source_TeslaController_mc_412_8_412_97_if_end;
+_home_user_garmin_source_TeslaController_mc_412_8_412_97_if_true:
+_home_user_garmin_source_TeslaController_mc_412_52_412_97_start:
+[ "/home/user/garmin/source/TeslaController.mc" 412 54 ]
+        %tmp.15 = "Key role not allowed to do this.";
+        ret %tmp.15;
+_home_user_garmin_source_TeslaController_mc_412_52_412_97_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_412_8_412_97_if_end;
+_home_user_garmin_source_TeslaController_mc_412_8_412_97_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 413 8 ]
+_home_user_garmin_source_TeslaController_mc_413_8_413_86_if_stmt:
+        %tmp.16 = lgetv %fault;
+        symbol [ fault %tmp.16 413 12 17 ];
+        symbol [ FAULT_WRONG_PERSONALIZATION %tmp.18 413 21 48 ];
+        %tmp.18 = getv ? :FAULT_WRONG_PERSONALIZATION;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_home_user_garmin_source_TeslaController_mc_413_8_413_86_if_end;
+_home_user_garmin_source_TeslaController_mc_413_8_413_86_if_true:
+_home_user_garmin_source_TeslaController_mc_413_50_413_86_start:
+[ "/home/user/garmin/source/TeslaController.mc" 413 52 ]
+        %tmp.20 = "Wrong VIN for this car.";
+        ret %tmp.20;
+_home_user_garmin_source_TeslaController_mc_413_50_413_86_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_413_8_413_86_if_end;
+_home_user_garmin_source_TeslaController_mc_413_8_413_86_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 414 8 ]
+_home_user_garmin_source_TeslaController_mc_414_8_414_101_if_stmt:
+        %tmp.21 = lgetv %fault;
+        symbol [ fault %tmp.21 414 12 17 ];
+        symbol [ FAULT_REMOTE_ACCESS_DISABLED %tmp.23 414 21 49 ];
+        %tmp.23 = getv ? :FAULT_REMOTE_ACCESS_DISABLED;
+        %tmp.24 = eq %tmp.21 %tmp.23;
+        bf %tmp.24 @_home_user_garmin_source_TeslaController_mc_414_8_414_101_if_end;
+_home_user_garmin_source_TeslaController_mc_414_8_414_101_if_true:
+_home_user_garmin_source_TeslaController_mc_414_51_414_101_start:
+[ "/home/user/garmin/source/TeslaController.mc" 414 53 ]
+        %tmp.25 = "Mobile access is disabled in the car.";
+        ret %tmp.25;
+_home_user_garmin_source_TeslaController_mc_414_51_414_101_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_414_8_414_101_if_end;
+_home_user_garmin_source_TeslaController_mc_414_8_414_101_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 415 8 ]
+_home_user_garmin_source_TeslaController_mc_415_8_417_8_if_stmt:
+        %tmp.26 = lgetv %fault;
+        symbol [ fault %tmp.26 415 12 17 ];
+        symbol [ FAULT_REQUIRES_RESPONSE_ENCRYPTION %tmp.28 415 21 55 ];
+        %tmp.28 = getv ? :FAULT_REQUIRES_RESPONSE_ENCRYPTION;
+        %tmp.29 = eq %tmp.26 %tmp.28;
+        bf %tmp.29 @_home_user_garmin_source_TeslaController_mc_415_8_417_8_if_end;
+_home_user_garmin_source_TeslaController_mc_415_8_417_8_if_true:
+_home_user_garmin_source_TeslaController_mc_415_57_417_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 416 12 ]
+        %tmp.30 = "Car requires encrypted replies (unsupported).";
+        ret %tmp.30;
+_home_user_garmin_source_TeslaController_mc_415_57_417_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_415_8_417_8_if_end;
+_home_user_garmin_source_TeslaController_mc_415_8_417_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 418 8 ]
+_home_user_garmin_source_TeslaController_mc_418_8_420_8_if_stmt:
+_home_user_garmin_source_TeslaController_mc_418_12_418_70_begin:
+_home_user_garmin_source_TeslaController_mc_418_12_418_44_begin:
+        %tmp.31 = lgetv %fault;
+        symbol [ fault %tmp.31 418 12 17 ];
+        symbol [ FAULT_BUSY %tmp.33 418 21 31 ];
+        %tmp.33 = getv ? :FAULT_BUSY;
+        %tmp.34 = eq %tmp.31 %tmp.33;
+        bt %tmp.34 @_home_user_garmin_source_TeslaController_mc_418_8_420_8_if_true;
+_home_user_garmin_source_TeslaController_mc_418_35_418_44_false:
+        %tmp.35 = lgetv %fault;
+        symbol [ fault %tmp.35 418 35 40 ];
+        symbol [ FAULT_TIMEOUT %tmp.37 418 44 57 ];
+        %tmp.37 = getv ? :FAULT_TIMEOUT;
+        %tmp.38 = eq %tmp.35 %tmp.37;
+        push %tmp.38;
+_home_user_garmin_source_TeslaController_mc_418_35_418_44_end:
+        %tmp.39 = phi [%tmp.34 @_home_user_garmin_source_TeslaController_mc_418_12_418_44_begin] [%tmp.38 @_home_user_garmin_source_TeslaController_mc_418_35_418_44_false] [%tmp.39 @_home_user_garmin_source_TeslaController_mc_418_35_418_44_end];
+        bt %tmp.39 @_home_user_garmin_source_TeslaController_mc_418_8_420_8_if_true;
+_home_user_garmin_source_TeslaController_mc_418_61_418_70_false:
+        %tmp.40 = lgetv %fault;
+        symbol [ fault %tmp.40 418 61 66 ];
+        symbol [ FAULT_INTERNAL %tmp.42 418 70 84 ];
+        %tmp.42 = getv ? :FAULT_INTERNAL;
+        %tmp.43 = eq %tmp.40 %tmp.42;
+        push %tmp.43;
+_home_user_garmin_source_TeslaController_mc_418_61_418_70_end:
+        %tmp.44 = phi [%tmp.39 @_home_user_garmin_source_TeslaController_mc_418_12_418_70_begin] [%tmp.43 @_home_user_garmin_source_TeslaController_mc_418_61_418_70_false] [%tmp.44 @_home_user_garmin_source_TeslaController_mc_418_61_418_70_end];
+        bf %tmp.44 @_home_user_garmin_source_TeslaController_mc_418_8_420_8_if_end;
+_home_user_garmin_source_TeslaController_mc_418_8_420_8_if_true:
+_home_user_garmin_source_TeslaController_mc_418_86_420_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 419 12 ]
+        %tmp.45 = "Vehicle busy. Try again.";
+        ret %tmp.45;
+_home_user_garmin_source_TeslaController_mc_418_86_420_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_418_8_420_8_if_end;
+_home_user_garmin_source_TeslaController_mc_418_8_420_8_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 421 8 ]
+        %tmp.46 = "Vehicle rejected command (fault ";
+        %tmp.47 = lgetv %fault;
+        symbol [ fault %tmp.47 421 52 57 ];
+        %tmp.48 = add %tmp.46 %tmp.47;
+        %tmp.49 = ")";
+        %tmp.50 = add %tmp.48 %tmp.49;
+        ret %tmp.50;
+_home_user_garmin_source_TeslaController_mc_409_40_422_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 424; @symbol_functiondef = [nominalMessage,424,20,34]; @symbol_param<0> = [code,424,35,39]; ]
+    protected
+    function nominalMessage(code) {
+_home_user_garmin_source_TeslaController_mc_424_41_432_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 425 8 ]
+_home_user_garmin_source_TeslaController_mc_425_8_425_80_if_stmt:
+        %tmp.1 = lgetv %code;
+        symbol [ code %tmp.1 425 12 16 ];
+        symbol [ GENERIC_CLOSURES_OPEN %tmp.3 425 20 41 ];
+        %tmp.3 = getv ? :GENERIC_CLOSURES_OPEN;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_home_user_garmin_source_TeslaController_mc_425_8_425_80_if_end;
+_home_user_garmin_source_TeslaController_mc_425_8_425_80_if_true:
+_home_user_garmin_source_TeslaController_mc_425_43_425_80_start:
+[ "/home/user/garmin/source/TeslaController.mc" 425 45 ]
+        %tmp.5 = "A door or trunk is open.";
+        ret %tmp.5;
+_home_user_garmin_source_TeslaController_mc_425_43_425_80_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_425_8_425_80_if_end;
+_home_user_garmin_source_TeslaController_mc_425_8_425_80_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 426 8 ]
+_home_user_garmin_source_TeslaController_mc_426_8_426_66_if_stmt:
+        %tmp.6 = lgetv %code;
+        symbol [ code %tmp.6 426 12 16 ];
+        symbol [ GENERIC_ALREADY_ON %tmp.8 426 20 38 ];
+        %tmp.8 = getv ? :GENERIC_ALREADY_ON;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_home_user_garmin_source_TeslaController_mc_426_8_426_66_if_end;
+_home_user_garmin_source_TeslaController_mc_426_8_426_66_if_true:
+_home_user_garmin_source_TeslaController_mc_426_40_426_66_start:
+[ "/home/user/garmin/source/TeslaController.mc" 426 42 ]
+        %tmp.10 = "Already done.";
+        ret %tmp.10;
+_home_user_garmin_source_TeslaController_mc_426_40_426_66_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_426_8_426_66_if_end;
+_home_user_garmin_source_TeslaController_mc_426_8_426_66_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 427 8 ]
+_home_user_garmin_source_TeslaController_mc_427_8_427_94_if_stmt:
+        %tmp.11 = lgetv %code;
+        symbol [ code %tmp.11 427 12 16 ];
+        symbol [ GENERIC_DISABLED_FOR_USER_COMMAND %tmp.13 427 20 53 ];
+        %tmp.13 = getv ? :GENERIC_DISABLED_FOR_USER_COMMAND;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        bf %tmp.14 @_home_user_garmin_source_TeslaController_mc_427_8_427_94_if_end;
+_home_user_garmin_source_TeslaController_mc_427_8_427_94_if_true:
+_home_user_garmin_source_TeslaController_mc_427_55_427_94_start:
+[ "/home/user/garmin/source/TeslaController.mc" 427 57 ]
+        %tmp.15 = "Disabled for this command.";
+        ret %tmp.15;
+_home_user_garmin_source_TeslaController_mc_427_55_427_94_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_427_8_427_94_if_end;
+_home_user_garmin_source_TeslaController_mc_427_8_427_94_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 428 8 ]
+_home_user_garmin_source_TeslaController_mc_428_8_428_82_if_stmt:
+        %tmp.16 = lgetv %code;
+        symbol [ code %tmp.16 428 12 16 ];
+        symbol [ GENERIC_VEHICLE_NOT_IN_PARK %tmp.18 428 20 47 ];
+        %tmp.18 = getv ? :GENERIC_VEHICLE_NOT_IN_PARK;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_home_user_garmin_source_TeslaController_mc_428_8_428_82_if_end;
+_home_user_garmin_source_TeslaController_mc_428_8_428_82_if_true:
+_home_user_garmin_source_TeslaController_mc_428_49_428_82_start:
+[ "/home/user/garmin/source/TeslaController.mc" 428 51 ]
+        %tmp.20 = "Vehicle not in Park.";
+        ret %tmp.20;
+_home_user_garmin_source_TeslaController_mc_428_49_428_82_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_428_8_428_82_if_end;
+_home_user_garmin_source_TeslaController_mc_428_8_428_82_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 429 8 ]
+_home_user_garmin_source_TeslaController_mc_429_8_429_70_if_stmt:
+        %tmp.21 = lgetv %code;
+        symbol [ code %tmp.21 429 12 16 ];
+        symbol [ GENERIC_UNAUTHORIZED %tmp.23 429 20 40 ];
+        %tmp.23 = getv ? :GENERIC_UNAUTHORIZED;
+        %tmp.24 = eq %tmp.21 %tmp.23;
+        bf %tmp.24 @_home_user_garmin_source_TeslaController_mc_429_8_429_70_if_end;
+_home_user_garmin_source_TeslaController_mc_429_8_429_70_if_true:
+_home_user_garmin_source_TeslaController_mc_429_42_429_70_start:
+[ "/home/user/garmin/source/TeslaController.mc" 429 44 ]
+        %tmp.25 = "Not authorized.";
+        ret %tmp.25;
+_home_user_garmin_source_TeslaController_mc_429_42_429_70_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_429_8_429_70_if_end;
+_home_user_garmin_source_TeslaController_mc_429_8_429_70_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 430 8 ]
+_home_user_garmin_source_TeslaController_mc_430_8_430_96_if_stmt:
+        %tmp.26 = lgetv %code;
+        symbol [ code %tmp.26 430 12 16 ];
+        symbol [ GENERIC_NOT_ALLOWED_OVER_TRANSPORT %tmp.28 430 20 54 ];
+        %tmp.28 = getv ? :GENERIC_NOT_ALLOWED_OVER_TRANSPORT;
+        %tmp.29 = eq %tmp.26 %tmp.28;
+        bf %tmp.29 @_home_user_garmin_source_TeslaController_mc_430_8_430_96_if_end;
+_home_user_garmin_source_TeslaController_mc_430_8_430_96_if_true:
+_home_user_garmin_source_TeslaController_mc_430_56_430_96_start:
+[ "/home/user/garmin/source/TeslaController.mc" 430 58 ]
+        %tmp.30 = "Not allowed over Bluetooth.";
+        ret %tmp.30;
+_home_user_garmin_source_TeslaController_mc_430_56_430_96_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_430_8_430_96_if_end;
+_home_user_garmin_source_TeslaController_mc_430_8_430_96_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 431 8 ]
+        %tmp.31 = self;
+        symbol [ intentName %tmp.32 431 15 25 ];
+        %tmp.32 = getv function %tmp.31 :intentName;
+        %tmp.33 = invoke %tmp.31 %tmp.32();
+        %tmp.34 = " refused (error ";
+        %tmp.35 = add %tmp.33 %tmp.34;
+        %tmp.36 = lgetv %code;
+        symbol [ code %tmp.36 431 51 55 ];
+        %tmp.37 = add %tmp.35 %tmp.36;
+        %tmp.38 = ")";
+        %tmp.39 = add %tmp.37 %tmp.38;
+        ret %tmp.39;
+_home_user_garmin_source_TeslaController_mc_424_41_432_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 434; @symbol_functiondef = [whitelistMessage,434,20,36]; @symbol_param<0> = [info,434,37,41]; ]
+    protected
+    function whitelistMessage(info) {
+_home_user_garmin_source_TeslaController_mc_434_43_441_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 435 8 ]
+_home_user_garmin_source_TeslaController_mc_435_8_435_91_if_stmt:
+        %tmp.1 = lgetv %info;
+        symbol [ info %tmp.1 435 12 16 ];
+        symbol [ TeslaProto %tmp.3 435 20 30 ];
+        %tmp.3 = getv ? :TeslaProto;
+        symbol [ WL_INFO_WHITELIST_FULL %tmp.4 435 31 53 ];
+        %tmp.4 = getv %tmp.3 :WL_INFO_WHITELIST_FULL;
+        %tmp.5 = eq %tmp.1 %tmp.4;
+        bf %tmp.5 @_home_user_garmin_source_TeslaController_mc_435_8_435_91_if_end;
+_home_user_garmin_source_TeslaController_mc_435_8_435_91_if_true:
+_home_user_garmin_source_TeslaController_mc_435_55_435_91_start:
+[ "/home/user/garmin/source/TeslaController.mc" 435 57 ]
+        %tmp.6 = "Car's key list is full.";
+        ret %tmp.6;
+_home_user_garmin_source_TeslaController_mc_435_55_435_91_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_435_8_435_91_if_end;
+_home_user_garmin_source_TeslaController_mc_435_8_435_91_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 436 8 ]
+_home_user_garmin_source_TeslaController_mc_436_8_436_89_if_stmt:
+        %tmp.7 = lgetv %info;
+        symbol [ info %tmp.7 436 12 16 ];
+        symbol [ TeslaProto %tmp.9 436 20 30 ];
+        %tmp.9 = getv ? :TeslaProto;
+        symbol [ WL_INFO_UI_DENIED %tmp.10 436 31 48 ];
+        %tmp.10 = getv %tmp.9 :WL_INFO_UI_DENIED;
+        %tmp.11 = eq %tmp.7 %tmp.10;
+        bf %tmp.11 @_home_user_garmin_source_TeslaController_mc_436_8_436_89_if_end;
+_home_user_garmin_source_TeslaController_mc_436_8_436_89_if_true:
+_home_user_garmin_source_TeslaController_mc_436_50_436_89_start:
+[ "/home/user/garmin/source/TeslaController.mc" 436 52 ]
+        %tmp.12 = "Pairing denied on the car.";
+        ret %tmp.12;
+_home_user_garmin_source_TeslaController_mc_436_50_436_89_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_436_8_436_89_if_end;
+_home_user_garmin_source_TeslaController_mc_436_8_436_89_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 437 8 ]
+_home_user_garmin_source_TeslaController_mc_437_8_437_110_if_stmt:
+        %tmp.13 = lgetv %info;
+        symbol [ info %tmp.13 437 12 16 ];
+        symbol [ TeslaProto %tmp.15 437 20 30 ];
+        %tmp.15 = getv ? :TeslaProto;
+        symbol [ WL_INFO_TIMED_OUT_WAITING_FOR_TAP %tmp.16 437 31 64 ];
+        %tmp.16 = getv %tmp.15 :WL_INFO_TIMED_OUT_WAITING_FOR_TAP;
+        %tmp.17 = eq %tmp.13 %tmp.16;
+        bf %tmp.17 @_home_user_garmin_source_TeslaController_mc_437_8_437_110_if_end;
+_home_user_garmin_source_TeslaController_mc_437_8_437_110_if_true:
+_home_user_garmin_source_TeslaController_mc_437_66_437_110_start:
+[ "/home/user/garmin/source/TeslaController.mc" 437 68 ]
+        %tmp.18 = "Timed out waiting for key card.";
+        ret %tmp.18;
+_home_user_garmin_source_TeslaController_mc_437_66_437_110_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_437_8_437_110_if_end;
+_home_user_garmin_source_TeslaController_mc_437_8_437_110_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 438 8 ]
+_home_user_garmin_source_TeslaController_mc_438_8_438_117_if_stmt:
+        %tmp.19 = lgetv %info;
+        symbol [ info %tmp.19 438 12 16 ];
+        symbol [ TeslaProto %tmp.21 438 20 30 ];
+        %tmp.21 = getv ? :TeslaProto;
+        symbol [ WL_INFO_TIMED_OUT_WAITING_FOR_UI_ACK %tmp.22 438 31 67 ];
+        %tmp.22 = getv %tmp.21 :WL_INFO_TIMED_OUT_WAITING_FOR_UI_ACK;
+        %tmp.23 = eq %tmp.19 %tmp.22;
+        bf %tmp.23 @_home_user_garmin_source_TeslaController_mc_438_8_438_117_if_end;
+_home_user_garmin_source_TeslaController_mc_438_8_438_117_if_true:
+_home_user_garmin_source_TeslaController_mc_438_69_438_117_start:
+[ "/home/user/garmin/source/TeslaController.mc" 438 71 ]
+        %tmp.24 = "Timed out waiting for confirmation.";
+        ret %tmp.24;
+_home_user_garmin_source_TeslaController_mc_438_69_438_117_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_438_8_438_117_if_end;
+_home_user_garmin_source_TeslaController_mc_438_8_438_117_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 439 8 ]
+_home_user_garmin_source_TeslaController_mc_439_8_439_81_if_stmt:
+        %tmp.25 = lgetv %info;
+        symbol [ info %tmp.25 439 12 16 ];
+        symbol [ TeslaProto %tmp.27 439 20 30 ];
+        %tmp.27 = getv ? :TeslaProto;
+        symbol [ WL_INFO_CANCELLED %tmp.28 439 31 48 ];
+        %tmp.28 = getv %tmp.27 :WL_INFO_CANCELLED;
+        %tmp.29 = eq %tmp.25 %tmp.28;
+        bf %tmp.29 @_home_user_garmin_source_TeslaController_mc_439_8_439_81_if_end;
+_home_user_garmin_source_TeslaController_mc_439_8_439_81_if_true:
+_home_user_garmin_source_TeslaController_mc_439_50_439_81_start:
+[ "/home/user/garmin/source/TeslaController.mc" 439 52 ]
+        %tmp.30 = "Pairing cancelled.";
+        ret %tmp.30;
+_home_user_garmin_source_TeslaController_mc_439_50_439_81_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_439_8_439_81_if_end;
+_home_user_garmin_source_TeslaController_mc_439_8_439_81_if_end:
+[ "/home/user/garmin/source/TeslaController.mc" 440 8 ]
+        %tmp.31 = "Pairing failed (code ";
+        %tmp.32 = lgetv %info;
+        symbol [ info %tmp.32 440 41 45 ];
+        %tmp.33 = add %tmp.31 %tmp.32;
+        %tmp.34 = ")";
+        %tmp.35 = add %tmp.33 %tmp.34;
+        ret %tmp.35;
+_home_user_garmin_source_TeslaController_mc_434_43_441_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 443; @symbol_functiondef = [onBleConnected,443,13,27]; ]
+    function onBleConnected() {
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 446; @symbol_functiondef = [onBleDisconnected,446,13,30]; ]
+    function onBleDisconnected() {
+_home_user_garmin_source_TeslaController_mc_446_33_457_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 447 8 ]
+_home_user_garmin_source_TeslaController_mc_447_8_456_8_if_stmt:
+        symbol [ mState %tmp.2 447 12 18 ];
+        %tmp.2 = getv ? :mState;
+        symbol [ STATE_IDLE %tmp.4 447 22 32 ];
+        %tmp.4 = getv ? :STATE_IDLE;
+        %tmp.5 = ne %tmp.2 %tmp.4;
+        bf %tmp.5 @_home_user_garmin_source_TeslaController_mc_447_8_456_8_if_end;
+_home_user_garmin_source_TeslaController_mc_447_8_456_8_if_true:
+_home_user_garmin_source_TeslaController_mc_447_34_456_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 449 12 ]
+        %tmp.6 = self;
+        symbol [ clearReplyTimer %tmp.7 449 12 27 ];
+        %tmp.7 = getv function %tmp.6 :clearReplyTimer;
+        invoke %tmp.6 %tmp.7();
+[ "/home/user/garmin/source/TeslaController.mc" 450 12 ]
+_home_user_garmin_source_TeslaController_mc_450_12_455_12_if_stmt:
+        symbol [ mState %tmp.9 450 16 22 ];
+        %tmp.9 = getv ? :mState;
+        symbol [ STATE_WAIT_PAIR %tmp.11 450 26 41 ];
+        %tmp.11 = getv ? :STATE_WAIT_PAIR;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_home_user_garmin_source_TeslaController_mc_450_12_455_12_if_else_false;
+_home_user_garmin_source_TeslaController_mc_450_12_455_12_if_true:
+_home_user_garmin_source_TeslaController_mc_450_43_453_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 452 16 ]
+        %tmp.13 = self;
+        symbol [ result %tmp.14 452 16 22 ];
+        %tmp.14 = getv function %tmp.13 :result;
+        %tmp.15 = true;
+        %tmp.16 = "Request sent. Tap your key card on the console.";
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16);
+_home_user_garmin_source_TeslaController_mc_450_43_453_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_450_12_455_12_if_end;
+_home_user_garmin_source_TeslaController_mc_450_12_455_12_if_else_false:
+_home_user_garmin_source_TeslaController_mc_453_19_455_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 454 16 ]
+        %tmp.17 = self;
+        symbol [ result %tmp.18 454 16 22 ];
+        %tmp.18 = getv function %tmp.17 :result;
+        %tmp.19 = false;
+        %tmp.20 = "Disconnected";
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.20);
+_home_user_garmin_source_TeslaController_mc_453_19_455_12_stop:
+_home_user_garmin_source_TeslaController_mc_450_12_455_12_if_end:
+_home_user_garmin_source_TeslaController_mc_447_34_456_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_447_8_456_8_if_end;
+_home_user_garmin_source_TeslaController_mc_447_8_456_8_if_end:
+_home_user_garmin_source_TeslaController_mc_446_33_457_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 459; @symbol_functiondef = [onBleError,459,13,23]; @symbol_param<0> = [msg,459,24,27]; ]
+    function onBleError(msg) {
+_home_user_garmin_source_TeslaController_mc_459_29_461_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 460 8 ]
+        %tmp.1 = self;
+        symbol [ result %tmp.2 460 8 14 ];
+        %tmp.2 = getv function %tmp.1 :result;
+        %tmp.3 = false;
+        %tmp.4 = lgetv %msg;
+        symbol [ msg %tmp.4 460 22 25 ];
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+_home_user_garmin_source_TeslaController_mc_459_29_461_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 465; @symbol_functiondef = [armReplyTimer,465,20,33]; ]
+    protected
+    function armReplyTimer() {
+_home_user_garmin_source_TeslaController_mc_465_36_467_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 466 8 ]
+        %tmp.1 = self;
+        symbol [ armReplyTimerFor %tmp.2 466 8 24 ];
+        %tmp.2 = getv function %tmp.1 :armReplyTimerFor;
+        symbol [ REPLY_TIMEOUT_MS %tmp.4 466 25 41 ];
+        %tmp.4 = getv ? :REPLY_TIMEOUT_MS;
+        invoke %tmp.1 %tmp.2(%tmp.4);
+_home_user_garmin_source_TeslaController_mc_465_36_467_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 469; @symbol_functiondef = [armReplyTimerFor,469,20,36]; @symbol_param<0> = [ms,469,37,39]; ]
+    protected
+    function armReplyTimerFor(ms) {
+_home_user_garmin_source_TeslaController_mc_469_41_473_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 470 8 ]
+        %tmp.1 = self;
+        symbol [ clearReplyTimer %tmp.2 470 8 23 ];
+        %tmp.2 = getv function %tmp.1 :clearReplyTimer;
+        invoke %tmp.1 %tmp.2();
+[ "/home/user/garmin/source/TeslaController.mc" 471 8 ]
+        symbol [ Timer %tmp.5 471 26 31 ];
+        %tmp.5 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.6 471 32 37 ];
+        %tmp.6 = getv function ? %tmp.5 :Timer;
+        %tmp.3 = newc %tmp.6 ();
+        symbol [ mReplyTimer ? 471 8 19 ];
+        putv self :mReplyTimer %tmp.3;
+[ "/home/user/garmin/source/TeslaController.mc" 472 8 ]
+        symbol [ mReplyTimer %tmp.8 472 8 19 ];
+        %tmp.8 = getv ? :mReplyTimer;
+        symbol [ start %tmp.9 472 20 25 ];
+        %tmp.9 = getv function %tmp.8 :start;
+        %tmp.10 = self;
+        symbol [ method %tmp.11 472 26 32 ];
+        %tmp.11 = getv function %tmp.10 :method;
+        %tmp.13 = const :onReplyTimeout;
+        symbol [ onReplyTimeout %tmp.13 472 34 48 const ];
+        %tmp.14 = invoke %tmp.10 %tmp.11(%tmp.13);
+        %tmp.15 = lgetv %ms;
+        symbol [ ms %tmp.15 472 51 53 ];
+        %tmp.16 = false;
+        invoke %tmp.8 %tmp.9(%tmp.14, %tmp.15, %tmp.16);
+_home_user_garmin_source_TeslaController_mc_469_41_473_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 475; @symbol_functiondef = [clearReplyTimer,475,20,35]; ]
+    protected
+    function clearReplyTimer() {
+_home_user_garmin_source_TeslaController_mc_475_38_480_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 476 8 ]
+_home_user_garmin_source_TeslaController_mc_476_8_479_8_if_stmt:
+        symbol [ mReplyTimer %tmp.2 476 12 23 ];
+        %tmp.2 = getv ? :mReplyTimer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_home_user_garmin_source_TeslaController_mc_476_8_479_8_if_end;
+_home_user_garmin_source_TeslaController_mc_476_8_479_8_if_true:
+_home_user_garmin_source_TeslaController_mc_476_33_479_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 477 12 ]
+        symbol [ mReplyTimer %tmp.6 477 12 23 ];
+        %tmp.6 = getv ? :mReplyTimer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 477 24 28 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "/home/user/garmin/source/TeslaController.mc" 478 12 ]
+        %tmp.9 = null;
+        symbol [ mReplyTimer ? 478 12 23 ];
+        putv self :mReplyTimer %tmp.9;
+_home_user_garmin_source_TeslaController_mc_476_33_479_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_476_8_479_8_if_end;
+_home_user_garmin_source_TeslaController_mc_476_8_479_8_if_end:
+_home_user_garmin_source_TeslaController_mc_475_38_480_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 482; @symbol_functiondef = [onReplyTimeout,482,13,27]; ]
+    function onReplyTimeout() {
+_home_user_garmin_source_TeslaController_mc_482_30_498_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 483 8 ]
+        %tmp.1 = null;
+        symbol [ mReplyTimer ? 483 8 19 ];
+        putv self :mReplyTimer %tmp.1;
+[ "/home/user/garmin/source/TeslaController.mc" 484 8 ]
+_home_user_garmin_source_TeslaController_mc_484_8_497_8_if_stmt:
+        symbol [ mState %tmp.3 484 12 18 ];
+        %tmp.3 = getv ? :mState;
+        symbol [ STATE_WAIT_PAIR %tmp.5 484 22 37 ];
+        %tmp.5 = getv ? :STATE_WAIT_PAIR;
+        %tmp.6 = eq %tmp.3 %tmp.5;
+        bf %tmp.6 @_home_user_garmin_source_TeslaController_mc_484_8_497_8_if_false;
+_home_user_garmin_source_TeslaController_mc_484_8_497_8_if_true:
+_home_user_garmin_source_TeslaController_mc_484_39_492_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 485 12 ]
+_home_user_garmin_source_TeslaController_mc_485_12_491_12_if_stmt:
+        symbol [ mPairWaiting %tmp.8 485 16 28 ];
+        %tmp.8 = getv ? :mPairWaiting;
+        bf %tmp.8 @_home_user_garmin_source_TeslaController_mc_485_12_491_12_if_else_false;
+_home_user_garmin_source_TeslaController_mc_485_12_491_12_if_true:
+_home_user_garmin_source_TeslaController_mc_485_30_487_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 486 16 ]
+        %tmp.9 = self;
+        symbol [ result %tmp.10 486 16 22 ];
+        %tmp.10 = getv function %tmp.9 :result;
+        %tmp.11 = false;
+        %tmp.12 = "Timed out waiting for key card.";
+        invoke %tmp.9 %tmp.10(%tmp.11, %tmp.12);
+_home_user_garmin_source_TeslaController_mc_485_30_487_12_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_485_12_491_12_if_end;
+_home_user_garmin_source_TeslaController_mc_485_12_491_12_if_else_false:
+_home_user_garmin_source_TeslaController_mc_487_19_491_12_start:
+[ "/home/user/garmin/source/TeslaController.mc" 490 16 ]
+        %tmp.13 = self;
+        symbol [ result %tmp.14 490 16 22 ];
+        %tmp.14 = getv function %tmp.13 :result;
+        %tmp.15 = true;
+        %tmp.16 = "Request sent. Tap your key card on the console, then confirm on screen.";
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16);
+_home_user_garmin_source_TeslaController_mc_487_19_491_12_stop:
+_home_user_garmin_source_TeslaController_mc_485_12_491_12_if_end:
+_home_user_garmin_source_TeslaController_mc_484_39_492_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_484_8_497_8_if_end;
+_home_user_garmin_source_TeslaController_mc_484_8_497_8_if_false:
+[ "/home/user/garmin/source/TeslaController.mc" 492 15 ]
+_home_user_garmin_source_TeslaController_mc_492_15_497_8_if_stmt:
+        symbol [ mState %tmp.18 492 19 25 ];
+        %tmp.18 = getv ? :mState;
+        symbol [ STATE_WAIT_RESULT %tmp.20 492 29 46 ];
+        %tmp.20 = getv ? :STATE_WAIT_RESULT;
+        %tmp.21 = eq %tmp.18 %tmp.20;
+        bf %tmp.21 @_home_user_garmin_source_TeslaController_mc_492_15_497_8_if_else_false;
+_home_user_garmin_source_TeslaController_mc_492_15_497_8_if_true:
+_home_user_garmin_source_TeslaController_mc_492_48_495_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 494 12 ]
+        %tmp.22 = self;
+        symbol [ result %tmp.23 494 12 18 ];
+        %tmp.23 = getv function %tmp.22 :result;
+        %tmp.24 = false;
+        %tmp.25 = "No reply. ";
+        %tmp.26 = self;
+        symbol [ intentName %tmp.27 494 41 51 ];
+        %tmp.27 = getv function %tmp.26 :intentName;
+        %tmp.28 = invoke %tmp.26 %tmp.27();
+        %tmp.29 = add %tmp.25 %tmp.28;
+        %tmp.30 = " may have worked.";
+        %tmp.31 = add %tmp.29 %tmp.30;
+        invoke %tmp.22 %tmp.23(%tmp.24, %tmp.31);
+_home_user_garmin_source_TeslaController_mc_492_48_495_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_492_15_497_8_if_end;
+_home_user_garmin_source_TeslaController_mc_492_15_497_8_if_else_false:
+_home_user_garmin_source_TeslaController_mc_495_15_497_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 496 12 ]
+        %tmp.32 = self;
+        symbol [ result %tmp.33 496 12 18 ];
+        %tmp.33 = getv function %tmp.32 :result;
+        %tmp.34 = false;
+        %tmp.35 = "No response from vehicle";
+        invoke %tmp.32 %tmp.33(%tmp.34, %tmp.35);
+_home_user_garmin_source_TeslaController_mc_495_15_497_8_stop:
+_home_user_garmin_source_TeslaController_mc_492_15_497_8_if_end:
+_home_user_garmin_source_TeslaController_mc_484_8_497_8_if_end:
+_home_user_garmin_source_TeslaController_mc_482_30_498_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 500; @symbol_functiondef = [report,500,20,26]; @symbol_param<0> = [msg,500,27,30]; ]
+    protected
+    function report(msg) {
+_home_user_garmin_source_TeslaController_mc_500_32_504_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 501 8 ]
+_home_user_garmin_source_TeslaController_mc_501_8_503_8_if_stmt:
+        symbol [ mSink %tmp.2 501 12 17 ];
+        %tmp.2 = getv ? :mSink;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_home_user_garmin_source_TeslaController_mc_501_8_503_8_if_end;
+_home_user_garmin_source_TeslaController_mc_501_8_503_8_if_true:
+_home_user_garmin_source_TeslaController_mc_501_27_503_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 502 12 ]
+        symbol [ mSink %tmp.6 502 12 17 ];
+        %tmp.6 = getv ? :mSink;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ onStatus %tmp.8 502 18 26 ];
+        %tmp.8 = getv function %tmp.7 :onStatus;
+        %tmp.9 = lgetv %msg;
+        symbol [ msg %tmp.9 502 27 30 ];
+        invoke %tmp.7 %tmp.8(%tmp.9);
+_home_user_garmin_source_TeslaController_mc_501_27_503_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_501_8_503_8_if_end;
+_home_user_garmin_source_TeslaController_mc_501_8_503_8_if_end:
+_home_user_garmin_source_TeslaController_mc_500_32_504_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 506; @symbol_functiondef = [result,506,20,26]; @symbol_param<0> = [ok,506,27,29]; @symbol_param<1> = [msg,506,31,34]; ]
+    protected
+    function result(ok, msg) {
+_home_user_garmin_source_TeslaController_mc_506_36_514_4_start:
+[ "/home/user/garmin/source/TeslaController.mc" 507 8 ]
+        %tmp.1 = self;
+        symbol [ clearReplyTimer %tmp.2 507 8 23 ];
+        %tmp.2 = getv function %tmp.1 :clearReplyTimer;
+        invoke %tmp.1 %tmp.2();
+[ "/home/user/garmin/source/TeslaController.mc" 508 8 ]
+        %tmp.3 = self;
+        symbol [ clearRetryTimer %tmp.4 508 8 23 ];
+        %tmp.4 = getv function %tmp.3 :clearRetryTimer;
+        invoke %tmp.3 %tmp.4();
+[ "/home/user/garmin/source/TeslaController.mc" 509 8 ]
+        symbol [ mBle %tmp.6 509 8 12 ];
+        %tmp.6 = getv ? :mBle;
+        symbol [ disconnect %tmp.7 509 13 23 ];
+        %tmp.7 = getv function %tmp.6 :disconnect;
+        invoke %tmp.6 %tmp.7();
+[ "/home/user/garmin/source/TeslaController.mc" 510 8 ]
+        symbol [ STATE_IDLE %tmp.9 510 17 27 ];
+        %tmp.9 = getv ? :STATE_IDLE;
+        symbol [ mState ? 510 8 14 ];
+        putv self :mState %tmp.9;
+[ "/home/user/garmin/source/TeslaController.mc" 511 8 ]
+_home_user_garmin_source_TeslaController_mc_511_8_513_8_if_stmt:
+        symbol [ mSink %tmp.11 511 12 17 ];
+        %tmp.11 = getv ? :mSink;
+        %tmp.12 = null;
+        %tmp.13 = ne %tmp.11 %tmp.12;
+        bf %tmp.13 @_home_user_garmin_source_TeslaController_mc_511_8_513_8_if_end;
+_home_user_garmin_source_TeslaController_mc_511_8_513_8_if_true:
+_home_user_garmin_source_TeslaController_mc_511_27_513_8_start:
+[ "/home/user/garmin/source/TeslaController.mc" 512 12 ]
+        symbol [ mSink %tmp.15 512 12 17 ];
+        %tmp.15 = getv ? :mSink;
+        %tmp.16 = as %tmp.15 { (!Null) };
+        symbol [ onResult %tmp.17 512 18 26 ];
+        %tmp.17 = getv function %tmp.16 :onResult;
+        %tmp.18 = lgetv %ok;
+        symbol [ ok %tmp.18 512 27 29 ];
+        %tmp.19 = lgetv %msg;
+        symbol [ msg %tmp.19 512 31 34 ];
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.19);
+_home_user_garmin_source_TeslaController_mc_511_27_513_8_stop:
+        goto @_home_user_garmin_source_TeslaController_mc_511_8_513_8_if_end;
+_home_user_garmin_source_TeslaController_mc_511_8_513_8_if_end:
+_home_user_garmin_source_TeslaController_mc_506_36_514_4_stop:
+    }
+}
+[ @file = "/home/user/garmin/source/TeslaController.mc"; @line = 1; ]
+<init> {
+}

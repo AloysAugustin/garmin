@@ -1,0 +1,690 @@
+[ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Graphics,2,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [Lang,3,13,17]; ]
+using Toybox.Lang;
+[ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 7; @symbol_classdef = [StatusView,7,6,16]; @symbol_extends<0> = [WatchUi,7,25,32]; @symbol_extends<1> = [View,7,33,37]; ]
+class StatusView extends WatchUi.View {
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 7; ]
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 7; ]
+    static
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 9; @position = 15; @symbol_vardef = [mTitle,9,15,21]; ]
+    protected
+    var mTitle;
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 10; @position = 15; @symbol_vardef = [mMessage,10,15,23]; ]
+    protected
+    var mMessage;
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 11; @position = 15; @symbol_vardef = [mDone,11,15,20]; ]
+    protected
+    var mDone;
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 12; @position = 15; @symbol_vardef = [mSuccess,12,15,23]; ]
+    protected
+    var mSuccess;
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; @symbol_param<0> = [title,14,24,29]; ]
+    function initialize(title) as Void {
+_home_user_garmin_source_ui_StatusView_mc_14_31_20_4_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 15 8 ]
+        symbol [ View %tmp.2 15 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 15 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/home/user/garmin/source/ui/StatusView.mc" 16 8 ]
+        %tmp.4 = lgetv %title;
+        symbol [ title %tmp.4 16 17 22 ];
+        symbol [ mTitle ? 16 8 14 ];
+        putv self :mTitle %tmp.4;
+[ "/home/user/garmin/source/ui/StatusView.mc" 17 8 ]
+        %tmp.5 = "Starting...";
+        symbol [ mMessage ? 17 8 16 ];
+        putv self :mMessage %tmp.5;
+[ "/home/user/garmin/source/ui/StatusView.mc" 18 8 ]
+        %tmp.6 = false;
+        symbol [ mDone ? 18 8 13 ];
+        putv self :mDone %tmp.6;
+[ "/home/user/garmin/source/ui/StatusView.mc" 19 8 ]
+        %tmp.7 = false;
+        symbol [ mSuccess ? 19 8 16 ];
+        putv self :mSuccess %tmp.7;
+_home_user_garmin_source_ui_StatusView_mc_14_31_20_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 24; @symbol_functiondef = [onStatus,24,13,21]; @symbol_param<0> = [msg,24,22,25]; ]
+    function onStatus(msg) {
+_home_user_garmin_source_ui_StatusView_mc_24_27_28_4_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 25 8 ]
+        %tmp.1 = lgetv %msg;
+        symbol [ msg %tmp.1 25 19 22 ];
+        symbol [ mMessage ? 25 8 16 ];
+        putv self :mMessage %tmp.1;
+[ "/home/user/garmin/source/ui/StatusView.mc" 26 8 ]
+        %tmp.2 = false;
+        symbol [ mDone ? 26 8 13 ];
+        putv self :mDone %tmp.2;
+[ "/home/user/garmin/source/ui/StatusView.mc" 27 8 ]
+        symbol [ WatchUi %tmp.3 27 8 15 ];
+        %tmp.3 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.4 27 16 29 ];
+        %tmp.4 = getv function %tmp.3 :requestUpdate;
+        invoke %tmp.3 %tmp.4();
+_home_user_garmin_source_ui_StatusView_mc_24_27_28_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 30; @symbol_functiondef = [onResult,30,13,21]; @symbol_param<0> = [ok,30,22,24]; @symbol_param<1> = [msg,30,26,29]; ]
+    function onResult(ok, msg) {
+_home_user_garmin_source_ui_StatusView_mc_30_31_35_4_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 31 8 ]
+        %tmp.1 = lgetv %msg;
+        symbol [ msg %tmp.1 31 19 22 ];
+        symbol [ mMessage ? 31 8 16 ];
+        putv self :mMessage %tmp.1;
+[ "/home/user/garmin/source/ui/StatusView.mc" 32 8 ]
+        %tmp.2 = true;
+        symbol [ mDone ? 32 8 13 ];
+        putv self :mDone %tmp.2;
+[ "/home/user/garmin/source/ui/StatusView.mc" 33 8 ]
+        %tmp.3 = lgetv %ok;
+        symbol [ ok %tmp.3 33 19 21 ];
+        symbol [ mSuccess ? 33 8 16 ];
+        putv self :mSuccess %tmp.3;
+[ "/home/user/garmin/source/ui/StatusView.mc" 34 8 ]
+        symbol [ WatchUi %tmp.4 34 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 34 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+_home_user_garmin_source_ui_StatusView_mc_30_31_35_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 37; @symbol_functiondef = [isDone,37,13,19]; ]
+    function isDone() {
+_home_user_garmin_source_ui_StatusView_mc_37_22_39_4_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 38 8 ]
+        symbol [ mDone %tmp.2 38 15 20 ];
+        %tmp.2 = getv ? :mDone;
+        ret %tmp.2;
+_home_user_garmin_source_ui_StatusView_mc_37_22_39_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 43; @symbol_functiondef = [onUpdate,43,13,21]; @symbol_param<0> = [dc,43,22,24]; ]
+    function onUpdate(dc) {
+_home_user_garmin_source_ui_StatusView_mc_43_26_68_4_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 44 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 44 8 10 ];
+        symbol [ setColor %tmp.2 44 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ Graphics %tmp.3 44 20 28 ];
+        %tmp.3 = getm $.Toybox.Graphics;
+        symbol [ COLOR_BLACK %tmp.4 44 29 40 ];
+        %tmp.4 = getv %tmp.3 :COLOR_BLACK;
+        symbol [ Graphics %tmp.5 44 42 50 ];
+        %tmp.5 = getm $.Toybox.Graphics;
+        symbol [ COLOR_BLACK %tmp.6 44 51 62 ];
+        %tmp.6 = getv %tmp.5 :COLOR_BLACK;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "/home/user/garmin/source/ui/StatusView.mc" 45 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 45 8 10 ];
+        symbol [ clear %tmp.8 45 11 16 ];
+        %tmp.8 = getv function %tmp.7 :clear;
+        invoke %tmp.7 %tmp.8();
+[ "/home/user/garmin/source/ui/StatusView.mc" 47 8 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_43_26_68_4_start" "_home_user_garmin_source_ui_StatusView_mc_43_26_68_4_stop" ]
+        %w.1 = local;
+        symbol [ w %w.1 47 12 13 ];
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 47 16 18 ];
+        symbol [ getWidth %tmp.10 47 19 27 ];
+        %tmp.10 = getv function %tmp.9 :getWidth;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        lputv %w.1 %tmp.11;
+        symbol [ w %w.1 47 12 13 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 48 8 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_43_26_68_4_start" "_home_user_garmin_source_ui_StatusView_mc_43_26_68_4_stop" ]
+        %h.2 = local;
+        symbol [ h %h.2 48 12 13 ];
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 48 16 18 ];
+        symbol [ getHeight %tmp.13 48 19 28 ];
+        %tmp.13 = getv function %tmp.12 :getHeight;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        lputv %h.2 %tmp.14;
+        symbol [ h %h.2 48 12 13 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 50 8 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_43_26_68_4_start" "_home_user_garmin_source_ui_StatusView_mc_43_26_68_4_stop" ]
+        %accent.3 = local;
+        symbol [ accent %accent.3 50 12 18 ];
+        symbol [ Graphics %tmp.15 50 21 29 ];
+        %tmp.15 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.16 50 30 41 ];
+        %tmp.16 = getv %tmp.15 :COLOR_WHITE;
+        lputv %accent.3 %tmp.16;
+        symbol [ accent %accent.3 50 12 18 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 51 8 ]
+_home_user_garmin_source_ui_StatusView_mc_51_8_53_8_if_stmt:
+        symbol [ mDone %tmp.18 51 12 17 ];
+        %tmp.18 = getv ? :mDone;
+        bf %tmp.18 @_home_user_garmin_source_ui_StatusView_mc_51_8_53_8_if_end;
+_home_user_garmin_source_ui_StatusView_mc_51_8_53_8_if_true:
+_home_user_garmin_source_ui_StatusView_mc_51_19_53_8_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 52 12 ]
+_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_begin:
+        symbol [ mSuccess %tmp.20 52 21 29 ];
+        %tmp.20 = getv ? :mSuccess;
+        bf %tmp.20 @_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_else_false;
+_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_true:
+        symbol [ Graphics %tmp.21 52 32 40 ];
+        %tmp.21 = getm $.Toybox.Graphics;
+        symbol [ COLOR_GREEN %tmp.22 52 41 52 ];
+        %tmp.22 = getv %tmp.21 :COLOR_GREEN;
+        push %tmp.22;
+        goto @_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_end;
+_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_else_false:
+        symbol [ Graphics %tmp.23 52 55 63 ];
+        %tmp.23 = getm $.Toybox.Graphics;
+        symbol [ COLOR_RED %tmp.24 52 64 73 ];
+        %tmp.24 = getv %tmp.23 :COLOR_RED;
+        push %tmp.24;
+_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_end:
+        %tmp.25 = phi [%tmp.20 @_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_begin] [%tmp.22 @_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_true] [%tmp.24 @_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_else_false] [%tmp.25 @_home_user_garmin_source_ui_StatusView_mc_52_21_52_64_end];
+        lputv %accent.3 %tmp.25;
+        symbol [ accent %accent.3 52 12 18 ];
+_home_user_garmin_source_ui_StatusView_mc_51_19_53_8_stop:
+        goto @_home_user_garmin_source_ui_StatusView_mc_51_8_53_8_if_end;
+_home_user_garmin_source_ui_StatusView_mc_51_8_53_8_if_end:
+[ "/home/user/garmin/source/ui/StatusView.mc" 55 8 ]
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 55 8 10 ];
+        symbol [ setColor %tmp.27 55 11 19 ];
+        %tmp.27 = getv function %tmp.26 :setColor;
+        %tmp.28 = lgetv %accent.3;
+        symbol [ accent %tmp.28 55 20 26 ];
+        symbol [ Graphics %tmp.29 55 28 36 ];
+        %tmp.29 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.30 55 37 54 ];
+        %tmp.30 = getv %tmp.29 :COLOR_TRANSPARENT;
+        invoke %tmp.26 %tmp.27(%tmp.28, %tmp.30);
+[ "/home/user/garmin/source/ui/StatusView.mc" 56 8 ]
+        %tmp.31 = lgetv %dc;
+        symbol [ dc %tmp.31 56 8 10 ];
+        symbol [ drawText %tmp.32 56 11 19 ];
+        %tmp.32 = getv function %tmp.31 :drawText;
+        %tmp.33 = lgetv %w.1;
+        symbol [ w %tmp.33 56 20 21 ];
+        %tmp.34 = 2;
+        %tmp.35 = div %tmp.33 %tmp.34;
+        %tmp.36 = lgetv %h.2;
+        symbol [ h %tmp.36 56 27 28 ];
+        %tmp.37 = 0.22;
+        %tmp.38 = mul %tmp.36 %tmp.37;
+        symbol [ Graphics %tmp.39 56 37 45 ];
+        %tmp.39 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.40 56 46 57 ];
+        %tmp.40 = getv %tmp.39 :FONT_MEDIUM;
+        symbol [ mTitle %tmp.42 56 59 65 ];
+        %tmp.42 = getv ? :mTitle;
+        symbol [ Graphics %tmp.43 57 12 20 ];
+        %tmp.43 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.44 57 21 40 ];
+        %tmp.44 = getv %tmp.43 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.31 %tmp.32(%tmp.35, %tmp.38, %tmp.40, %tmp.42, %tmp.44);
+[ "/home/user/garmin/source/ui/StatusView.mc" 59 8 ]
+        %tmp.45 = lgetv %dc;
+        symbol [ dc %tmp.45 59 8 10 ];
+        symbol [ setColor %tmp.46 59 11 19 ];
+        %tmp.46 = getv function %tmp.45 :setColor;
+        symbol [ Graphics %tmp.47 59 20 28 ];
+        %tmp.47 = getm $.Toybox.Graphics;
+        symbol [ COLOR_WHITE %tmp.48 59 29 40 ];
+        %tmp.48 = getv %tmp.47 :COLOR_WHITE;
+        symbol [ Graphics %tmp.49 59 42 50 ];
+        %tmp.49 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.50 59 51 68 ];
+        %tmp.50 = getv %tmp.49 :COLOR_TRANSPARENT;
+        invoke %tmp.45 %tmp.46(%tmp.48, %tmp.50);
+[ "/home/user/garmin/source/ui/StatusView.mc" 60 8 ]
+        %tmp.51 = lgetv %dc;
+        symbol [ dc %tmp.51 60 8 10 ];
+        symbol [ drawText %tmp.52 60 11 19 ];
+        %tmp.52 = getv function %tmp.51 :drawText;
+        %tmp.53 = lgetv %w.1;
+        symbol [ w %tmp.53 60 20 21 ];
+        %tmp.54 = 2;
+        %tmp.55 = div %tmp.53 %tmp.54;
+        %tmp.56 = lgetv %h.2;
+        symbol [ h %tmp.56 60 27 28 ];
+        %tmp.57 = 2;
+        %tmp.58 = div %tmp.56 %tmp.57;
+        symbol [ Graphics %tmp.59 60 34 42 ];
+        %tmp.59 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.60 60 43 53 ];
+        %tmp.60 = getv %tmp.59 :FONT_SMALL;
+        %tmp.61 = self;
+        symbol [ wrap %tmp.62 60 55 59 ];
+        %tmp.62 = getv function %tmp.61 :wrap;
+        symbol [ mMessage %tmp.64 60 60 68 ];
+        %tmp.64 = getv ? :mMessage;
+        %tmp.65 = invoke %tmp.61 %tmp.62(%tmp.64);
+        symbol [ Graphics %tmp.66 61 12 20 ];
+        %tmp.66 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.67 61 21 40 ];
+        %tmp.67 = getv %tmp.66 :TEXT_JUSTIFY_CENTER;
+        symbol [ Graphics %tmp.68 61 43 51 ];
+        %tmp.68 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_VCENTER %tmp.69 61 52 72 ];
+        %tmp.69 = getv %tmp.68 :TEXT_JUSTIFY_VCENTER;
+        %tmp.70 = bitor %tmp.67 %tmp.69;
+        invoke %tmp.51 %tmp.52(%tmp.55, %tmp.58, %tmp.60, %tmp.65, %tmp.70);
+[ "/home/user/garmin/source/ui/StatusView.mc" 63 8 ]
+_home_user_garmin_source_ui_StatusView_mc_63_8_67_8_if_stmt:
+        symbol [ mDone %tmp.72 63 12 17 ];
+        %tmp.72 = getv ? :mDone;
+        bf %tmp.72 @_home_user_garmin_source_ui_StatusView_mc_63_8_67_8_if_end;
+_home_user_garmin_source_ui_StatusView_mc_63_8_67_8_if_true:
+_home_user_garmin_source_ui_StatusView_mc_63_19_67_8_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 64 12 ]
+        %tmp.73 = lgetv %dc;
+        symbol [ dc %tmp.73 64 12 14 ];
+        symbol [ setColor %tmp.74 64 15 23 ];
+        %tmp.74 = getv function %tmp.73 :setColor;
+        symbol [ Graphics %tmp.75 64 24 32 ];
+        %tmp.75 = getm $.Toybox.Graphics;
+        symbol [ COLOR_LT_GRAY %tmp.76 64 33 46 ];
+        %tmp.76 = getv %tmp.75 :COLOR_LT_GRAY;
+        symbol [ Graphics %tmp.77 64 48 56 ];
+        %tmp.77 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.78 64 57 74 ];
+        %tmp.78 = getv %tmp.77 :COLOR_TRANSPARENT;
+        invoke %tmp.73 %tmp.74(%tmp.76, %tmp.78);
+[ "/home/user/garmin/source/ui/StatusView.mc" 65 12 ]
+        %tmp.79 = lgetv %dc;
+        symbol [ dc %tmp.79 65 12 14 ];
+        symbol [ drawText %tmp.80 65 15 23 ];
+        %tmp.80 = getv function %tmp.79 :drawText;
+        %tmp.81 = lgetv %w.1;
+        symbol [ w %tmp.81 65 24 25 ];
+        %tmp.82 = 2;
+        %tmp.83 = div %tmp.81 %tmp.82;
+        %tmp.84 = lgetv %h.2;
+        symbol [ h %tmp.84 65 31 32 ];
+        %tmp.85 = 0.86;
+        %tmp.86 = mul %tmp.84 %tmp.85;
+        symbol [ Graphics %tmp.87 65 41 49 ];
+        %tmp.87 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.88 65 50 59 ];
+        %tmp.88 = getv %tmp.87 :FONT_TINY;
+        %tmp.89 = "BACK to return";
+        symbol [ Graphics %tmp.90 66 16 24 ];
+        %tmp.90 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.91 66 25 44 ];
+        %tmp.91 = getv %tmp.90 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.79 %tmp.80(%tmp.83, %tmp.86, %tmp.88, %tmp.89, %tmp.91);
+_home_user_garmin_source_ui_StatusView_mc_63_19_67_8_stop:
+        goto @_home_user_garmin_source_ui_StatusView_mc_63_8_67_8_if_end;
+_home_user_garmin_source_ui_StatusView_mc_63_8_67_8_if_end:
+_home_user_garmin_source_ui_StatusView_mc_43_26_68_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 71; @symbol_functiondef = [wrap,71,20,24]; @symbol_param<0> = [text,71,25,29]; ]
+    protected
+    function wrap(text) {
+_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 72 8 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_start" "_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_stop" ]
+        %words.1 = local;
+        symbol [ words %words.1 72 12 17 ];
+        %tmp.1 = self;
+        symbol [ splitWords %tmp.2 72 20 30 ];
+        %tmp.2 = getv function %tmp.1 :splitWords;
+        %tmp.3 = lgetv %text;
+        symbol [ text %tmp.3 72 31 35 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        lputv %words.1 %tmp.4;
+        symbol [ words %words.1 72 12 17 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 73 8 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_start" "_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_stop" ]
+        %line.2 = local;
+        symbol [ line %line.2 73 12 16 ];
+        %tmp.5 = "";
+        lputv %line.2 %tmp.5;
+        symbol [ line %line.2 73 12 16 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 74 8 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_start" "_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_stop" ]
+        %out.3 = local;
+        symbol [ out %out.3 74 12 15 ];
+        %tmp.6 = "";
+        lputv %out.3 %tmp.6;
+        symbol [ out %out.3 74 12 15 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 75 8 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_start" "_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_stop" ]
+        %max.4 = local;
+        symbol [ max %max.4 75 12 15 ];
+        %tmp.7 = 16;
+        lputv %max.4 %tmp.7;
+        symbol [ max %max.4 75 12 15 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 76 8 ]
+        for @_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_test @_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_incr @_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_end;
+_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_init:
+        [ "_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_begin" "_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_end" ]
+        %i.5 = local;
+        symbol [ i %i.5 76 17 18 ];
+        %tmp.8 = 0;
+        lputv %i.5 %tmp.8;
+        symbol [ i %i.5 76 17 18 ];
+_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_test:
+        %tmp.9 = lgetv %i.5;
+        symbol [ i %tmp.9 76 24 25 ];
+        %tmp.10 = lgetv %words.1;
+        symbol [ words %tmp.10 76 28 33 ];
+        symbol [ size %tmp.11 76 34 38 ];
+        %tmp.11 = getv function %tmp.10 :size;
+        %tmp.12 = invoke %tmp.10 %tmp.11();
+        %tmp.13 = lt %tmp.9 %tmp.12;
+        bf %tmp.13 @_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_end;
+_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_begin:
+_home_user_garmin_source_ui_StatusView_mc_76_47_84_8_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 77 12 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_76_47_84_8_start" "_home_user_garmin_source_ui_StatusView_mc_76_47_84_8_stop" ]
+        %candidate.6 = local;
+        symbol [ candidate %candidate.6 77 16 25 ];
+_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_begin:
+        %tmp.14 = lgetv %line.2;
+        symbol [ line %tmp.14 77 28 32 ];
+        symbol [ equals %tmp.15 77 33 39 ];
+        %tmp.15 = getv function %tmp.14 :equals;
+        %tmp.16 = "";
+        %tmp.17 = invoke %tmp.14 %tmp.15(%tmp.16);
+        bf %tmp.17 @_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_else_false;
+_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_true:
+        %tmp.18 = lgetv %words.1;
+        symbol [ words %tmp.18 77 46 51 ];
+        %tmp.19 = lgetv %i.5;
+        symbol [ i %tmp.19 77 52 53 ];
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        push %tmp.20;
+        goto @_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_end;
+_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_else_false:
+        %tmp.21 = lgetv %line.2;
+        symbol [ line %tmp.21 77 57 61 ];
+        %tmp.22 = " ";
+        %tmp.23 = add %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %words.1;
+        symbol [ words %tmp.24 77 70 75 ];
+        %tmp.25 = lgetv %i.5;
+        symbol [ i %tmp.25 77 76 77 ];
+        %tmp.26 = agetv %tmp.24 %tmp.25;
+        %tmp.27 = add %tmp.23 %tmp.26;
+        push %tmp.27;
+_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_end:
+        %tmp.28 = phi [%tmp.17 @_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_begin] [%tmp.20 @_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_true] [%tmp.27 @_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_else_false] [%tmp.28 @_home_user_garmin_source_ui_StatusView_mc_77_28_77_77_end];
+        lputv %candidate.6 %tmp.28;
+        symbol [ candidate %candidate.6 77 16 25 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 78 12 ]
+_home_user_garmin_source_ui_StatusView_mc_78_12_83_12_if_stmt:
+        %tmp.29 = lgetv %candidate.6;
+        symbol [ candidate %tmp.29 78 16 25 ];
+        symbol [ length %tmp.30 78 26 32 ];
+        %tmp.30 = getv function %tmp.29 :length;
+        %tmp.31 = invoke %tmp.29 %tmp.30();
+        %tmp.32 = lgetv %max.4;
+        symbol [ max %tmp.32 78 37 40 ];
+        %tmp.33 = gt %tmp.31 %tmp.32;
+        bf %tmp.33 @_home_user_garmin_source_ui_StatusView_mc_78_12_83_12_if_else_false;
+_home_user_garmin_source_ui_StatusView_mc_78_12_83_12_if_true:
+_home_user_garmin_source_ui_StatusView_mc_78_42_81_12_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 79 16 ]
+_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_begin:
+        %tmp.34 = lgetv %out.3;
+        symbol [ out %tmp.34 79 22 25 ];
+        symbol [ equals %tmp.35 79 26 32 ];
+        %tmp.35 = getv function %tmp.34 :equals;
+        %tmp.36 = "";
+        %tmp.37 = invoke %tmp.34 %tmp.35(%tmp.36);
+        bf %tmp.37 @_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_else_false;
+_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_true:
+        %tmp.38 = lgetv %line.2;
+        symbol [ line %tmp.38 79 39 43 ];
+        push %tmp.38;
+        goto @_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_end;
+_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_else_false:
+        %tmp.39 = lgetv %out.3;
+        symbol [ out %tmp.39 79 46 49 ];
+        %tmp.40 = "\n";
+        %tmp.41 = add %tmp.39 %tmp.40;
+        %tmp.42 = lgetv %line.2;
+        symbol [ line %tmp.42 79 59 63 ];
+        %tmp.43 = add %tmp.41 %tmp.42;
+        push %tmp.43;
+_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_end:
+        %tmp.44 = phi [%tmp.37 @_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_begin] [%tmp.38 @_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_true] [%tmp.43 @_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_else_false] [%tmp.44 @_home_user_garmin_source_ui_StatusView_mc_79_22_79_59_end];
+        lputv %out.3 %tmp.44;
+        symbol [ out %out.3 79 16 19 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 80 16 ]
+        %tmp.45 = lgetv %words.1;
+        symbol [ words %tmp.45 80 23 28 ];
+        %tmp.46 = lgetv %i.5;
+        symbol [ i %tmp.46 80 29 30 ];
+        %tmp.47 = agetv %tmp.45 %tmp.46;
+        lputv %line.2 %tmp.47;
+        symbol [ line %line.2 80 16 20 ];
+_home_user_garmin_source_ui_StatusView_mc_78_42_81_12_stop:
+        goto @_home_user_garmin_source_ui_StatusView_mc_78_12_83_12_if_end;
+_home_user_garmin_source_ui_StatusView_mc_78_12_83_12_if_else_false:
+_home_user_garmin_source_ui_StatusView_mc_81_19_83_12_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 82 16 ]
+        %tmp.48 = lgetv %candidate.6;
+        symbol [ candidate %tmp.48 82 23 32 ];
+        lputv %line.2 %tmp.48;
+        symbol [ line %line.2 82 16 20 ];
+_home_user_garmin_source_ui_StatusView_mc_81_19_83_12_stop:
+_home_user_garmin_source_ui_StatusView_mc_78_12_83_12_if_end:
+_home_user_garmin_source_ui_StatusView_mc_76_47_84_8_stop:
+_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_incr:
+[ "/home/user/garmin/source/ui/StatusView.mc" 76 ]
+        %tmp.51 = lgetv %i.5;
+        symbol [ i %tmp.51 76 42 43 ];
+        %tmp.52 = add %tmp.51 1;
+        lputv %i.5 %tmp.52;
+        symbol [ i %i.5 76 42 43 ];
+        goto @_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_test;
+_home_user_garmin_source_ui_StatusView_mc_76_8_84_8_for_end:
+[ "/home/user/garmin/source/ui/StatusView.mc" 85 8 ]
+_home_user_garmin_source_ui_StatusView_mc_85_8_87_8_if_stmt:
+        %tmp.53 = lgetv %line.2;
+        symbol [ line %tmp.53 85 13 17 ];
+        symbol [ equals %tmp.54 85 18 24 ];
+        %tmp.54 = getv function %tmp.53 :equals;
+        %tmp.55 = "";
+        %tmp.56 = invoke %tmp.53 %tmp.54(%tmp.55);
+        %tmp.57 = not %tmp.56;
+        bf %tmp.57 @_home_user_garmin_source_ui_StatusView_mc_85_8_87_8_if_end;
+_home_user_garmin_source_ui_StatusView_mc_85_8_87_8_if_true:
+_home_user_garmin_source_ui_StatusView_mc_85_30_87_8_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 86 12 ]
+_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_begin:
+        %tmp.58 = lgetv %out.3;
+        symbol [ out %tmp.58 86 18 21 ];
+        symbol [ equals %tmp.59 86 22 28 ];
+        %tmp.59 = getv function %tmp.58 :equals;
+        %tmp.60 = "";
+        %tmp.61 = invoke %tmp.58 %tmp.59(%tmp.60);
+        bf %tmp.61 @_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_else_false;
+_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_true:
+        %tmp.62 = lgetv %line.2;
+        symbol [ line %tmp.62 86 35 39 ];
+        push %tmp.62;
+        goto @_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_end;
+_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_else_false:
+        %tmp.63 = lgetv %out.3;
+        symbol [ out %tmp.63 86 42 45 ];
+        %tmp.64 = "\n";
+        %tmp.65 = add %tmp.63 %tmp.64;
+        %tmp.66 = lgetv %line.2;
+        symbol [ line %tmp.66 86 55 59 ];
+        %tmp.67 = add %tmp.65 %tmp.66;
+        push %tmp.67;
+_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_end:
+        %tmp.68 = phi [%tmp.61 @_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_begin] [%tmp.62 @_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_true] [%tmp.67 @_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_else_false] [%tmp.68 @_home_user_garmin_source_ui_StatusView_mc_86_18_86_55_end];
+        lputv %out.3 %tmp.68;
+        symbol [ out %out.3 86 12 15 ];
+_home_user_garmin_source_ui_StatusView_mc_85_30_87_8_stop:
+        goto @_home_user_garmin_source_ui_StatusView_mc_85_8_87_8_if_end;
+_home_user_garmin_source_ui_StatusView_mc_85_8_87_8_if_end:
+[ "/home/user/garmin/source/ui/StatusView.mc" 88 8 ]
+        %tmp.69 = lgetv %out.3;
+        symbol [ out %tmp.69 88 15 18 ];
+        ret %tmp.69;
+_home_user_garmin_source_ui_StatusView_mc_71_31_89_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 91; @symbol_functiondef = [splitWords,91,20,30]; @symbol_param<0> = [text,91,31,35]; ]
+    protected
+    function splitWords(text) {
+_home_user_garmin_source_ui_StatusView_mc_91_37_109_4_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 92 8 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_91_37_109_4_start" "_home_user_garmin_source_ui_StatusView_mc_91_37_109_4_stop" ]
+        %words.1 = local;
+        symbol [ words %words.1 92 12 17 ];
+        %tmp.1 = newa 0;
+        lputv %words.1 %tmp.1;
+        symbol [ words %words.1 92 12 17 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 93 8 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_91_37_109_4_start" "_home_user_garmin_source_ui_StatusView_mc_91_37_109_4_stop" ]
+        %current.2 = local;
+        symbol [ current %current.2 93 12 19 ];
+        %tmp.2 = "";
+        lputv %current.2 %tmp.2;
+        symbol [ current %current.2 93 12 19 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 94 8 ]
+        for @_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_test @_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_incr @_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_end;
+_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_init:
+        [ "_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_begin" "_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 94 17 18 ];
+        %tmp.3 = 0;
+        lputv %i.3 %tmp.3;
+        symbol [ i %i.3 94 17 18 ];
+_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_test:
+        %tmp.4 = lgetv %i.3;
+        symbol [ i %tmp.4 94 24 25 ];
+        %tmp.5 = lgetv %text;
+        symbol [ text %tmp.5 94 28 32 ];
+        symbol [ length %tmp.6 94 33 39 ];
+        %tmp.6 = getv function %tmp.5 :length;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = lt %tmp.4 %tmp.7;
+        bf %tmp.8 @_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_end;
+_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_begin:
+_home_user_garmin_source_ui_StatusView_mc_94_48_104_8_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 95 12 ]
+        [ "_home_user_garmin_source_ui_StatusView_mc_94_48_104_8_start" "_home_user_garmin_source_ui_StatusView_mc_94_48_104_8_stop" ]
+        %c.4 = local;
+        symbol [ c %c.4 95 16 17 ];
+        %tmp.9 = lgetv %text;
+        symbol [ text %tmp.9 95 20 24 ];
+        symbol [ substring %tmp.10 95 25 34 ];
+        %tmp.10 = getv function %tmp.9 :substring;
+        %tmp.11 = lgetv %i.3;
+        symbol [ i %tmp.11 95 35 36 ];
+        %tmp.12 = lgetv %i.3;
+        symbol [ i %tmp.12 95 38 39 ];
+        %tmp.13 = 1;
+        %tmp.14 = add %tmp.12 %tmp.13;
+        %tmp.15 = invoke %tmp.9 %tmp.10(%tmp.11, %tmp.14);
+        lputv %c.4 %tmp.15;
+        symbol [ c %c.4 95 16 17 ];
+[ "/home/user/garmin/source/ui/StatusView.mc" 96 12 ]
+_home_user_garmin_source_ui_StatusView_mc_96_12_103_12_if_stmt:
+        %tmp.16 = lgetv %c.4;
+        symbol [ c %tmp.16 96 16 17 ];
+        symbol [ equals %tmp.17 96 18 24 ];
+        %tmp.17 = getv function %tmp.16 :equals;
+        %tmp.18 = " ";
+        %tmp.19 = invoke %tmp.16 %tmp.17(%tmp.18);
+        bf %tmp.19 @_home_user_garmin_source_ui_StatusView_mc_96_12_103_12_if_else_false;
+_home_user_garmin_source_ui_StatusView_mc_96_12_103_12_if_true:
+_home_user_garmin_source_ui_StatusView_mc_96_31_101_12_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 97 16 ]
+_home_user_garmin_source_ui_StatusView_mc_97_16_100_16_if_stmt:
+        %tmp.20 = lgetv %current.2;
+        symbol [ current %tmp.20 97 21 28 ];
+        symbol [ equals %tmp.21 97 29 35 ];
+        %tmp.21 = getv function %tmp.20 :equals;
+        %tmp.22 = "";
+        %tmp.23 = invoke %tmp.20 %tmp.21(%tmp.22);
+        %tmp.24 = not %tmp.23;
+        bf %tmp.24 @_home_user_garmin_source_ui_StatusView_mc_97_16_100_16_if_end;
+_home_user_garmin_source_ui_StatusView_mc_97_16_100_16_if_true:
+_home_user_garmin_source_ui_StatusView_mc_97_41_100_16_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 98 20 ]
+        %tmp.25 = lgetv %words.1;
+        symbol [ words %tmp.25 98 20 25 ];
+        symbol [ add %tmp.26 98 26 29 ];
+        %tmp.26 = getv function %tmp.25 :add;
+        %tmp.27 = lgetv %current.2;
+        symbol [ current %tmp.27 98 30 37 ];
+        invoke %tmp.25 %tmp.26(%tmp.27);
+[ "/home/user/garmin/source/ui/StatusView.mc" 99 20 ]
+        %tmp.28 = "";
+        lputv %current.2 %tmp.28;
+        symbol [ current %current.2 99 20 27 ];
+_home_user_garmin_source_ui_StatusView_mc_97_41_100_16_stop:
+        goto @_home_user_garmin_source_ui_StatusView_mc_97_16_100_16_if_end;
+_home_user_garmin_source_ui_StatusView_mc_97_16_100_16_if_end:
+_home_user_garmin_source_ui_StatusView_mc_96_31_101_12_stop:
+        goto @_home_user_garmin_source_ui_StatusView_mc_96_12_103_12_if_end;
+_home_user_garmin_source_ui_StatusView_mc_96_12_103_12_if_else_false:
+_home_user_garmin_source_ui_StatusView_mc_101_19_103_12_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 102 16 ]
+        %tmp.29 = lgetv %current.2;
+        symbol [ current %tmp.29 102 16 23 ];
+        %tmp.30 = lgetv %c.4;
+        symbol [ c %tmp.30 102 27 28 ];
+        %tmp.31 = add %tmp.29 %tmp.30;
+        lputv %current.2 %tmp.31;
+        symbol [ current %current.2 102 16 23 ];
+_home_user_garmin_source_ui_StatusView_mc_101_19_103_12_stop:
+_home_user_garmin_source_ui_StatusView_mc_96_12_103_12_if_end:
+_home_user_garmin_source_ui_StatusView_mc_94_48_104_8_stop:
+_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_incr:
+[ "/home/user/garmin/source/ui/StatusView.mc" 94 ]
+        %tmp.34 = lgetv %i.3;
+        symbol [ i %tmp.34 94 43 44 ];
+        %tmp.35 = add %tmp.34 1;
+        lputv %i.3 %tmp.35;
+        symbol [ i %i.3 94 43 44 ];
+        goto @_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_test;
+_home_user_garmin_source_ui_StatusView_mc_94_8_104_8_for_end:
+[ "/home/user/garmin/source/ui/StatusView.mc" 105 8 ]
+_home_user_garmin_source_ui_StatusView_mc_105_8_107_8_if_stmt:
+        %tmp.36 = lgetv %current.2;
+        symbol [ current %tmp.36 105 13 20 ];
+        symbol [ equals %tmp.37 105 21 27 ];
+        %tmp.37 = getv function %tmp.36 :equals;
+        %tmp.38 = "";
+        %tmp.39 = invoke %tmp.36 %tmp.37(%tmp.38);
+        %tmp.40 = not %tmp.39;
+        bf %tmp.40 @_home_user_garmin_source_ui_StatusView_mc_105_8_107_8_if_end;
+_home_user_garmin_source_ui_StatusView_mc_105_8_107_8_if_true:
+_home_user_garmin_source_ui_StatusView_mc_105_33_107_8_start:
+[ "/home/user/garmin/source/ui/StatusView.mc" 106 12 ]
+        %tmp.41 = lgetv %words.1;
+        symbol [ words %tmp.41 106 12 17 ];
+        symbol [ add %tmp.42 106 18 21 ];
+        %tmp.42 = getv function %tmp.41 :add;
+        %tmp.43 = lgetv %current.2;
+        symbol [ current %tmp.43 106 22 29 ];
+        invoke %tmp.41 %tmp.42(%tmp.43);
+_home_user_garmin_source_ui_StatusView_mc_105_33_107_8_stop:
+        goto @_home_user_garmin_source_ui_StatusView_mc_105_8_107_8_if_end;
+_home_user_garmin_source_ui_StatusView_mc_105_8_107_8_if_end:
+[ "/home/user/garmin/source/ui/StatusView.mc" 108 8 ]
+        %tmp.44 = lgetv %words.1;
+        symbol [ words %tmp.44 108 15 20 ];
+        ret %tmp.44;
+_home_user_garmin_source_ui_StatusView_mc_91_37_109_4_stop:
+    }
+}
+[ @file = "/home/user/garmin/source/ui/StatusView.mc"; @line = 1; ]
+<init> {
+}

@@ -43,9 +43,7 @@ also kept in the [`dist/`](dist/) folder:
 | ----- | ---- |
 | Instinct 2  | `TeslaKey-instinct2.prg` |
 | Instinct 2S | `TeslaKey-instinct2s.prg` |
-
-> Instinct 2X: build from source with a current SDK (see Option B) — the 2X
-> postdates the SDK used for these binaries.
+| Instinct 2X | `TeslaKey-instinct2x.prg` |
 
 1. **Download** the `.prg` that matches your watch (verify it against
    `dist/SHA256SUMS.txt` if you like).
@@ -126,7 +124,7 @@ the parsing of vehicle replies, against bytes produced from Tesla's official
 ## Project layout
 
 ```
-manifest.xml                 App manifest (Instinct 2/2S/2X, BLE permission)
+manifest.xml                 App manifest (supported watches, BLE permission)
 monkey.jungle                Build configuration
 resources/                   Strings, launcher icon, VIN setting
 source/
@@ -146,7 +144,8 @@ source/
 ## Building
 
 You need the [Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/)
-(4.1.7 or newer, which includes the Instinct 2 device) and a developer key.
+(9.x; the Instinct 2X needs a recent SDK) with the device files installed
+via the SDK Manager, and a developer key.
 
 ```bash
 # One-time: create a developer signing key
@@ -158,7 +157,10 @@ openssl pkcs8 -topk8 -inform PEM -outform DER \
 monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y certs/developer_key.der -d instinct2
 
 # Build for the 2S or 2X instead
-monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y certs/developer_key.der -d instinct2s
+monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y certs/developer_key.der -d instinct2x
+
+# Release-build every supported watch into dist/ (+ SHA256SUMS.txt)
+tools/build-dist.sh
 ```
 
 ### Run the unit tests (simulator, no vehicle needed)

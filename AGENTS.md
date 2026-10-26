@@ -7,7 +7,7 @@ Tesla, speaking Tesla's documented Vehicle Command protocol directly.
 ## What this project is
 
 - Language: **Monkey C** (Garmin Connect IQ).
-- Target device: **instinct2** (also instinct2s; instinct2x needs a newer SDK).
+- Target devices: **instinct2 / instinct2s / instinct2x** (multi-device work in progress, see HANDOFF.md).
 - Protocol: Tesla `vehicle-command` (BLE to the VCSEC service). See README for
   the full design.
 
@@ -16,9 +16,11 @@ Tesla, speaking Tesla's documented Vehicle Command protocol directly.
 The build needs the Connect IQ SDK **and** the per-device files, which the Garmin
 SDK Manager normally downloads from `developer.garmin.com`.
 
-Both the normal build and the `--unit-test` build compile cleanly for `instinct2`
-and `instinct2s` (SDK **9.3.0** with the 4.1.7 device files; `dist/` was last
-built with 9.3.0, release mode `-r`). All 15 unit tests pass in the simulator:
+Run `tools/ciq-setup.sh` first (SDK 9.3.0 + device files + fonts from Garmin).
+Both the normal build and the `--unit-test` build compile cleanly for
+`instinct2`, `instinct2s` and `instinct2x`, and all 15 unit tests pass in the
+simulator on each. `tools/build-dist.sh` release-builds (`-r`) every manifest
+product into `dist/` and rewrites `dist/SHA256SUMS.txt`:
 
 ```bash
 monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y certs/developer_key.der -d instinct2
@@ -125,9 +127,12 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   downloads a pinned CLI release instead of using upstream `install.sh`.
 - **Docker works** (start the daemon with `dockerd &` if the socket is missing).
   Docker Hub blobs are reachable; **ghcr.io blobs are blocked** (403).
-- The SDK + device files used here came from the Docker Hub image
-  `piccobit/docker-connectiq:4.1.7-2022-11-21-562b8a195` (SDK 4.1.7, includes
-  the instinct2 device). Inspect images with `docker create` + `docker export`
+  Docker Hub often answers **429** (anonymous pull limit); pull through
+  Google's mirror instead: `mirror.gcr.io/yulrizka/connectiq:latest`,
+  `mirror.gcr.io/library/ubuntu:22.04` (works; `public.ecr.aws` did not).
+- Before `CIQ_TOKEN` existed, the device files came from the Docker Hub image
+  `piccobit/docker-connectiq:4.1.7-2022-11-21-562b8a195` (SDK 4.1.7). No
+  longer needed. Inspect images with `docker create` + `docker export`
   (copying files out), which avoids executing image code.
 - The compiler is Java: run `monkeybrains.jar` with
   `com.garmin.monkeybrains.Monkeybrains`. Device files must be at
@@ -144,7 +149,7 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
     -e https_proxy=$P -e HTTPS_PROXY=$P \
     -v /root/.ccr/ca-bundle.crt:/usr/local/share/ca-certificates/ccr.crt:ro \
     -v /root/.Garmin:/root/.Garmin -v <sdk>:/sdk -v $PWD:/proj \
-    --entrypoint sleep yulrizka/connectiq:latest infinity
+    --entrypoint sleep mirror.gcr.io/yulrizka/connectiq:latest infinity
   docker exec ciqsim sh -c 'update-ca-certificates; sed -i "s#http://#https://#" /etc/apt/sources.list; apt-get update; apt-get install -y xvfb'
   docker exec -d ciqsim sh -c "Xvfb :99 -screen 0 1280x1024x24 >/tmp/xvfb.log 2>&1"
   docker exec -d -e DISPLAY=:99 -w /sdk/bin ciqsim sh -c "./simulator >/tmp/sim.log 2>&1"

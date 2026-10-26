@@ -1,0 +1,1487 @@
+[ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Application,1,13,24]; ]
+using Toybox.Application;
+[ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Cryptography,2,13,25]; ]
+using Toybox.Cryptography;
+[ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [System,3,13,19]; ]
+using Toybox.System;
+[ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [Lang,4,13,17]; ]
+using Toybox.Lang;
+[ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 11; @symbol_classdef = [TeslaKey,11,6,14]; ]
+class TeslaKey {
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 11; ]
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 11; ]
+    static
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 14; @position = 10; @symbol_constdef = [STORE_PRIV,14,10,20]; ]
+    const STORE_PRIV = "clientPriv";
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 15; @position = 10; @symbol_constdef = [STORE_PUB,15,10,19]; ]
+    const STORE_PUB = "clientPub";
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 16; @position = 10; @symbol_constdef = [STORE_VIN,16,10,19]; ]
+    const STORE_VIN = "vin";
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 19; @position = 10; @symbol_constdef = [COMMAND_TTL,19,10,21]; ]
+    const COMMAND_TTL = 30;
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 22; ]
+    static
+    enum {
+        [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 23; @position = 8; @symbol_enumdec = [SESSION_OK,23,8,18]; ]
+        SESSION_OK,
+        [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 24; @position = 8; @symbol_enumdec = [SESSION_NOT_PAIRED,24,8,26]; ]
+        SESSION_NOT_PAIRED,
+        [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 25; @position = 8; @symbol_enumdec = [SESSION_INVALID,25,8,23]; ]
+        SESSION_INVALID
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 28; @position = 15; @symbol_vardef = [mPriv,28,15,20]; ]
+    protected
+    var mPriv;
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 29; @position = 15; @symbol_vardef = [mPub,29,15,19]; ]
+    protected
+    var mPub;
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 30; @position = 15; @symbol_vardef = [mVin,30,15,19]; ]
+    protected
+    var mVin;
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 35; @position = 15; @symbol_vardef = [mSessions,35,15,24]; ]
+    protected
+    var mSessions;
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 38; @position = 15; @symbol_vardef = [mRoutingAddr,38,15,27]; ]
+    protected
+    var mRoutingAddr;
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 40; @symbol_functiondef = [initialize,40,13,23]; ]
+    function initialize() as Void {
+_home_user_garmin_source_TeslaKey_mc_40_26_45_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 41 8 ]
+        %tmp.1 = newd 0;
+        symbol [ mSessions ? 41 8 17 ];
+        putv self :mSessions %tmp.1;
+[ "/home/user/garmin/source/TeslaKey.mc" 42 8 ]
+        %tmp.2 = self;
+        symbol [ loadKeyPair %tmp.3 42 8 19 ];
+        %tmp.3 = getv function %tmp.2 :loadKeyPair;
+        invoke %tmp.2 %tmp.3();
+[ "/home/user/garmin/source/TeslaKey.mc" 43 8 ]
+        %tmp.4 = self;
+        symbol [ loadVin %tmp.5 43 8 15 ];
+        %tmp.5 = getv function %tmp.4 :loadVin;
+        invoke %tmp.4 %tmp.5();
+[ "/home/user/garmin/source/TeslaKey.mc" 44 8 ]
+        %tmp.6 = self;
+        symbol [ newRoutingAddress %tmp.7 44 8 25 ];
+        %tmp.7 = getv function %tmp.6 :newRoutingAddress;
+        invoke %tmp.6 %tmp.7();
+_home_user_garmin_source_TeslaKey_mc_40_26_45_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 52; @symbol_functiondef = [loadKeyPair,52,20,31]; ]
+    protected
+    function loadKeyPair() {
+_home_user_garmin_source_TeslaKey_mc_52_34_60_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 53 8 ]
+        symbol [ Application %tmp.1 53 16 27 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 53 28 35 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 53 36 44 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        symbol [ STORE_PRIV %tmp.5 53 45 55 ];
+        %tmp.5 = getv ? :STORE_PRIV;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        symbol [ mPriv ? 53 8 13 ];
+        putv self :mPriv %tmp.6;
+[ "/home/user/garmin/source/TeslaKey.mc" 54 8 ]
+_home_user_garmin_source_TeslaKey_mc_54_8_57_8_if_stmt:
+        symbol [ mPriv %tmp.8 54 12 17 ];
+        %tmp.8 = getv ? :mPriv;
+        %tmp.9 = null;
+        %tmp.10 = eq %tmp.8 %tmp.9;
+        bf %tmp.10 @_home_user_garmin_source_TeslaKey_mc_54_8_57_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_54_8_57_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_54_27_57_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 55 12 ]
+        symbol [ TeslaCrypto %tmp.12 55 20 31 ];
+        %tmp.12 = getv ? :TeslaCrypto;
+        symbol [ generatePrivateKey %tmp.13 55 32 50 ];
+        %tmp.13 = getv function %tmp.12 :generatePrivateKey;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        symbol [ mPriv ? 55 12 17 ];
+        putv self :mPriv %tmp.14;
+[ "/home/user/garmin/source/TeslaKey.mc" 56 12 ]
+        symbol [ Application %tmp.15 56 12 23 ];
+        %tmp.15 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.16 56 24 31 ];
+        %tmp.16 = getv %tmp.15 :Storage;
+        symbol [ setValue %tmp.17 56 32 40 ];
+        %tmp.17 = getv function %tmp.16 :setValue;
+        symbol [ STORE_PRIV %tmp.19 56 41 51 ];
+        %tmp.19 = getv ? :STORE_PRIV;
+        symbol [ mPriv %tmp.21 56 53 58 ];
+        %tmp.21 = getv ? :mPriv;
+        invoke %tmp.16 %tmp.17(%tmp.19, %tmp.21);
+_home_user_garmin_source_TeslaKey_mc_54_27_57_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_54_8_57_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_54_8_57_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 58 8 ]
+        symbol [ TeslaCrypto %tmp.23 58 15 26 ];
+        %tmp.23 = getv ? :TeslaCrypto;
+        symbol [ publicKeyFromPrivate %tmp.24 58 27 47 ];
+        %tmp.24 = getv function %tmp.23 :publicKeyFromPrivate;
+        symbol [ mPriv %tmp.26 58 48 53 ];
+        %tmp.26 = getv ? :mPriv;
+        %tmp.27 = invoke %tmp.23 %tmp.24(%tmp.26);
+        symbol [ mPub ? 58 8 12 ];
+        putv self :mPub %tmp.27;
+[ "/home/user/garmin/source/TeslaKey.mc" 59 8 ]
+        symbol [ Application %tmp.28 59 8 19 ];
+        %tmp.28 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.29 59 20 27 ];
+        %tmp.29 = getv %tmp.28 :Storage;
+        symbol [ deleteValue %tmp.30 59 28 39 ];
+        %tmp.30 = getv function %tmp.29 :deleteValue;
+        symbol [ STORE_PUB %tmp.32 59 40 49 ];
+        %tmp.32 = getv ? :STORE_PUB;
+        invoke %tmp.29 %tmp.30(%tmp.32);
+_home_user_garmin_source_TeslaKey_mc_52_34_60_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 64; @symbol_functiondef = [publicKey,64,13,22]; ]
+    function publicKey() {
+_home_user_garmin_source_TeslaKey_mc_64_25_66_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 65 8 ]
+        symbol [ mPub %tmp.2 65 15 19 ];
+        %tmp.2 = getv ? :mPub;
+        ret %tmp.2;
+_home_user_garmin_source_TeslaKey_mc_64_25_66_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 68; @symbol_functiondef = [publicKeyHex,68,13,25]; ]
+    function publicKeyHex() {
+_home_user_garmin_source_TeslaKey_mc_68_28_70_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 69 8 ]
+        symbol [ TeslaCrypto %tmp.2 69 15 26 ];
+        %tmp.2 = getv ? :TeslaCrypto;
+        symbol [ toHex %tmp.3 69 27 32 ];
+        %tmp.3 = getv function %tmp.2 :toHex;
+        symbol [ mPub %tmp.5 69 33 37 ];
+        %tmp.5 = getv ? :mPub;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        ret %tmp.6;
+_home_user_garmin_source_TeslaKey_mc_68_28_70_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 74; @symbol_functiondef = [loadVin,74,20,27]; ]
+    protected
+    function loadVin() {
+_home_user_garmin_source_TeslaKey_mc_74_30_90_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 76 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_74_30_90_4_start" "_home_user_garmin_source_TeslaKey_mc_74_30_90_4_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 76 12 13 ];
+        %tmp.1 = null;
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 76 12 13 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 77 8 ]
+        try @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_beginTry @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_endTry @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_catch @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_finally;
+_home_user_garmin_source_TeslaKey_mc_77_8_81_8_beginTry:
+_home_user_garmin_source_TeslaKey_mc_77_12_79_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 78 12 ]
+        symbol [ Application %tmp.2 78 16 27 ];
+        %tmp.2 = getm $.Toybox.Application;
+        symbol [ Properties %tmp.3 78 28 38 ];
+        %tmp.3 = getv %tmp.2 :Properties;
+        symbol [ getValue %tmp.4 78 39 47 ];
+        %tmp.4 = getv function %tmp.3 :getValue;
+        %tmp.5 = "vin";
+        %tmp.6 = invoke %tmp.3 %tmp.4(%tmp.5);
+        lputv %v.1 %tmp.6;
+        symbol [ v %v.1 78 12 13 ];
+_home_user_garmin_source_TeslaKey_mc_77_12_79_8_stop:
+_home_user_garmin_source_TeslaKey_mc_77_8_81_8_endTry:
+        jsr @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_finally;
+        goto @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_end;
+_home_user_garmin_source_TeslaKey_mc_77_8_81_8_catch:
+        %tmp.7 = exception;
+        push %tmp.7;
+[ "/home/user/garmin/source/TeslaKey.mc" 79 10 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_77_8_81_8_catch" "_home_user_garmin_source_TeslaKey_mc_79_10_81_8_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 79 17 18 ];
+        %tmp.8 = dup %tmp.7;
+        lputv %e.2 %tmp.8;
+        symbol [ e %e.2 79 17 18 ];
+_home_user_garmin_source_TeslaKey_mc_79_20_81_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 80 12 ]
+        %tmp.9 = null;
+        lputv %v.1 %tmp.9;
+        symbol [ v %v.1 80 12 13 ];
+_home_user_garmin_source_TeslaKey_mc_79_20_81_8_stop:
+        jsr @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_finally;
+        pop;
+        goto @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_end;
+_home_user_garmin_source_TeslaKey_mc_79_10_81_8_end:
+        try @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_catch @_home_user_garmin_source_TeslaKey_mc_79_10_81_8_end @_home_user_garmin_source_TeslaKey_mc_79_10_81_8_end @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_finally;
+        jsr @_home_user_garmin_source_TeslaKey_mc_77_8_81_8_finally;
+        throw %tmp.7;
+_home_user_garmin_source_TeslaKey_mc_77_8_81_8_finally:
+        jsrret;
+_home_user_garmin_source_TeslaKey_mc_77_8_81_8_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 82 8 ]
+_home_user_garmin_source_TeslaKey_mc_82_8_84_8_if_stmt:
+_home_user_garmin_source_TeslaKey_mc_82_12_82_70_begin:
+_home_user_garmin_source_TeslaKey_mc_82_12_82_51_begin:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 82 12 13 ];
+        %tmp.11 = null;
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bt %tmp.12 @_home_user_garmin_source_TeslaKey_mc_82_8_84_8_if_true;
+_home_user_garmin_source_TeslaKey_mc_82_25_82_51_false:
+        %tmp.13 = lgetv %v.1;
+        symbol [ v %tmp.13 82 27 28 ];
+        %tmp.14 = as %tmp.13 { (!Null) };
+        symbol [ Lang %tmp.15 82 40 44 ];
+        %tmp.15 = getm $.Toybox.Lang;
+        symbol [ String %tmp.16 82 45 51 ];
+        %tmp.16 = getv %tmp.15 :String;
+        %tmp.17 = isa %tmp.14 %tmp.16;
+        %tmp.18 = not %tmp.17;
+        push %tmp.18;
+_home_user_garmin_source_TeslaKey_mc_82_25_82_51_end:
+        %tmp.19 = phi [%tmp.12 @_home_user_garmin_source_TeslaKey_mc_82_12_82_51_begin] [%tmp.18 @_home_user_garmin_source_TeslaKey_mc_82_25_82_51_false] [%tmp.19 @_home_user_garmin_source_TeslaKey_mc_82_25_82_51_end];
+        bt %tmp.19 @_home_user_garmin_source_TeslaKey_mc_82_8_84_8_if_true;
+_home_user_garmin_source_TeslaKey_mc_82_56_82_70_false:
+        %tmp.20 = lgetv %v.1;
+        symbol [ v %tmp.20 82 56 57 ];
+        %tmp.21 = as %tmp.20 { (Lang.String) && (!Null) };
+        symbol [ length %tmp.22 82 58 64 ];
+        %tmp.22 = getv function %tmp.21 :length;
+        %tmp.23 = invoke %tmp.21 %tmp.22();
+        %tmp.24 = 17;
+        %tmp.25 = ne %tmp.23 %tmp.24;
+        push %tmp.25;
+_home_user_garmin_source_TeslaKey_mc_82_56_82_70_end:
+        %tmp.26 = phi [%tmp.19 @_home_user_garmin_source_TeslaKey_mc_82_12_82_70_begin] [%tmp.25 @_home_user_garmin_source_TeslaKey_mc_82_56_82_70_false] [%tmp.26 @_home_user_garmin_source_TeslaKey_mc_82_56_82_70_end];
+        bf %tmp.26 @_home_user_garmin_source_TeslaKey_mc_82_8_84_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_82_8_84_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_82_74_84_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 83 12 ]
+        symbol [ Application %tmp.27 83 16 27 ];
+        %tmp.27 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.28 83 28 35 ];
+        %tmp.28 = getv %tmp.27 :Storage;
+        symbol [ getValue %tmp.29 83 36 44 ];
+        %tmp.29 = getv function %tmp.28 :getValue;
+        symbol [ STORE_VIN %tmp.31 83 45 54 ];
+        %tmp.31 = getv ? :STORE_VIN;
+        %tmp.32 = invoke %tmp.28 %tmp.29(%tmp.31);
+        lputv %v.1 %tmp.32;
+        symbol [ v %v.1 83 12 13 ];
+_home_user_garmin_source_TeslaKey_mc_82_74_84_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_82_8_84_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_82_8_84_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 85 8 ]
+_home_user_garmin_source_TeslaKey_mc_85_8_89_8_if_stmt:
+_home_user_garmin_source_TeslaKey_mc_85_12_85_67_begin:
+_home_user_garmin_source_TeslaKey_mc_85_12_85_43_begin:
+        %tmp.33 = lgetv %v.1;
+        symbol [ v %tmp.33 85 12 13 ];
+        %tmp.34 = null;
+        %tmp.35 = ne %tmp.33 %tmp.34;
+        bf %tmp.35 @_home_user_garmin_source_TeslaKey_mc_85_8_89_8_if_else_false;
+_home_user_garmin_source_TeslaKey_mc_85_25_85_43_true:
+        %tmp.36 = lgetv %v.1;
+        symbol [ v %tmp.36 85 25 26 ];
+        %tmp.37 = as %tmp.36 { (!Null) };
+        symbol [ Lang %tmp.38 85 38 42 ];
+        %tmp.38 = getm $.Toybox.Lang;
+        symbol [ String %tmp.39 85 43 49 ];
+        %tmp.39 = getv %tmp.38 :String;
+        %tmp.40 = isa %tmp.37 %tmp.39;
+        push %tmp.40;
+_home_user_garmin_source_TeslaKey_mc_85_25_85_43_end:
+        %tmp.41 = phi [%tmp.35 @_home_user_garmin_source_TeslaKey_mc_85_12_85_43_begin] [%tmp.40 @_home_user_garmin_source_TeslaKey_mc_85_25_85_43_true] [%tmp.41 @_home_user_garmin_source_TeslaKey_mc_85_25_85_43_end];
+        bf %tmp.41 @_home_user_garmin_source_TeslaKey_mc_85_8_89_8_if_else_false;
+_home_user_garmin_source_TeslaKey_mc_85_53_85_67_true:
+        %tmp.42 = lgetv %v.1;
+        symbol [ v %tmp.42 85 53 54 ];
+        %tmp.43 = as %tmp.42 { (Lang.String) && (!Null) };
+        symbol [ length %tmp.44 85 55 61 ];
+        %tmp.44 = getv function %tmp.43 :length;
+        %tmp.45 = invoke %tmp.43 %tmp.44();
+        %tmp.46 = 17;
+        %tmp.47 = eq %tmp.45 %tmp.46;
+        push %tmp.47;
+_home_user_garmin_source_TeslaKey_mc_85_53_85_67_end:
+        %tmp.48 = phi [%tmp.41 @_home_user_garmin_source_TeslaKey_mc_85_12_85_67_begin] [%tmp.47 @_home_user_garmin_source_TeslaKey_mc_85_53_85_67_true] [%tmp.48 @_home_user_garmin_source_TeslaKey_mc_85_53_85_67_end];
+        bf %tmp.48 @_home_user_garmin_source_TeslaKey_mc_85_8_89_8_if_else_false;
+_home_user_garmin_source_TeslaKey_mc_85_8_89_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_85_71_87_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 86 12 ]
+        %tmp.49 = lgetv %v.1;
+        symbol [ v %tmp.49 86 19 20 ];
+        %tmp.50 = as %tmp.49 { (Lang.String) && (!Null) };
+        symbol [ toUpper %tmp.51 86 21 28 ];
+        %tmp.51 = getv function %tmp.50 :toUpper;
+        %tmp.52 = invoke %tmp.50 %tmp.51();
+        symbol [ mVin ? 86 12 16 ];
+        putv self :mVin %tmp.52;
+_home_user_garmin_source_TeslaKey_mc_85_71_87_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_85_8_89_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_85_8_89_8_if_else_false:
+_home_user_garmin_source_TeslaKey_mc_87_15_89_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 88 12 ]
+        %tmp.53 = null;
+        symbol [ mVin ? 88 12 16 ];
+        putv self :mVin %tmp.53;
+_home_user_garmin_source_TeslaKey_mc_87_15_89_8_stop:
+_home_user_garmin_source_TeslaKey_mc_85_8_89_8_if_end:
+_home_user_garmin_source_TeslaKey_mc_74_30_90_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 93; @symbol_functiondef = [reloadSettings,93,13,27]; ]
+    function reloadSettings() {
+_home_user_garmin_source_TeslaKey_mc_93_30_95_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 94 8 ]
+        %tmp.1 = self;
+        symbol [ loadVin %tmp.2 94 8 15 ];
+        %tmp.2 = getv function %tmp.1 :loadVin;
+        invoke %tmp.1 %tmp.2();
+_home_user_garmin_source_TeslaKey_mc_93_30_95_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 97; @symbol_functiondef = [setVin,97,13,19]; @symbol_param<0> = [vin,97,20,23]; ]
+    function setVin(vin) {
+_home_user_garmin_source_TeslaKey_mc_97_25_100_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 98 8 ]
+        %tmp.1 = lgetv %vin;
+        symbol [ vin %tmp.1 98 15 18 ];
+        symbol [ toUpper %tmp.2 98 19 26 ];
+        %tmp.2 = getv function %tmp.1 :toUpper;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ mVin ? 98 8 12 ];
+        putv self :mVin %tmp.3;
+[ "/home/user/garmin/source/TeslaKey.mc" 99 8 ]
+        symbol [ Application %tmp.4 99 8 19 ];
+        %tmp.4 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.5 99 20 27 ];
+        %tmp.5 = getv %tmp.4 :Storage;
+        symbol [ setValue %tmp.6 99 28 36 ];
+        %tmp.6 = getv function %tmp.5 :setValue;
+        symbol [ STORE_VIN %tmp.8 99 37 46 ];
+        %tmp.8 = getv ? :STORE_VIN;
+        symbol [ mVin %tmp.10 99 48 52 ];
+        %tmp.10 = getv ? :mVin;
+        invoke %tmp.5 %tmp.6(%tmp.8, %tmp.10);
+_home_user_garmin_source_TeslaKey_mc_97_25_100_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 102; @symbol_functiondef = [hasVin,102,13,19]; ]
+    function hasVin() {
+_home_user_garmin_source_TeslaKey_mc_102_22_104_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 103 8 ]
+        symbol [ mVin %tmp.2 103 15 19 ];
+        %tmp.2 = getv ? :mVin;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        ret %tmp.4;
+_home_user_garmin_source_TeslaKey_mc_102_22_104_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 106; @symbol_functiondef = [vin,106,13,16]; ]
+    function vin() {
+_home_user_garmin_source_TeslaKey_mc_106_19_108_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 107 8 ]
+        symbol [ mVin %tmp.2 107 15 19 ];
+        %tmp.2 = getv ? :mVin;
+        ret %tmp.2;
+_home_user_garmin_source_TeslaKey_mc_106_19_108_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 110; @symbol_functiondef = [vinBytes,110,20,28]; ]
+    protected
+    function vinBytes() {
+_home_user_garmin_source_TeslaKey_mc_110_31_112_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 111 8 ]
+        symbol [ TeslaCrypto %tmp.2 111 15 26 ];
+        %tmp.2 = getv ? :TeslaCrypto;
+        symbol [ strBytes %tmp.3 111 27 35 ];
+        %tmp.3 = getv function %tmp.2 :strBytes;
+        symbol [ mVin %tmp.5 111 36 40 ];
+        %tmp.5 = getv ? :mVin;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        ret %tmp.6;
+_home_user_garmin_source_TeslaKey_mc_110_31_112_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 116; @symbol_functiondef = [localName,116,13,22]; ]
+    function localName() {
+_home_user_garmin_source_TeslaKey_mc_116_25_119_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 117 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_116_25_119_4_start" "_home_user_garmin_source_TeslaKey_mc_116_25_119_4_stop" ]
+        %digest.1 = local;
+        symbol [ digest %digest.1 117 12 18 ];
+        symbol [ TeslaCrypto %tmp.2 117 21 32 ];
+        %tmp.2 = getv ? :TeslaCrypto;
+        symbol [ sha1 %tmp.3 117 33 37 ];
+        %tmp.3 = getv function %tmp.2 :sha1;
+        %tmp.4 = self;
+        symbol [ vinBytes %tmp.5 117 38 46 ];
+        %tmp.5 = getv function %tmp.4 :vinBytes;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = invoke %tmp.2 %tmp.3(%tmp.6);
+        lputv %digest.1 %tmp.7;
+        symbol [ digest %digest.1 117 12 18 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 118 8 ]
+        %tmp.8 = "S";
+        symbol [ TeslaCrypto %tmp.10 118 21 32 ];
+        %tmp.10 = getv ? :TeslaCrypto;
+        symbol [ toHex %tmp.11 118 33 38 ];
+        %tmp.11 = getv function %tmp.10 :toHex;
+        %tmp.12 = lgetv %digest.1;
+        symbol [ digest %tmp.12 118 39 45 ];
+        symbol [ slice %tmp.13 118 46 51 ];
+        %tmp.13 = getv function %tmp.12 :slice;
+        %tmp.14 = 0;
+        %tmp.15 = 8;
+        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.14, %tmp.15);
+        %tmp.17 = invoke %tmp.10 %tmp.11(%tmp.16);
+        %tmp.18 = add %tmp.8 %tmp.17;
+        %tmp.19 = "C";
+        %tmp.20 = add %tmp.18 %tmp.19;
+        ret %tmp.20;
+_home_user_garmin_source_TeslaKey_mc_116_25_119_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 123; @symbol_functiondef = [newRoutingAddress,123,13,30]; ]
+    function newRoutingAddress() {
+_home_user_garmin_source_TeslaKey_mc_123_33_125_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 124 8 ]
+        symbol [ Cryptography %tmp.1 124 23 35 ];
+        %tmp.1 = getm $.Toybox.Cryptography;
+        symbol [ randomBytes %tmp.2 124 36 47 ];
+        %tmp.2 = getv function %tmp.1 :randomBytes;
+        %tmp.3 = 16;
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        symbol [ mRoutingAddr ? 124 8 20 ];
+        putv self :mRoutingAddr %tmp.4;
+_home_user_garmin_source_TeslaKey_mc_123_33_125_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 128; @symbol_functiondef = [resetSessions,128,13,26]; ]
+    function resetSessions() {
+_home_user_garmin_source_TeslaKey_mc_128_29_130_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 129 8 ]
+        %tmp.1 = newd 0;
+        symbol [ mSessions ? 129 8 17 ];
+        putv self :mSessions %tmp.1;
+_home_user_garmin_source_TeslaKey_mc_128_29_130_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 132; @symbol_functiondef = [hasSession,132,13,23]; @symbol_param<0> = [domain,132,24,30]; ]
+    function hasSession(domain) {
+_home_user_garmin_source_TeslaKey_mc_132_32_134_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 133 8 ]
+_home_user_garmin_source_TeslaKey_mc_133_15_133_70_begin:
+        symbol [ mSessions %tmp.2 133 15 24 ];
+        %tmp.2 = getv ? :mSessions;
+        symbol [ hasKey %tmp.3 133 25 31 ];
+        %tmp.3 = getv function %tmp.2 :hasKey;
+        %tmp.4 = lgetv %domain;
+        symbol [ domain %tmp.4 133 32 38 ];
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        %tmp.6 = dup %tmp.5;
+        bf %tmp.6 @_home_user_garmin_source_TeslaKey_mc_133_43_133_70_end;
+_home_user_garmin_source_TeslaKey_mc_133_43_133_70_true:
+        symbol [ mSessions %tmp.8 133 43 52 ];
+        %tmp.8 = getv ? :mSessions;
+        %tmp.9 = lgetv %domain;
+        symbol [ domain %tmp.9 133 53 59 ];
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        %tmp.12 = const :verified;
+        symbol [ verified %tmp.12 133 62 70 const ];
+        %tmp.13 = agetv %tmp.10 %tmp.12;
+        %tmp.14 = and %tmp.5 %tmp.13;
+        push %tmp.14;
+_home_user_garmin_source_TeslaKey_mc_133_43_133_70_end:
+        %tmp.15 = phi [%tmp.6 @_home_user_garmin_source_TeslaKey_mc_133_15_133_70_begin] [%tmp.14 @_home_user_garmin_source_TeslaKey_mc_133_43_133_70_true] [%tmp.15 @_home_user_garmin_source_TeslaKey_mc_133_43_133_70_end];
+        ret %tmp.15;
+_home_user_garmin_source_TeslaKey_mc_132_32_134_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 138; @symbol_functiondef = [isForUs,138,13,20]; @symbol_param<0> = [routable,138,21,29]; ]
+    function isForUs(routable) {
+_home_user_garmin_source_TeslaKey_mc_138_31_143_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 139 8 ]
+_home_user_garmin_source_TeslaKey_mc_139_8_141_8_if_stmt:
+        %tmp.1 = lgetv %routable;
+        symbol [ routable %tmp.1 139 13 21 ];
+        symbol [ hasKey %tmp.2 139 22 28 ];
+        %tmp.2 = getv function %tmp.1 :hasKey;
+        %tmp.4 = const :toAddress;
+        symbol [ toAddress %tmp.4 139 30 39 const ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        %tmp.6 = not %tmp.5;
+        bf %tmp.6 @_home_user_garmin_source_TeslaKey_mc_139_8_141_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_139_8_141_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_139_42_141_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 140 12 ]
+        %tmp.7 = true;
+        ret %tmp.7;
+_home_user_garmin_source_TeslaKey_mc_139_42_141_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_139_8_141_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_139_8_141_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 142 8 ]
+        symbol [ TeslaCrypto %tmp.9 142 15 26 ];
+        %tmp.9 = getv ? :TeslaCrypto;
+        symbol [ constantTimeEquals %tmp.10 142 27 45 ];
+        %tmp.10 = getv function %tmp.9 :constantTimeEquals;
+        %tmp.11 = lgetv %routable;
+        symbol [ routable %tmp.11 142 46 54 ];
+        %tmp.13 = const :toAddress;
+        symbol [ toAddress %tmp.13 142 56 65 const ];
+        %tmp.14 = agetv %tmp.11 %tmp.13;
+        symbol [ mRoutingAddr %tmp.16 142 68 80 ];
+        %tmp.16 = getv ? :mRoutingAddr;
+        %tmp.17 = invoke %tmp.9 %tmp.10(%tmp.14, %tmp.16);
+        ret %tmp.17;
+_home_user_garmin_source_TeslaKey_mc_138_31_143_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 149; @symbol_functiondef = [buildHandshake,149,13,27]; @symbol_param<0> = [domain,149,28,34]; ]
+    function buildHandshake(domain) {
+_home_user_garmin_source_TeslaKey_mc_149_36_156_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 150 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_149_36_156_4_start" "_home_user_garmin_source_TeslaKey_mc_149_36_156_4_stop" ]
+        %uuid.1 = local;
+        symbol [ uuid %uuid.1 150 12 16 ];
+        symbol [ Cryptography %tmp.1 150 19 31 ];
+        %tmp.1 = getm $.Toybox.Cryptography;
+        symbol [ randomBytes %tmp.2 150 32 43 ];
+        %tmp.2 = getv function %tmp.1 :randomBytes;
+        %tmp.3 = 16;
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        lputv %uuid.1 %tmp.4;
+        symbol [ uuid %uuid.1 150 12 16 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 151 8 ]
+        symbol [ mSessions %tmp.5 151 8 17 ];
+        %tmp.5 = getv self :mSessions;
+        %tmp.6 = newd 2;
+        %tmp.8 = const :challenge;
+        symbol [ challenge %tmp.8 152 13 22 const ];
+        %tmp.9 = lgetv %uuid.1;
+        symbol [ uuid %tmp.9 152 26 30 ];
+        %tmp.10 = dup %tmp.6;
+        %tmp.11 = aputv %tmp.10 %tmp.8 %tmp.9;
+        %tmp.13 = const :verified;
+        symbol [ verified %tmp.13 153 13 21 const ];
+        %tmp.14 = false;
+        %tmp.15 = dup %tmp.11;
+        %tmp.16 = aputv %tmp.15 %tmp.13 %tmp.14;
+        %tmp.17 = lgetv %domain;
+        symbol [ domain %tmp.17 151 18 24 ];
+        aputv %tmp.5 %tmp.17 %tmp.16;
+[ "/home/user/garmin/source/TeslaKey.mc" 155 8 ]
+        symbol [ TeslaProto %tmp.19 155 15 25 ];
+        %tmp.19 = getv ? :TeslaProto;
+        symbol [ handshakeRequest %tmp.20 155 26 42 ];
+        %tmp.20 = getv function %tmp.19 :handshakeRequest;
+        %tmp.21 = lgetv %domain;
+        symbol [ domain %tmp.21 155 43 49 ];
+        symbol [ mPub %tmp.23 155 51 55 ];
+        %tmp.23 = getv ? :mPub;
+        symbol [ mRoutingAddr %tmp.25 155 57 69 ];
+        %tmp.25 = getv ? :mRoutingAddr;
+        %tmp.26 = lgetv %uuid.1;
+        symbol [ uuid %tmp.26 155 71 75 ];
+        %tmp.27 = invoke %tmp.19 %tmp.20(%tmp.21, %tmp.23, %tmp.25, %tmp.26);
+        ret %tmp.27;
+_home_user_garmin_source_TeslaKey_mc_149_36_156_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 160; @symbol_functiondef = [replyChallenge,160,20,34]; @symbol_param<0> = [sess,160,35,39]; @symbol_param<1> = [routable,160,41,49]; ]
+    protected
+    function replyChallenge(sess, routable) {
+_home_user_garmin_source_TeslaKey_mc_160_51_165_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 161 8 ]
+_home_user_garmin_source_TeslaKey_mc_161_8_163_8_if_stmt:
+_home_user_garmin_source_TeslaKey_mc_161_12_161_77_begin:
+        %tmp.1 = lgetv %routable;
+        symbol [ routable %tmp.1 161 12 20 ];
+        symbol [ hasKey %tmp.2 161 21 27 ];
+        %tmp.2 = getv function %tmp.1 :hasKey;
+        %tmp.4 = const :requestUuid;
+        symbol [ requestUuid %tmp.4 161 29 40 const ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        bf %tmp.5 @_home_user_garmin_source_TeslaKey_mc_161_8_163_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_161_45_161_77_true:
+        %tmp.6 = lgetv %routable;
+        symbol [ routable %tmp.6 161 45 53 ];
+        %tmp.8 = const :requestUuid;
+        symbol [ requestUuid %tmp.8 161 55 66 const ];
+        %tmp.9 = agetv %tmp.6 %tmp.8;
+        symbol [ size %tmp.10 161 68 72 ];
+        %tmp.10 = getv function %tmp.9 :size;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        push %tmp.13;
+_home_user_garmin_source_TeslaKey_mc_161_45_161_77_end:
+        %tmp.14 = phi [%tmp.5 @_home_user_garmin_source_TeslaKey_mc_161_12_161_77_begin] [%tmp.13 @_home_user_garmin_source_TeslaKey_mc_161_45_161_77_true] [%tmp.14 @_home_user_garmin_source_TeslaKey_mc_161_45_161_77_end];
+        bf %tmp.14 @_home_user_garmin_source_TeslaKey_mc_161_8_163_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_161_8_163_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_161_80_163_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 162 12 ]
+        %tmp.15 = lgetv %routable;
+        symbol [ routable %tmp.15 162 19 27 ];
+        %tmp.17 = const :requestUuid;
+        symbol [ requestUuid %tmp.17 162 29 40 const ];
+        %tmp.18 = agetv %tmp.15 %tmp.17;
+        ret %tmp.18;
+_home_user_garmin_source_TeslaKey_mc_161_80_163_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_161_8_163_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_161_8_163_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 164 8 ]
+        %tmp.19 = lgetv %sess;
+        symbol [ sess %tmp.19 164 15 19 ];
+        %tmp.21 = const :challenge;
+        symbol [ challenge %tmp.21 164 21 30 const ];
+        %tmp.22 = agetv %tmp.19 %tmp.21;
+        ret %tmp.22;
+_home_user_garmin_source_TeslaKey_mc_160_51_165_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 170; @symbol_functiondef = [applySessionInfo,170,13,29]; @symbol_param<0> = [domain,170,30,36]; @symbol_param<1> = [routable,170,38,46]; ]
+    function applySessionInfo(domain, routable) {
+_home_user_garmin_source_TeslaKey_mc_170_48_210_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 171 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_170_48_210_4_start" "_home_user_garmin_source_TeslaKey_mc_170_48_210_4_stop" ]
+        %sess.1 = local;
+        symbol [ sess %sess.1 171 12 16 ];
+        symbol [ mSessions %tmp.2 171 19 28 ];
+        %tmp.2 = getv ? :mSessions;
+        %tmp.3 = lgetv %domain;
+        symbol [ domain %tmp.3 171 29 35 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        lputv %sess.1 %tmp.4;
+        symbol [ sess %sess.1 171 12 16 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 172 8 ]
+_home_user_garmin_source_TeslaKey_mc_172_8_174_8_if_stmt:
+_home_user_garmin_source_TeslaKey_mc_172_12_172_57_begin:
+        %tmp.5 = lgetv %sess.1;
+        symbol [ sess %tmp.5 172 12 16 ];
+        %tmp.6 = null;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        bt %tmp.7 @_home_user_garmin_source_TeslaKey_mc_172_8_174_8_if_true;
+_home_user_garmin_source_TeslaKey_mc_172_28_172_57_false:
+        %tmp.8 = lgetv %routable;
+        symbol [ routable %tmp.8 172 29 37 ];
+        symbol [ hasKey %tmp.9 172 38 44 ];
+        %tmp.9 = getv function %tmp.8 :hasKey;
+        %tmp.11 = const :sessionInfo;
+        symbol [ sessionInfo %tmp.11 172 46 57 const ];
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        %tmp.13 = not %tmp.12;
+        push %tmp.13;
+_home_user_garmin_source_TeslaKey_mc_172_28_172_57_end:
+        %tmp.14 = phi [%tmp.7 @_home_user_garmin_source_TeslaKey_mc_172_12_172_57_begin] [%tmp.13 @_home_user_garmin_source_TeslaKey_mc_172_28_172_57_false] [%tmp.14 @_home_user_garmin_source_TeslaKey_mc_172_28_172_57_end];
+        bf %tmp.14 @_home_user_garmin_source_TeslaKey_mc_172_8_174_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_172_8_174_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_172_60_174_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 173 12 ]
+        symbol [ SESSION_INVALID %tmp.16 173 19 34 ];
+        %tmp.16 = getv ? :SESSION_INVALID;
+        ret %tmp.16;
+_home_user_garmin_source_TeslaKey_mc_172_60_174_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_172_8_174_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_172_8_174_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 175 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_170_48_210_4_start" "_home_user_garmin_source_TeslaKey_mc_170_48_210_4_stop" ]
+        %encoded.2 = local;
+        symbol [ encoded %encoded.2 175 12 19 ];
+        %tmp.17 = lgetv %routable;
+        symbol [ routable %tmp.17 175 22 30 ];
+        %tmp.19 = const :sessionInfo;
+        symbol [ sessionInfo %tmp.19 175 32 43 const ];
+        %tmp.20 = agetv %tmp.17 %tmp.19;
+        lputv %encoded.2 %tmp.20;
+        symbol [ encoded %encoded.2 175 12 19 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 176 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_170_48_210_4_start" "_home_user_garmin_source_TeslaKey_mc_170_48_210_4_stop" ]
+        %info.3 = local;
+        symbol [ info %info.3 176 12 16 ];
+        symbol [ TeslaProto %tmp.22 176 19 29 ];
+        %tmp.22 = getv ? :TeslaProto;
+        symbol [ parseSessionInfo %tmp.23 176 30 46 ];
+        %tmp.23 = getv function %tmp.22 :parseSessionInfo;
+        %tmp.24 = lgetv %encoded.2;
+        symbol [ encoded %tmp.24 176 47 54 ];
+        %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+        lputv %info.3 %tmp.25;
+        symbol [ info %info.3 176 12 16 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 177 8 ]
+_home_user_garmin_source_TeslaKey_mc_177_8_179_8_if_stmt:
+        %tmp.26 = lgetv %info.3;
+        symbol [ info %tmp.26 177 12 16 ];
+        %tmp.28 = const :status;
+        symbol [ status %tmp.28 177 18 24 const ];
+        %tmp.29 = agetv %tmp.26 %tmp.28;
+        symbol [ TeslaProto %tmp.31 177 29 39 ];
+        %tmp.31 = getv ? :TeslaProto;
+        symbol [ SESSION_INFO_STATUS_KEY_NOT_ON_WHITELIST %tmp.32 177 40 80 ];
+        %tmp.32 = getv %tmp.31 :SESSION_INFO_STATUS_KEY_NOT_ON_WHITELIST;
+        %tmp.33 = eq %tmp.29 %tmp.32;
+        bf %tmp.33 @_home_user_garmin_source_TeslaKey_mc_177_8_179_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_177_8_179_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_177_82_179_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 178 12 ]
+        symbol [ SESSION_NOT_PAIRED %tmp.35 178 19 37 ];
+        %tmp.35 = getv ? :SESSION_NOT_PAIRED;
+        ret %tmp.35;
+_home_user_garmin_source_TeslaKey_mc_177_82_179_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_177_8_179_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_177_8_179_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 180 8 ]
+_home_user_garmin_source_TeslaKey_mc_180_8_182_8_if_stmt:
+_home_user_garmin_source_TeslaKey_mc_180_12_180_56_begin:
+        %tmp.36 = lgetv %info.3;
+        symbol [ info %tmp.36 180 12 16 ];
+        %tmp.38 = const :publicKey;
+        symbol [ publicKey %tmp.38 180 18 27 const ];
+        %tmp.39 = agetv %tmp.36 %tmp.38;
+        %tmp.40 = null;
+        %tmp.41 = eq %tmp.39 %tmp.40;
+        bt %tmp.41 @_home_user_garmin_source_TeslaKey_mc_180_8_182_8_if_true;
+_home_user_garmin_source_TeslaKey_mc_180_40_180_56_false:
+        %tmp.42 = lgetv %info.3;
+        symbol [ info %tmp.42 180 40 44 ];
+        %tmp.44 = const :epoch;
+        symbol [ epoch %tmp.44 180 46 51 const ];
+        %tmp.45 = agetv %tmp.42 %tmp.44;
+        %tmp.46 = null;
+        %tmp.47 = eq %tmp.45 %tmp.46;
+        push %tmp.47;
+_home_user_garmin_source_TeslaKey_mc_180_40_180_56_end:
+        %tmp.48 = phi [%tmp.41 @_home_user_garmin_source_TeslaKey_mc_180_12_180_56_begin] [%tmp.47 @_home_user_garmin_source_TeslaKey_mc_180_40_180_56_false] [%tmp.48 @_home_user_garmin_source_TeslaKey_mc_180_40_180_56_end];
+        bf %tmp.48 @_home_user_garmin_source_TeslaKey_mc_180_8_182_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_180_8_182_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_180_62_182_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 181 12 ]
+        symbol [ SESSION_INVALID %tmp.50 181 19 34 ];
+        %tmp.50 = getv ? :SESSION_INVALID;
+        ret %tmp.50;
+_home_user_garmin_source_TeslaKey_mc_180_62_182_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_180_8_182_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_180_8_182_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 184 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_170_48_210_4_start" "_home_user_garmin_source_TeslaKey_mc_170_48_210_4_stop" ]
+        %key.4 = local;
+        symbol [ key %key.4 184 12 15 ];
+        symbol [ TeslaCrypto %tmp.52 184 18 29 ];
+        %tmp.52 = getv ? :TeslaCrypto;
+        symbol [ deriveSharedKey %tmp.53 184 30 45 ];
+        %tmp.53 = getv function %tmp.52 :deriveSharedKey;
+        symbol [ mPriv %tmp.55 184 46 51 ];
+        %tmp.55 = getv ? :mPriv;
+        %tmp.56 = lgetv %info.3;
+        symbol [ info %tmp.56 184 53 57 ];
+        %tmp.58 = const :publicKey;
+        symbol [ publicKey %tmp.58 184 59 68 const ];
+        %tmp.59 = agetv %tmp.56 %tmp.58;
+        %tmp.60 = invoke %tmp.52 %tmp.53(%tmp.55, %tmp.59);
+        lputv %key.4 %tmp.60;
+        symbol [ key %key.4 184 12 15 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 185 8 ]
+_home_user_garmin_source_TeslaKey_mc_185_8_187_8_if_stmt:
+        %tmp.61 = lgetv %key.4;
+        symbol [ key %tmp.61 185 12 15 ];
+        %tmp.62 = null;
+        %tmp.63 = eq %tmp.61 %tmp.62;
+        bf %tmp.63 @_home_user_garmin_source_TeslaKey_mc_185_8_187_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_185_8_187_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_185_25_187_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 186 12 ]
+        symbol [ SESSION_INVALID %tmp.65 186 19 34 ];
+        %tmp.65 = getv ? :SESSION_INVALID;
+        ret %tmp.65;
+_home_user_garmin_source_TeslaKey_mc_185_25_187_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_185_8_187_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_185_8_187_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 191 8 ]
+_home_user_garmin_source_TeslaKey_mc_191_8_193_8_if_stmt:
+        %tmp.66 = lgetv %routable;
+        symbol [ routable %tmp.66 191 13 21 ];
+        symbol [ hasKey %tmp.67 191 22 28 ];
+        %tmp.67 = getv function %tmp.66 :hasKey;
+        %tmp.69 = const :sessionInfoTag;
+        symbol [ sessionInfoTag %tmp.69 191 30 44 const ];
+        %tmp.70 = invoke %tmp.66 %tmp.67(%tmp.69);
+        %tmp.71 = not %tmp.70;
+        bf %tmp.71 @_home_user_garmin_source_TeslaKey_mc_191_8_193_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_191_8_193_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_191_47_193_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 192 12 ]
+        symbol [ SESSION_INVALID %tmp.73 192 19 34 ];
+        %tmp.73 = getv ? :SESSION_INVALID;
+        ret %tmp.73;
+_home_user_garmin_source_TeslaKey_mc_191_47_193_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_191_8_193_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_191_8_193_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 194 8 ]
+_home_user_garmin_source_TeslaKey_mc_194_8_197_8_if_stmt:
+        symbol [ TeslaCrypto %tmp.75 194 13 24 ];
+        %tmp.75 = getv ? :TeslaCrypto;
+        symbol [ verifySessionInfo %tmp.76 194 25 42 ];
+        %tmp.76 = getv function %tmp.75 :verifySessionInfo;
+        %tmp.77 = lgetv %key.4;
+        symbol [ key %tmp.77 194 43 46 ];
+        %tmp.78 = self;
+        symbol [ vinBytes %tmp.79 194 48 56 ];
+        %tmp.79 = getv function %tmp.78 :vinBytes;
+        %tmp.80 = invoke %tmp.78 %tmp.79();
+        %tmp.81 = self;
+        symbol [ replyChallenge %tmp.82 194 60 74 ];
+        %tmp.82 = getv function %tmp.81 :replyChallenge;
+        %tmp.83 = lgetv %sess.1;
+        symbol [ sess %tmp.83 194 75 79 ];
+        %tmp.84 = lgetv %routable;
+        symbol [ routable %tmp.84 194 81 89 ];
+        %tmp.85 = invoke %tmp.81 %tmp.82(%tmp.83, %tmp.84);
+        %tmp.86 = lgetv %encoded.2;
+        symbol [ encoded %tmp.86 195 16 23 ];
+        %tmp.87 = lgetv %routable;
+        symbol [ routable %tmp.87 195 25 33 ];
+        %tmp.89 = const :sessionInfoTag;
+        symbol [ sessionInfoTag %tmp.89 195 35 49 const ];
+        %tmp.90 = agetv %tmp.87 %tmp.89;
+        %tmp.91 = invoke %tmp.75 %tmp.76(%tmp.77, %tmp.80, %tmp.85, %tmp.86, %tmp.90);
+        %tmp.92 = not %tmp.91;
+        bf %tmp.92 @_home_user_garmin_source_TeslaKey_mc_194_8_197_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_194_8_197_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_195_53_197_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 196 12 ]
+        symbol [ SESSION_INVALID %tmp.94 196 19 34 ];
+        %tmp.94 = getv ? :SESSION_INVALID;
+        ret %tmp.94;
+_home_user_garmin_source_TeslaKey_mc_195_53_197_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_194_8_197_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_194_8_197_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 199 8 ]
+        symbol [ mSessions %tmp.95 199 8 17 ];
+        %tmp.95 = getv self :mSessions;
+        %tmp.96 = newd 8;
+        %tmp.98 = const :key;
+        symbol [ key %tmp.98 200 13 16 const ];
+        %tmp.99 = lgetv %key.4;
+        symbol [ key %tmp.99 200 20 23 ];
+        %tmp.100 = dup %tmp.96;
+        %tmp.101 = aputv %tmp.100 %tmp.98 %tmp.99;
+        %tmp.103 = const :vehiclePub;
+        symbol [ vehiclePub %tmp.103 201 13 23 const ];
+        %tmp.104 = lgetv %info.3;
+        symbol [ info %tmp.104 201 27 31 ];
+        %tmp.106 = const :publicKey;
+        symbol [ publicKey %tmp.106 201 33 42 const ];
+        %tmp.107 = agetv %tmp.104 %tmp.106;
+        %tmp.108 = dup %tmp.101;
+        %tmp.109 = aputv %tmp.108 %tmp.103 %tmp.107;
+        %tmp.111 = const :epoch;
+        symbol [ epoch %tmp.111 202 13 18 const ];
+        %tmp.112 = lgetv %info.3;
+        symbol [ info %tmp.112 202 22 26 ];
+        %tmp.114 = const :epoch;
+        symbol [ epoch %tmp.114 202 28 33 const ];
+        %tmp.115 = agetv %tmp.112 %tmp.114;
+        %tmp.116 = dup %tmp.109;
+        %tmp.117 = aputv %tmp.116 %tmp.111 %tmp.115;
+        %tmp.119 = const :counter;
+        symbol [ counter %tmp.119 203 13 20 const ];
+        %tmp.120 = lgetv %info.3;
+        symbol [ info %tmp.120 203 24 28 ];
+        %tmp.122 = const :counter;
+        symbol [ counter %tmp.122 203 30 37 const ];
+        %tmp.123 = agetv %tmp.120 %tmp.122;
+        %tmp.124 = dup %tmp.117;
+        %tmp.125 = aputv %tmp.124 %tmp.119 %tmp.123;
+        %tmp.127 = const :clockTime;
+        symbol [ clockTime %tmp.127 204 13 22 const ];
+        %tmp.128 = lgetv %info.3;
+        symbol [ info %tmp.128 204 26 30 ];
+        %tmp.130 = const :clockTime;
+        symbol [ clockTime %tmp.130 204 32 41 const ];
+        %tmp.131 = agetv %tmp.128 %tmp.130;
+        %tmp.132 = dup %tmp.125;
+        %tmp.133 = aputv %tmp.132 %tmp.127 %tmp.131;
+        %tmp.135 = const :timerMs;
+        symbol [ timerMs %tmp.135 205 13 20 const ];
+        symbol [ System %tmp.136 205 24 30 ];
+        %tmp.136 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.137 205 31 39 ];
+        %tmp.137 = getv function %tmp.136 :getTimer;
+        %tmp.138 = invoke %tmp.136 %tmp.137();
+        %tmp.139 = dup %tmp.133;
+        %tmp.140 = aputv %tmp.139 %tmp.135 %tmp.138;
+        %tmp.142 = const :verified;
+        symbol [ verified %tmp.142 206 13 21 const ];
+        %tmp.143 = true;
+        %tmp.144 = dup %tmp.140;
+        %tmp.145 = aputv %tmp.144 %tmp.142 %tmp.143;
+        %tmp.147 = const :challenge;
+        symbol [ challenge %tmp.147 207 13 22 const ];
+        %tmp.148 = lgetv %sess.1;
+        symbol [ sess %tmp.148 207 26 30 ];
+        %tmp.150 = const :challenge;
+        symbol [ challenge %tmp.150 207 32 41 const ];
+        %tmp.151 = agetv %tmp.148 %tmp.150;
+        %tmp.152 = dup %tmp.145;
+        %tmp.153 = aputv %tmp.152 %tmp.147 %tmp.151;
+        %tmp.154 = lgetv %domain;
+        symbol [ domain %tmp.154 199 18 24 ];
+        aputv %tmp.95 %tmp.154 %tmp.153;
+[ "/home/user/garmin/source/TeslaKey.mc" 209 8 ]
+        symbol [ SESSION_OK %tmp.156 209 15 25 ];
+        %tmp.156 = getv ? :SESSION_OK;
+        ret %tmp.156;
+_home_user_garmin_source_TeslaKey_mc_170_48_210_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 217; @symbol_functiondef = [refreshFromResponse,217,13,32]; @symbol_param<0> = [domain,217,33,39]; @symbol_param<1> = [routable,217,41,49]; ]
+    function refreshFromResponse(domain, routable) {
+_home_user_garmin_source_TeslaKey_mc_217_51_246_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 218 8 ]
+_home_user_garmin_source_TeslaKey_mc_218_8_221_8_if_stmt:
+_home_user_garmin_source_TeslaKey_mc_218_12_219_37_begin:
+_home_user_garmin_source_TeslaKey_mc_218_12_218_78_begin:
+        %tmp.1 = lgetv %routable;
+        symbol [ routable %tmp.1 218 13 21 ];
+        symbol [ hasKey %tmp.2 218 22 28 ];
+        %tmp.2 = getv function %tmp.1 :hasKey;
+        %tmp.4 = const :sessionInfo;
+        symbol [ sessionInfo %tmp.4 218 30 41 const ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        %tmp.6 = not %tmp.5;
+        bt %tmp.6 @_home_user_garmin_source_TeslaKey_mc_218_8_221_8_if_true;
+_home_user_garmin_source_TeslaKey_mc_218_46_218_78_false:
+        %tmp.7 = lgetv %routable;
+        symbol [ routable %tmp.7 218 47 55 ];
+        symbol [ hasKey %tmp.8 218 56 62 ];
+        %tmp.8 = getv function %tmp.7 :hasKey;
+        %tmp.10 = const :sessionInfoTag;
+        symbol [ sessionInfoTag %tmp.10 218 64 78 const ];
+        %tmp.11 = invoke %tmp.7 %tmp.8(%tmp.10);
+        %tmp.12 = not %tmp.11;
+        push %tmp.12;
+_home_user_garmin_source_TeslaKey_mc_218_46_218_78_end:
+        %tmp.13 = phi [%tmp.6 @_home_user_garmin_source_TeslaKey_mc_218_12_218_78_begin] [%tmp.12 @_home_user_garmin_source_TeslaKey_mc_218_46_218_78_false] [%tmp.13 @_home_user_garmin_source_TeslaKey_mc_218_46_218_78_end];
+        bt %tmp.13 @_home_user_garmin_source_TeslaKey_mc_218_8_221_8_if_true;
+_home_user_garmin_source_TeslaKey_mc_219_19_219_37_false:
+        %tmp.14 = self;
+        symbol [ hasSession %tmp.15 219 20 30 ];
+        %tmp.15 = getv function %tmp.14 :hasSession;
+        %tmp.16 = lgetv %domain;
+        symbol [ domain %tmp.16 219 31 37 ];
+        %tmp.17 = invoke %tmp.14 %tmp.15(%tmp.16);
+        %tmp.18 = not %tmp.17;
+        push %tmp.18;
+_home_user_garmin_source_TeslaKey_mc_219_19_219_37_end:
+        %tmp.19 = phi [%tmp.13 @_home_user_garmin_source_TeslaKey_mc_218_12_219_37_begin] [%tmp.18 @_home_user_garmin_source_TeslaKey_mc_219_19_219_37_false] [%tmp.19 @_home_user_garmin_source_TeslaKey_mc_219_19_219_37_end];
+        bf %tmp.19 @_home_user_garmin_source_TeslaKey_mc_218_8_221_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_218_8_221_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_219_40_221_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 220 12 ]
+        %tmp.20 = false;
+        ret %tmp.20;
+_home_user_garmin_source_TeslaKey_mc_219_40_221_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_218_8_221_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_218_8_221_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 222 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_217_51_246_4_start" "_home_user_garmin_source_TeslaKey_mc_217_51_246_4_stop" ]
+        %sess.1 = local;
+        symbol [ sess %sess.1 222 12 16 ];
+        symbol [ mSessions %tmp.22 222 19 28 ];
+        %tmp.22 = getv ? :mSessions;
+        %tmp.23 = lgetv %domain;
+        symbol [ domain %tmp.23 222 29 35 ];
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        lputv %sess.1 %tmp.24;
+        symbol [ sess %sess.1 222 12 16 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 223 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_217_51_246_4_start" "_home_user_garmin_source_TeslaKey_mc_217_51_246_4_stop" ]
+        %encoded.2 = local;
+        symbol [ encoded %encoded.2 223 12 19 ];
+        %tmp.25 = lgetv %routable;
+        symbol [ routable %tmp.25 223 22 30 ];
+        %tmp.27 = const :sessionInfo;
+        symbol [ sessionInfo %tmp.27 223 32 43 const ];
+        %tmp.28 = agetv %tmp.25 %tmp.27;
+        lputv %encoded.2 %tmp.28;
+        symbol [ encoded %encoded.2 223 12 19 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 224 8 ]
+_home_user_garmin_source_TeslaKey_mc_224_8_227_8_if_stmt:
+        symbol [ TeslaCrypto %tmp.30 224 13 24 ];
+        %tmp.30 = getv ? :TeslaCrypto;
+        symbol [ verifySessionInfo %tmp.31 224 25 42 ];
+        %tmp.31 = getv function %tmp.30 :verifySessionInfo;
+        %tmp.32 = lgetv %sess.1;
+        symbol [ sess %tmp.32 224 43 47 ];
+        %tmp.34 = const :key;
+        symbol [ key %tmp.34 224 49 52 const ];
+        %tmp.35 = agetv %tmp.32 %tmp.34;
+        %tmp.36 = self;
+        symbol [ vinBytes %tmp.37 224 55 63 ];
+        %tmp.37 = getv function %tmp.36 :vinBytes;
+        %tmp.38 = invoke %tmp.36 %tmp.37();
+        %tmp.39 = self;
+        symbol [ replyChallenge %tmp.40 224 67 81 ];
+        %tmp.40 = getv function %tmp.39 :replyChallenge;
+        %tmp.41 = lgetv %sess.1;
+        symbol [ sess %tmp.41 224 82 86 ];
+        %tmp.42 = lgetv %routable;
+        symbol [ routable %tmp.42 224 88 96 ];
+        %tmp.43 = invoke %tmp.39 %tmp.40(%tmp.41, %tmp.42);
+        %tmp.44 = lgetv %encoded.2;
+        symbol [ encoded %tmp.44 225 16 23 ];
+        %tmp.45 = lgetv %routable;
+        symbol [ routable %tmp.45 225 25 33 ];
+        %tmp.47 = const :sessionInfoTag;
+        symbol [ sessionInfoTag %tmp.47 225 35 49 const ];
+        %tmp.48 = agetv %tmp.45 %tmp.47;
+        %tmp.49 = invoke %tmp.30 %tmp.31(%tmp.35, %tmp.38, %tmp.43, %tmp.44, %tmp.48);
+        %tmp.50 = not %tmp.49;
+        bf %tmp.50 @_home_user_garmin_source_TeslaKey_mc_224_8_227_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_224_8_227_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_225_53_227_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 226 12 ]
+        %tmp.51 = false;
+        ret %tmp.51;
+_home_user_garmin_source_TeslaKey_mc_225_53_227_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_224_8_227_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_224_8_227_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 228 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_217_51_246_4_start" "_home_user_garmin_source_TeslaKey_mc_217_51_246_4_stop" ]
+        %info.3 = local;
+        symbol [ info %info.3 228 12 16 ];
+        symbol [ TeslaProto %tmp.53 228 19 29 ];
+        %tmp.53 = getv ? :TeslaProto;
+        symbol [ parseSessionInfo %tmp.54 228 30 46 ];
+        %tmp.54 = getv function %tmp.53 :parseSessionInfo;
+        %tmp.55 = lgetv %encoded.2;
+        symbol [ encoded %tmp.55 228 47 54 ];
+        %tmp.56 = invoke %tmp.53 %tmp.54(%tmp.55);
+        lputv %info.3 %tmp.56;
+        symbol [ info %info.3 228 12 16 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 229 8 ]
+_home_user_garmin_source_TeslaKey_mc_229_8_233_8_if_stmt:
+_home_user_garmin_source_TeslaKey_mc_229_12_231_91_begin:
+        %tmp.57 = lgetv %info.3;
+        symbol [ info %tmp.57 229 12 16 ];
+        %tmp.59 = const :epoch;
+        symbol [ epoch %tmp.59 229 18 23 const ];
+        %tmp.60 = agetv %tmp.57 %tmp.59;
+        %tmp.61 = null;
+        %tmp.62 = eq %tmp.60 %tmp.61;
+        bt %tmp.62 @_home_user_garmin_source_TeslaKey_mc_229_8_233_8_if_true;
+_home_user_garmin_source_TeslaKey_mc_230_19_231_91_false:
+_home_user_garmin_source_TeslaKey_mc_230_20_231_90_begin:
+        %tmp.63 = lgetv %info.3;
+        symbol [ info %tmp.63 230 20 24 ];
+        %tmp.65 = const :publicKey;
+        symbol [ publicKey %tmp.65 230 26 35 const ];
+        %tmp.66 = agetv %tmp.63 %tmp.65;
+        %tmp.67 = null;
+        %tmp.68 = ne %tmp.66 %tmp.67;
+        bf %tmp.68 @_home_user_garmin_source_TeslaKey_mc_229_8_233_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_231_23_231_90_true:
+        symbol [ TeslaCrypto %tmp.70 231 24 35 ];
+        %tmp.70 = getv ? :TeslaCrypto;
+        symbol [ constantTimeEquals %tmp.71 231 36 54 ];
+        %tmp.71 = getv function %tmp.70 :constantTimeEquals;
+        %tmp.72 = lgetv %info.3;
+        symbol [ info %tmp.72 231 55 59 ];
+        %tmp.74 = const :publicKey;
+        symbol [ publicKey %tmp.74 231 61 70 const ];
+        %tmp.75 = agetv %tmp.72 %tmp.74;
+        %tmp.76 = lgetv %sess.1;
+        symbol [ sess %tmp.76 231 73 77 ];
+        %tmp.78 = const :vehiclePub;
+        symbol [ vehiclePub %tmp.78 231 79 89 const ];
+        %tmp.79 = agetv %tmp.76 %tmp.78;
+        %tmp.80 = invoke %tmp.70 %tmp.71(%tmp.75, %tmp.79);
+        %tmp.81 = not %tmp.80;
+        push %tmp.81;
+_home_user_garmin_source_TeslaKey_mc_231_23_231_90_end:
+        %tmp.82 = phi [%tmp.68 @_home_user_garmin_source_TeslaKey_mc_230_20_231_90_begin] [%tmp.81 @_home_user_garmin_source_TeslaKey_mc_231_23_231_90_true] [%tmp.82 @_home_user_garmin_source_TeslaKey_mc_231_23_231_90_end];
+        push %tmp.82;
+_home_user_garmin_source_TeslaKey_mc_230_19_231_91_end:
+        %tmp.83 = phi [%tmp.62 @_home_user_garmin_source_TeslaKey_mc_229_12_231_91_begin] [%tmp.82 @_home_user_garmin_source_TeslaKey_mc_230_19_231_91_false] [%tmp.83 @_home_user_garmin_source_TeslaKey_mc_230_19_231_91_end];
+        bf %tmp.83 @_home_user_garmin_source_TeslaKey_mc_229_8_233_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_229_8_233_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_231_94_233_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 232 12 ]
+        %tmp.84 = false;
+        ret %tmp.84;
+_home_user_garmin_source_TeslaKey_mc_231_94_233_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_229_8_233_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_229_8_233_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 234 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_217_51_246_4_start" "_home_user_garmin_source_TeslaKey_mc_217_51_246_4_stop" ]
+        %newEpoch.4 = local;
+        symbol [ newEpoch %newEpoch.4 234 12 20 ];
+        symbol [ TeslaCrypto %tmp.86 234 24 35 ];
+        %tmp.86 = getv ? :TeslaCrypto;
+        symbol [ constantTimeEquals %tmp.87 234 36 54 ];
+        %tmp.87 = getv function %tmp.86 :constantTimeEquals;
+        %tmp.88 = lgetv %info.3;
+        symbol [ info %tmp.88 234 55 59 ];
+        %tmp.90 = const :epoch;
+        symbol [ epoch %tmp.90 234 61 66 const ];
+        %tmp.91 = agetv %tmp.88 %tmp.90;
+        %tmp.92 = lgetv %sess.1;
+        symbol [ sess %tmp.92 234 69 73 ];
+        %tmp.94 = const :epoch;
+        symbol [ epoch %tmp.94 234 75 80 const ];
+        %tmp.95 = agetv %tmp.92 %tmp.94;
+        %tmp.96 = invoke %tmp.86 %tmp.87(%tmp.91, %tmp.95);
+        %tmp.97 = not %tmp.96;
+        lputv %newEpoch.4 %tmp.97;
+        symbol [ newEpoch %newEpoch.4 234 12 20 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 235 8 ]
+_home_user_garmin_source_TeslaKey_mc_235_8_242_8_if_stmt:
+        %tmp.98 = lgetv %newEpoch.4;
+        symbol [ newEpoch %tmp.98 235 12 20 ];
+        bf %tmp.98 @_home_user_garmin_source_TeslaKey_mc_235_8_242_8_if_false;
+_home_user_garmin_source_TeslaKey_mc_235_8_242_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_235_22_238_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 236 12 ]
+        %tmp.99 = lgetv %sess.1;
+        symbol [ sess %tmp.99 236 12 16 ];
+        %tmp.100 = lgetv %info.3;
+        symbol [ info %tmp.100 236 27 31 ];
+        %tmp.102 = const :epoch;
+        symbol [ epoch %tmp.102 236 33 38 const ];
+        %tmp.103 = agetv %tmp.100 %tmp.102;
+        %tmp.105 = const :epoch;
+        symbol [ epoch %tmp.105 236 18 23 const ];
+        aputv %tmp.99 %tmp.105 %tmp.103;
+[ "/home/user/garmin/source/TeslaKey.mc" 237 12 ]
+        %tmp.106 = lgetv %sess.1;
+        symbol [ sess %tmp.106 237 12 16 ];
+        %tmp.107 = lgetv %info.3;
+        symbol [ info %tmp.107 237 29 33 ];
+        %tmp.109 = const :counter;
+        symbol [ counter %tmp.109 237 35 42 const ];
+        %tmp.110 = agetv %tmp.107 %tmp.109;
+        %tmp.112 = const :counter;
+        symbol [ counter %tmp.112 237 18 25 const ];
+        aputv %tmp.106 %tmp.112 %tmp.110;
+_home_user_garmin_source_TeslaKey_mc_235_22_238_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_235_8_242_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_235_8_242_8_if_false:
+[ "/home/user/garmin/source/TeslaKey.mc" 238 15 ]
+_home_user_garmin_source_TeslaKey_mc_238_15_242_8_if_stmt:
+        %tmp.113 = lgetv %info.3;
+        symbol [ info %tmp.113 238 19 23 ];
+        %tmp.115 = const :clockTime;
+        symbol [ clockTime %tmp.115 238 25 34 const ];
+        %tmp.116 = agetv %tmp.113 %tmp.115;
+        %tmp.117 = lgetv %sess.1;
+        symbol [ sess %tmp.117 238 38 42 ];
+        %tmp.119 = const :clockTime;
+        symbol [ clockTime %tmp.119 238 44 53 const ];
+        %tmp.120 = agetv %tmp.117 %tmp.119;
+        %tmp.121 = lt %tmp.116 %tmp.120;
+        bf %tmp.121 @_home_user_garmin_source_TeslaKey_mc_238_15_242_8_if_false;
+_home_user_garmin_source_TeslaKey_mc_238_15_242_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_238_56_240_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 239 12 ]
+        %tmp.122 = false;
+        ret %tmp.122;
+_home_user_garmin_source_TeslaKey_mc_238_56_240_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_238_15_242_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_238_15_242_8_if_false:
+[ "/home/user/garmin/source/TeslaKey.mc" 240 15 ]
+_home_user_garmin_source_TeslaKey_mc_240_15_242_8_if_stmt:
+        %tmp.123 = lgetv %info.3;
+        symbol [ info %tmp.123 240 19 23 ];
+        %tmp.125 = const :counter;
+        symbol [ counter %tmp.125 240 25 32 const ];
+        %tmp.126 = agetv %tmp.123 %tmp.125;
+        %tmp.127 = lgetv %sess.1;
+        symbol [ sess %tmp.127 240 36 40 ];
+        %tmp.129 = const :counter;
+        symbol [ counter %tmp.129 240 42 49 const ];
+        %tmp.130 = agetv %tmp.127 %tmp.129;
+        %tmp.131 = gt %tmp.126 %tmp.130;
+        bf %tmp.131 @_home_user_garmin_source_TeslaKey_mc_240_15_242_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_240_15_242_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_240_52_242_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 241 12 ]
+        %tmp.132 = lgetv %sess.1;
+        symbol [ sess %tmp.132 241 12 16 ];
+        %tmp.133 = lgetv %info.3;
+        symbol [ info %tmp.133 241 29 33 ];
+        %tmp.135 = const :counter;
+        symbol [ counter %tmp.135 241 35 42 const ];
+        %tmp.136 = agetv %tmp.133 %tmp.135;
+        %tmp.138 = const :counter;
+        symbol [ counter %tmp.138 241 18 25 const ];
+        aputv %tmp.132 %tmp.138 %tmp.136;
+_home_user_garmin_source_TeslaKey_mc_240_52_242_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_240_15_242_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_240_15_242_8_if_end:
+_home_user_garmin_source_TeslaKey_mc_238_15_242_8_if_end:
+_home_user_garmin_source_TeslaKey_mc_235_8_242_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 243 8 ]
+        %tmp.139 = lgetv %sess.1;
+        symbol [ sess %tmp.139 243 8 12 ];
+        %tmp.140 = lgetv %info.3;
+        symbol [ info %tmp.140 243 27 31 ];
+        %tmp.142 = const :clockTime;
+        symbol [ clockTime %tmp.142 243 33 42 const ];
+        %tmp.143 = agetv %tmp.140 %tmp.142;
+        %tmp.145 = const :clockTime;
+        symbol [ clockTime %tmp.145 243 14 23 const ];
+        aputv %tmp.139 %tmp.145 %tmp.143;
+[ "/home/user/garmin/source/TeslaKey.mc" 244 8 ]
+        %tmp.146 = lgetv %sess.1;
+        symbol [ sess %tmp.146 244 8 12 ];
+        symbol [ System %tmp.147 244 25 31 ];
+        %tmp.147 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.148 244 32 40 ];
+        %tmp.148 = getv function %tmp.147 :getTimer;
+        %tmp.149 = invoke %tmp.147 %tmp.148();
+        %tmp.151 = const :timerMs;
+        symbol [ timerMs %tmp.151 244 14 21 const ];
+        aputv %tmp.146 %tmp.151 %tmp.149;
+[ "/home/user/garmin/source/TeslaKey.mc" 245 8 ]
+        %tmp.152 = true;
+        ret %tmp.152;
+_home_user_garmin_source_TeslaKey_mc_217_51_246_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 251; @symbol_functiondef = [vehicleClockNow,251,20,35]; @symbol_param<0> = [sess,251,36,40]; ]
+    protected
+    function vehicleClockNow(sess) {
+_home_user_garmin_source_TeslaKey_mc_251_42_257_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 252 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_251_42_257_4_start" "_home_user_garmin_source_TeslaKey_mc_251_42_257_4_stop" ]
+        %elapsedMs.1 = local;
+        symbol [ elapsedMs %elapsedMs.1 252 12 21 ];
+        symbol [ System %tmp.1 252 24 30 ];
+        %tmp.1 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.2 252 31 39 ];
+        %tmp.2 = getv function %tmp.1 :getTimer;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = lgetv %sess;
+        symbol [ sess %tmp.4 252 44 48 ];
+        %tmp.6 = const :timerMs;
+        symbol [ timerMs %tmp.6 252 50 57 const ];
+        %tmp.7 = agetv %tmp.4 %tmp.6;
+        %tmp.8 = sub %tmp.3 %tmp.7;
+        lputv %elapsedMs.1 %tmp.8;
+        symbol [ elapsedMs %elapsedMs.1 252 12 21 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 253 8 ]
+_home_user_garmin_source_TeslaKey_mc_253_8_255_8_if_stmt:
+        %tmp.9 = lgetv %elapsedMs.1;
+        symbol [ elapsedMs %tmp.9 253 12 21 ];
+        %tmp.10 = 0;
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        bf %tmp.11 @_home_user_garmin_source_TeslaKey_mc_253_8_255_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_253_8_255_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_253_27_255_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 254 12 ]
+        %tmp.12 = 0;
+        lputv %elapsedMs.1 %tmp.12;
+        symbol [ elapsedMs %elapsedMs.1 254 12 21 ];
+_home_user_garmin_source_TeslaKey_mc_253_27_255_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_253_8_255_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_253_8_255_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 256 8 ]
+        %tmp.13 = lgetv %sess;
+        symbol [ sess %tmp.13 256 15 19 ];
+        %tmp.15 = const :clockTime;
+        symbol [ clockTime %tmp.15 256 21 30 const ];
+        %tmp.16 = agetv %tmp.13 %tmp.15;
+        %tmp.17 = lgetv %elapsedMs.1;
+        symbol [ elapsedMs %tmp.17 256 35 44 ];
+        %tmp.18 = 1000;
+        %tmp.19 = div %tmp.17 %tmp.18;
+        %tmp.20 = add %tmp.16 %tmp.19;
+        ret %tmp.20;
+_home_user_garmin_source_TeslaKey_mc_251_42_257_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 261; @symbol_functiondef = [buildCommand,261,13,25]; @symbol_param<0> = [domain,261,26,32]; @symbol_param<1> = [plaintext,261,34,43]; ]
+    function buildCommand(domain, plaintext) {
+_home_user_garmin_source_TeslaKey_mc_261_45_286_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 262 8 ]
+_home_user_garmin_source_TeslaKey_mc_262_8_264_8_if_stmt:
+        %tmp.1 = self;
+        symbol [ hasSession %tmp.2 262 13 23 ];
+        %tmp.2 = getv function %tmp.1 :hasSession;
+        %tmp.3 = lgetv %domain;
+        symbol [ domain %tmp.3 262 24 30 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        %tmp.5 = not %tmp.4;
+        bf %tmp.5 @_home_user_garmin_source_TeslaKey_mc_262_8_264_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_262_8_264_8_if_true:
+_home_user_garmin_source_TeslaKey_mc_262_33_264_8_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 263 12 ]
+        %tmp.6 = null;
+        ret %tmp.6;
+_home_user_garmin_source_TeslaKey_mc_262_33_264_8_stop:
+        goto @_home_user_garmin_source_TeslaKey_mc_262_8_264_8_if_end;
+_home_user_garmin_source_TeslaKey_mc_262_8_264_8_if_end:
+[ "/home/user/garmin/source/TeslaKey.mc" 265 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_start" "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_stop" ]
+        %sess.1 = local;
+        symbol [ sess %sess.1 265 12 16 ];
+        symbol [ mSessions %tmp.8 265 19 28 ];
+        %tmp.8 = getv ? :mSessions;
+        %tmp.9 = lgetv %domain;
+        symbol [ domain %tmp.9 265 29 35 ];
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        lputv %sess.1 %tmp.10;
+        symbol [ sess %sess.1 265 12 16 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 266 8 ]
+        %tmp.11 = lgetv %sess.1;
+        symbol [ sess %tmp.11 266 8 12 ];
+        %tmp.12 = lgetv %sess.1;
+        symbol [ sess %tmp.12 266 25 29 ];
+        %tmp.14 = const :counter;
+        symbol [ counter %tmp.14 266 31 38 const ];
+        %tmp.15 = agetv %tmp.12 %tmp.14;
+        %tmp.16 = 1;
+        %tmp.17 = add %tmp.15 %tmp.16;
+        %tmp.19 = const :counter;
+        symbol [ counter %tmp.19 266 14 21 const ];
+        aputv %tmp.11 %tmp.19 %tmp.17;
+[ "/home/user/garmin/source/TeslaKey.mc" 267 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_start" "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_stop" ]
+        %counter.2 = local;
+        symbol [ counter %counter.2 267 12 19 ];
+        %tmp.20 = lgetv %sess.1;
+        symbol [ sess %tmp.20 267 22 26 ];
+        %tmp.22 = const :counter;
+        symbol [ counter %tmp.22 267 28 35 const ];
+        %tmp.23 = agetv %tmp.20 %tmp.22;
+        lputv %counter.2 %tmp.23;
+        symbol [ counter %counter.2 267 12 19 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 268 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_start" "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_stop" ]
+        %expiresAt.3 = local;
+        symbol [ expiresAt %expiresAt.3 268 12 21 ];
+        %tmp.24 = self;
+        symbol [ vehicleClockNow %tmp.25 268 24 39 ];
+        %tmp.25 = getv function %tmp.24 :vehicleClockNow;
+        %tmp.26 = lgetv %sess.1;
+        symbol [ sess %tmp.26 268 40 44 ];
+        %tmp.27 = invoke %tmp.24 %tmp.25(%tmp.26);
+        symbol [ COMMAND_TTL %tmp.29 268 48 59 ];
+        %tmp.29 = getv ? :COMMAND_TTL;
+        %tmp.30 = add %tmp.27 %tmp.29;
+        lputv %expiresAt.3 %tmp.30;
+        symbol [ expiresAt %expiresAt.3 268 12 21 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 270 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_start" "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_stop" ]
+        %metadata.4 = local;
+        symbol [ metadata %metadata.4 270 12 20 ];
+        symbol [ TeslaCrypto %tmp.32 270 23 34 ];
+        %tmp.32 = getv ? :TeslaCrypto;
+        symbol [ commandMetadata %tmp.33 270 35 50 ];
+        %tmp.33 = getv function %tmp.32 :commandMetadata;
+        symbol [ TeslaCrypto %tmp.35 271 12 23 ];
+        %tmp.35 = getv ? :TeslaCrypto;
+        symbol [ SIGNATURE_TYPE_HMAC_PERSONALIZED %tmp.36 271 24 56 ];
+        %tmp.36 = getv %tmp.35 :SIGNATURE_TYPE_HMAC_PERSONALIZED;
+        %tmp.37 = lgetv %domain;
+        symbol [ domain %tmp.37 272 12 18 ];
+        %tmp.38 = self;
+        symbol [ vinBytes %tmp.39 273 12 20 ];
+        %tmp.39 = getv function %tmp.38 :vinBytes;
+        %tmp.40 = invoke %tmp.38 %tmp.39();
+        %tmp.41 = lgetv %sess.1;
+        symbol [ sess %tmp.41 274 12 16 ];
+        %tmp.43 = const :epoch;
+        symbol [ epoch %tmp.43 274 18 23 const ];
+        %tmp.44 = agetv %tmp.41 %tmp.43;
+        %tmp.45 = lgetv %expiresAt.3;
+        symbol [ expiresAt %tmp.45 275 12 21 ];
+        %tmp.46 = lgetv %counter.2;
+        symbol [ counter %tmp.46 276 12 19 ];
+        %tmp.47 = 0;
+        %tmp.48 = invoke %tmp.32 %tmp.33(%tmp.36, %tmp.37, %tmp.40, %tmp.44, %tmp.45, %tmp.46, %tmp.47);
+        lputv %metadata.4 %tmp.48;
+        symbol [ metadata %metadata.4 270 12 20 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 279 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_start" "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_stop" ]
+        %tag.5 = local;
+        symbol [ tag %tag.5 279 12 15 ];
+        symbol [ TeslaCrypto %tmp.50 279 18 29 ];
+        %tmp.50 = getv ? :TeslaCrypto;
+        symbol [ commandTag %tmp.51 279 30 40 ];
+        %tmp.51 = getv function %tmp.50 :commandTag;
+        %tmp.52 = lgetv %sess.1;
+        symbol [ sess %tmp.52 279 41 45 ];
+        %tmp.54 = const :key;
+        symbol [ key %tmp.54 279 47 50 const ];
+        %tmp.55 = agetv %tmp.52 %tmp.54;
+        %tmp.56 = lgetv %metadata.4;
+        symbol [ metadata %tmp.56 279 53 61 ];
+        %tmp.57 = lgetv %plaintext;
+        symbol [ plaintext %tmp.57 279 63 72 ];
+        %tmp.58 = invoke %tmp.50 %tmp.51(%tmp.55, %tmp.56, %tmp.57);
+        lputv %tag.5 %tmp.58;
+        symbol [ tag %tag.5 279 12 15 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 280 8 ]
+        [ "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_start" "_home_user_garmin_source_TeslaKey_mc_261_45_286_4_stop" ]
+        %uuid.6 = local;
+        symbol [ uuid %uuid.6 280 12 16 ];
+        symbol [ Cryptography %tmp.59 280 19 31 ];
+        %tmp.59 = getm $.Toybox.Cryptography;
+        symbol [ randomBytes %tmp.60 280 32 43 ];
+        %tmp.60 = getv function %tmp.59 :randomBytes;
+        %tmp.61 = 16;
+        %tmp.62 = invoke %tmp.59 %tmp.60(%tmp.61);
+        lputv %uuid.6 %tmp.62;
+        symbol [ uuid %uuid.6 280 12 16 ];
+[ "/home/user/garmin/source/TeslaKey.mc" 281 8 ]
+        %tmp.63 = lgetv %sess.1;
+        symbol [ sess %tmp.63 281 8 12 ];
+        %tmp.64 = lgetv %uuid.6;
+        symbol [ uuid %tmp.64 281 27 31 ];
+        %tmp.66 = const :challenge;
+        symbol [ challenge %tmp.66 281 14 23 const ];
+        aputv %tmp.63 %tmp.66 %tmp.64;
+[ "/home/user/garmin/source/TeslaKey.mc" 283 8 ]
+        symbol [ TeslaProto %tmp.68 283 15 25 ];
+        %tmp.68 = getv ? :TeslaProto;
+        symbol [ signedCommand %tmp.69 283 26 39 ];
+        %tmp.69 = getv function %tmp.68 :signedCommand;
+        %tmp.70 = lgetv %domain;
+        symbol [ domain %tmp.70 284 12 18 ];
+        %tmp.71 = lgetv %plaintext;
+        symbol [ plaintext %tmp.71 284 20 29 ];
+        symbol [ mPub %tmp.73 284 31 35 ];
+        %tmp.73 = getv ? :mPub;
+        symbol [ mRoutingAddr %tmp.75 284 37 49 ];
+        %tmp.75 = getv ? :mRoutingAddr;
+        %tmp.76 = lgetv %sess.1;
+        symbol [ sess %tmp.76 285 12 16 ];
+        %tmp.78 = const :epoch;
+        symbol [ epoch %tmp.78 285 18 23 const ];
+        %tmp.79 = agetv %tmp.76 %tmp.78;
+        %tmp.80 = lgetv %counter.2;
+        symbol [ counter %tmp.80 285 26 33 ];
+        %tmp.81 = lgetv %expiresAt.3;
+        symbol [ expiresAt %tmp.81 285 35 44 ];
+        %tmp.82 = lgetv %tag.5;
+        symbol [ tag %tmp.82 285 46 49 ];
+        %tmp.83 = lgetv %uuid.6;
+        symbol [ uuid %tmp.83 285 51 55 ];
+        %tmp.84 = invoke %tmp.68 %tmp.69(%tmp.70, %tmp.71, %tmp.73, %tmp.75, %tmp.79, %tmp.80, %tmp.81, %tmp.82, %tmp.83);
+        ret %tmp.84;
+_home_user_garmin_source_TeslaKey_mc_261_45_286_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 289; @symbol_functiondef = [buildAddKey,289,13,24]; @symbol_param<0> = [role,289,25,29]; ]
+    function buildAddKey(role) {
+_home_user_garmin_source_TeslaKey_mc_289_31_291_4_start:
+[ "/home/user/garmin/source/TeslaKey.mc" 290 8 ]
+        symbol [ TeslaProto %tmp.2 290 15 25 ];
+        %tmp.2 = getv ? :TeslaProto;
+        symbol [ addKeyEnvelope %tmp.3 290 26 40 ];
+        %tmp.3 = getv function %tmp.2 :addKeyEnvelope;
+        symbol [ mPub %tmp.5 290 41 45 ];
+        %tmp.5 = getv ? :mPub;
+        %tmp.6 = lgetv %role;
+        symbol [ role %tmp.6 290 47 51 ];
+        symbol [ TeslaProto %tmp.8 290 53 63 ];
+        %tmp.8 = getv ? :TeslaProto;
+        symbol [ FORM_FACTOR_ANDROID %tmp.9 290 64 83 ];
+        %tmp.9 = getv %tmp.8 :FORM_FACTOR_ANDROID;
+        %tmp.10 = invoke %tmp.2 %tmp.3(%tmp.5, %tmp.6, %tmp.9);
+        ret %tmp.10;
+_home_user_garmin_source_TeslaKey_mc_289_31_291_4_stop:
+    }
+}
+[ @file = "/home/user/garmin/source/TeslaKey.mc"; @line = 1; ]
+<init> {
+}

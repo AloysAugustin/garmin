@@ -1,0 +1,65 @@
+[ @file = "/home/user/garmin/source/ui/StatusDelegate.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/home/user/garmin/source/ui/StatusDelegate.mc"; @line = 4; @symbol_classdef = [StatusDelegate,4,6,20]; @symbol_extends<0> = [WatchUi,4,29,36]; @symbol_extends<1> = [BehaviorDelegate,4,37,53]; ]
+class StatusDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "/home/user/garmin/source/ui/StatusDelegate.mc"; @line = 4; ]
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusDelegate.mc"; @line = 4; ]
+    static
+    <init> {
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusDelegate.mc"; @line = 6; @position = 15; @symbol_vardef = [mController,6,15,26]; ]
+    protected
+    var mController;
+    [ @file = "/home/user/garmin/source/ui/StatusDelegate.mc"; @line = 8; @symbol_functiondef = [initialize,8,13,23]; @symbol_param<0> = [controller,8,24,34]; ]
+    function initialize(controller) as Void {
+_home_user_garmin_source_ui_StatusDelegate_mc_8_36_11_4_start:
+[ "/home/user/garmin/source/ui/StatusDelegate.mc" 9 8 ]
+        symbol [ BehaviorDelegate %tmp.2 9 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 9 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/home/user/garmin/source/ui/StatusDelegate.mc" 10 8 ]
+        %tmp.4 = lgetv %controller;
+        symbol [ controller %tmp.4 10 22 32 ];
+        symbol [ mController ? 10 8 19 ];
+        putv self :mController %tmp.4;
+_home_user_garmin_source_ui_StatusDelegate_mc_8_36_11_4_stop:
+    }
+    [ @file = "/home/user/garmin/source/ui/StatusDelegate.mc"; @line = 13; @symbol_functiondef = [onBack,13,13,19]; ]
+    function onBack() {
+_home_user_garmin_source_ui_StatusDelegate_mc_13_22_18_4_start:
+[ "/home/user/garmin/source/ui/StatusDelegate.mc" 14 8 ]
+        symbol [ mController %tmp.2 14 8 19 ];
+        %tmp.2 = getv ? :mController;
+        symbol [ setSink %tmp.3 14 20 27 ];
+        %tmp.3 = getv function %tmp.2 :setSink;
+        %tmp.4 = null;
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "/home/user/garmin/source/ui/StatusDelegate.mc" 15 8 ]
+        symbol [ mController %tmp.6 15 8 19 ];
+        %tmp.6 = getv ? :mController;
+        symbol [ cancel %tmp.7 15 20 26 ];
+        %tmp.7 = getv function %tmp.6 :cancel;
+        invoke %tmp.6 %tmp.7();
+[ "/home/user/garmin/source/ui/StatusDelegate.mc" 16 8 ]
+        symbol [ WatchUi %tmp.8 16 8 15 ];
+        %tmp.8 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.9 16 16 23 ];
+        %tmp.9 = getv function %tmp.8 :popView;
+        symbol [ WatchUi %tmp.10 16 24 31 ];
+        %tmp.10 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_RIGHT %tmp.11 16 32 43 ];
+        %tmp.11 = getv %tmp.10 :SLIDE_RIGHT;
+        invoke %tmp.8 %tmp.9(%tmp.11);
+[ "/home/user/garmin/source/ui/StatusDelegate.mc" 17 8 ]
+        %tmp.12 = true;
+        ret %tmp.12;
+_home_user_garmin_source_ui_StatusDelegate_mc_13_22_18_4_stop:
+    }
+}
+[ @file = "/home/user/garmin/source/ui/StatusDelegate.mc"; @line = 1; ]
+<init> {
+}
