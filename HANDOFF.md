@@ -27,8 +27,8 @@ the Docker simulator recipe. This file covers what's next.
 Device files and fonts need a Garmin account. The owner (whose account has
 SMS 2FA) created an OAuth token with `lindell/connect-iq-sdk-manager-cli`
 via its browser login flow, and stored the **contents of `token.json`** as
-the environment secret **`CIQ_TOKEN`**. It was added mid-session, so it has
-**not been tested yet**.
+the environment secret **`CIQ_TOKEN`**. It works (tested 2026-10-26; refresh
+token valid until 2027-10-26).
 
 ```bash
 tools/ciq-setup.sh            # writes the token, installs the CLI, accepts the
@@ -49,7 +49,7 @@ Device files and fonts are Garmin-licensed: keep them out of git.
 
 ## Next tasks, in order
 
-1. **Run `tools/ciq-setup.sh`** and fix it if needed (written but unrun).
+1. ~~Run `tools/ciq-setup.sh`~~ — done 2026-10-26 (fixed the CLI install).
 2. **Re-enable the Instinct 2X:** add `<iq:product id="instinct2x"/>` to
    `manifest.xml` (a comment marks the spot), download it, build, run tests.
 3. **Check the UI in the simulator** now that fonts exist (Menu2 menus,

@@ -8,8 +8,7 @@
 # Usage: tools/ciq-setup.sh [manifest.xml]
 #   Downloads the devices listed in the manifest. For other devices use
 #   `connect-iq-sdk-manager device download -d <id>[,<id>] --include-fonts`
-#   or `--download-all` (large). Untested as of 2026-10-26: CIQ_TOKEN was
-#   added after the session that wrote this started.
+#   or `--download-all` (large).
 set -euo pipefail
 manifest=${1:-manifest.xml}
 CIQ_ROOT="$HOME/.Garmin/ConnectIQ"
@@ -25,12 +24,20 @@ umask 077
 printf '%s' "$CIQ_TOKEN" > "$CIQ_ROOT/token.json"
 umask 022
 
-if ! command -v connect-iq-sdk-manager >/dev/null; then
-  # The installer refuses to write a binary that doesn't exist yet unless it
-  # can sudo; pre-creating the file works around that.
-  touch "$BIN_DIR/connect-iq-sdk-manager"
-  curl -sSfL https://raw.githubusercontent.com/lindell/connect-iq-sdk-manager-cli/master/install.sh \
-    | sh -s -- -b "$BIN_DIR"
+if [ ! -x "$BIN_DIR/connect-iq-sdk-manager" ] || [ ! -s "$BIN_DIR/connect-iq-sdk-manager" ]; then
+  # Download a pinned release directly: the upstream install.sh looks up the
+  # tag through api.github.com, which the cloud proxy blocks (403), while
+  # github.com release downloads work.
+  ver=0.8.4
+  name="connect-iq-sdk-manager-cli_${ver}_Linux_x86_64.tar.gz"
+  url="https://github.com/lindell/connect-iq-sdk-manager-cli/releases/download/v${ver}"
+  tmp=$(mktemp -d)
+  curl -sSfL -o "$tmp/$name" "$url/$name"
+  curl -sSfL -o "$tmp/checksums.txt" "$url/checksums.txt"
+  (cd "$tmp" && grep " $name\$" checksums.txt | sha256sum -c -)
+  tar -xzf "$tmp/$name" -C "$tmp" connect-iq-sdk-manager
+  install -m 755 "$tmp/connect-iq-sdk-manager" "$BIN_DIR/connect-iq-sdk-manager"
+  rm -rf "$tmp"
 fi
 export PATH="$BIN_DIR:$PATH"
 
