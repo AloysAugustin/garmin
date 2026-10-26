@@ -19,7 +19,10 @@ covers what Garmin access additionally unlocks.
 - Source was reviewed against the current `teslamotors/vehicle-command` and
   fixed (handshake challenge = request uuid, mandatory session-info tag,
   VCSEC multi-reply handling, retries, pairing status, BLE framing guards).
-  **The `dist/` binaries predate those fixes and must be rebuilt.**
+- `dist/` was then rebuilt with SDK 9.3.0 (instinct2/2S) from the fixed
+  source, signed with a **new** developer key (the earlier key was never
+  committed). Unit tests compile but have **not yet been run** in the
+  simulator.
 
 ## Current state (already done)
 

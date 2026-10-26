@@ -49,7 +49,10 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   state use dynamically-typed dictionaries/byte arrays, and some SDK API type
   stubs are over-narrow (`Cryptography.createPublicKey`, BLE iterator element
   types), so gradual typing throws false positives. Syntax/semantic compilation
-  is unaffected.
+  is unaffected. Re-checked with SDK 9.3.0: `typecheck = 1` gives 5 errors —
+  4 fixable (timer `method()` callbacks need `as Void`, the scan iterator
+  element type), but the `createPublicKey` stub still declares its first
+  parameter as `HashAlgorithm`, so it stays at 0.
 
 ## Connect IQ crypto capability notes (important for the protocol)
 
