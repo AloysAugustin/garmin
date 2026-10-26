@@ -200,7 +200,7 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   API 3.1–3.2 but has every API used. Tests pass on vívoactive 3 Music.
 - Unit tests pass (15/15) on fenix7, venu3, venusq2m, fr55, vivoactive3m,
   instinctcrossover, instincte40mm, instinct3amoled45mm and the Instinct 2
-  family. `tools/build-dist.sh` builds all 118 (~15 min).
+  family. `tools/build-dist.sh` builds all 118 (~8 min, 3.8 MB).
 - Simulator quirk: `BluetoothLowEnergy.registerProfile` fails with a fatal
   "System Error" (not the catchable `ProfileRegistrationException`) on about
   the 4th app launch in one simulator session — profiles are never released
