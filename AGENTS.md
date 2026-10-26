@@ -110,6 +110,10 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   device catalogue (`api.gcs.garmin.com/ciq-product-onboarding/...`) needs a
   Garmin account token (401 without one), and no public Docker image ships
   `instinct2x`. Older sessions saw all `*.garmin.com` hosts blocked (403).
+- **Garmin login for device files/fonts:** the `CIQ_TOKEN` environment secret
+  holds an OAuth `token.json` for `lindell/connect-iq-sdk-manager-cli`;
+  `tools/ciq-setup.sh` installs it and downloads devices + fonts. See
+  HANDOFF.md for how it was created (owner's account uses SMS 2FA).
 - **Docker works** (start the daemon with `dockerd &` if the socket is missing).
   Docker Hub blobs are reachable; **ghcr.io blobs are blocked** (403).
 - The SDK + device files used here came from the Docker Hub image

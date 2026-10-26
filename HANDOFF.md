@@ -1,111 +1,83 @@
-# Handoff — tasks needing Garmin server access
+# Handoff — next session (written 2026-10-26)
 
-This note is for an agent/developer running in an environment that **can reach
-Garmin's servers** (`developer.garmin.com`, the Connect IQ SDK Manager, device
-downloads). The app is complete and compiles; the items below are the things
-that were blocked in the environment where it was built (Garmin hosts returned
-403 there, so the SDK and device files had to be extracted from a Docker image).
+Read `AGENTS.md` first: build mechanics, Monkey C / Connect IQ gotchas, and
+the Docker simulator recipe. This file covers what's next.
 
-Read `AGENTS.md` first for build mechanics and Monkey C gotchas. This file only
-covers what Garmin access additionally unlocks.
+## Where things stand
 
-## Status update (2026-10-26)
+- App in `source/` builds for `instinct2` / `instinct2s` with SDK **9.3.0**
+  (using the SDK 4.1.7 device files from the `piccobit/docker-connectiq`
+  image). **All 15 unit tests pass in the simulator** (Docker recipe in
+  AGENTS.md).
+- Protocol code was checked against the current `teslamotors/vehicle-command`
+  and fixed: handshake challenge = request uuid, mandatory session-info tag,
+  verified/monotonic session refresh, VCSEC multi-reply handling with
+  retries, pairing status, BLE framing guards, safer advert matching.
+- Running the tests for the first time showed the original crypto never
+  worked on Connect IQ (EC keys/secret are little-endian; `toUtf8Array()` is
+  not a ByteArray). Fixed and covered by tests.
+- `dist/` holds release builds for instinct2/2S from the fixed source, signed
+  with a throwaway developer key (the original key was never committed; no
+  permanent key exists yet).
+- **Not verified:** the UI in the simulator (no device fonts until Garmin
+  access works) and anything on real hardware or a real car.
 
-- With full network access, the SDK itself now downloads from
-  developer.garmin.com (9.3.0 is current), but **device files still need a
-  Garmin account login**, so tasks 1–3 for `instinct2x` remain open. Any
-  environment with a signed-in SDK Manager (or Garmin credentials supplied
-  as environment secrets for a CLI SDK manager) can do them.
-- Source was reviewed against the current `teslamotors/vehicle-command` and
-  fixed (handshake challenge = request uuid, mandatory session-info tag,
-  VCSEC multi-reply handling, retries, pairing status, BLE framing guards).
-- The simulator now runs in Docker (recipe in AGENTS.md). Running the tests
-  revealed that the original crypto never worked on Connect IQ: EC keys and
-  the ECDH secret are little-endian there, and `toUtf8Array()` isn't a
-  ByteArray. Both are fixed; **all 15 unit tests pass in the simulator**.
-- `dist/` is rebuilt with SDK 9.3.0 (instinct2/2S) from the fixed source,
-  signed with a **new** developer key (the earlier key was never committed).
-- UI not checked in the simulator: device font files need a Garmin login.
+## Garmin access: the `CIQ_TOKEN` secret
 
-## Current state (already done)
-
-- Full Connect IQ app in `source/`; compiles cleanly for `instinct2` and
-  `instinct2s` with SDK **4.1.7**.
-- Pre-built binaries committed in `dist/` (`TeslaKey-instinct2.prg`,
-  `TeslaKey-instinct2s.prg`, `SHA256SUMS.txt`).
-- Crypto/protocol verified against Tesla's official `protocol.md` test vectors
-  (unit tests in `source/tests/CryptoTests.mc`, plus an independent cross-check).
-- `instinct2x` is intentionally **not** in `manifest.xml` — it postdates SDK
-  4.1.7 and that SDK's compiler rejects the unknown product id.
-
-## Tasks to do with Garmin access
-
-### 1. Install the current official SDK + device files
-
-Use the SDK Manager (or the CLI SDK download) to get the latest SDK and the
-device bundles for `instinct2`, `instinct2s`, **and `instinct2x`**. Device files
-install under `~/.Garmin/ConnectIQ/Devices/<device>/`.
-
-### 2. Re-enable the Instinct 2X
-
-In `manifest.xml`, add it back to `<iq:products>`:
-
-```xml
-<iq:product id="instinct2x"/>
-```
-
-(The manifest already has a comment marking where it goes.)
-
-### 3. Build release binaries for all three devices
+Device files and fonts need a Garmin account. The owner (whose account has
+SMS 2FA) created an OAuth token with `lindell/connect-iq-sdk-manager-cli`
+via its browser login flow, and stored the **contents of `token.json`** as
+the environment secret **`CIQ_TOKEN`**. It was added mid-session, so it has
+**not been tested yet**.
 
 ```bash
-# one-time signing key (keep it OUT of git; see .gitignore)
-openssl genrsa -out certs/developer_key.pem 4096
-openssl pkcs8 -topk8 -inform PEM -outform DER \
-    -in certs/developer_key.pem -out certs/developer_key.der -nocrypt
-
-for d in instinct2 instinct2s instinct2x; do
-  monkeyc -f monkey.jungle -o dist/TeslaKey-$d.prg -y certs/developer_key.der -d $d
-done
-(cd dist && sha256sum *.prg > SHA256SUMS.txt)
+tools/ciq-setup.sh            # writes the token, installs the CLI, accepts the
+                              # agreement, sets SDK >=9, downloads the manifest's
+                              # devices + fonts into ~/.Garmin/ConnectIQ
 ```
 
-Then commit the refreshed `dist/` (binaries are tracked; `bin/` and `certs/`
-are not).
+If the token has expired (`refreshTokenExpiresIn` in the JSON), ask the
+owner to redo the login; don't ask for the password. The 2FA-compatible
+procedure is: run the CLI's `login` in a container, `curl` its
+`/login` URL from inside the container to get the Garmin SSO link, sign in in
+a browser, then `curl` the resulting `http://localhost:<port>/done?ticket=…`
+URL from inside the container. (Password login can't do 2FA. The installer
+also needs `touch <bindir>/connect-iq-sdk-manager` first, or it refuses to
+install without sudo.)
 
-Optional: with a newer SDK you may be able to relax `project.typecheck = 0` in
-`monkey.jungle` back to gradual typing if the SDK's API type stubs for
-`Cryptography.createPublicKey` / BLE iterators are no longer over-narrow. Rebuild
-and confirm no new errors before changing it.
+Device files and fonts are Garmin-licensed: keep them out of git.
 
-### 4. Run the unit tests in the simulator (done 2026-10-26 — 15/15 pass)
+## Next tasks, in order
 
-This needs a **GUI-capable** environment (the simulator links `webkit2gtk`;
-it could not run on the headless Ubuntu 24.04 box used earlier):
+1. **Run `tools/ciq-setup.sh`** and fix it if needed (written but unrun).
+2. **Re-enable the Instinct 2X:** add `<iq:product id="instinct2x"/>` to
+   `manifest.xml` (a comment marks the spot), download it, build, run tests.
+3. **Check the UI in the simulator** now that fonts exist (Menu2 menus,
+   `StatusView`, `InfoView`). Screenshots via `import -window root` in the
+   container (install `imagemagick`).
+4. **Multi-device support** (owner's goal: as many Garmin watches as
+   possible). About 125 watches have both `BluetoothLowEnergy` and
+   `Cryptography.KeyPair` per the SDK 9.3.0 docs: roughly everything since
+   ~2019 (fēnix 6+, epix, FR 245–970, Venu 2/3/4, vívoactive 4–6,
+   Instinct 2/3/Crossover/E, Enduro, MARQ, D2, Descent). Not supported: Venu
+   Sq/Sq 2 (no BLE API), fēnix 5, FR 645/935, Instinct 1, vívosmart/Lily.
+   - Add those products to the manifest (check `minApiLevel`).
+   - Per-resolution launcher icons (the current one is 62×62 for Instinct).
+   - Check layouts on round, rectangular and Instinct screens in the simulator.
+   - Run the unit tests on a few representative devices.
+5. **Permanent signing key:** create once, store outside the repo (store
+   updates must use the same key forever). Ask the owner where to keep it.
+6. **AES-GCM (recommended before a public release):** Tesla recommends
+   `FLAG_ENCRYPT_RESPONSE`, and fault `REQUIRES_RESPONSE_ENCRYPTION` (28)
+   exists; if firmware enforces it, every user breaks. GCM can be built on
+   Connect IQ's AES-ECB (CTR + GHASH). Test against Go-generated vectors.
+7. **Store package:** `monkeyc -e -o dist/TeslaKey.iq ...`. A Connect IQ
+   Store submission needs the owner's developer account, a description,
+   screenshots, a privacy statement, and a name that doesn't present the app
+   as official (no Tesla logo).
 
-```bash
-monkeyc -f monkey.jungle -o bin/TeslaKey-test.prg -y certs/developer_key.der \
-        -d instinct2 --unit-test
-connectiq &                 # start the simulator
-monkeydo bin/TeslaKey-test.prg instinct2 -t
-```
+## Needs hardware (owner)
 
-All six tests in `CryptoTests.mc` should pass (they assert against Tesla's
-published test vectors).
-
-### 5. (Optional) Build a store package and/or cut a GitHub release
-
-- Store/sideload-everywhere package: `monkeyc -e -o dist/TeslaKey.iq ...` (export).
-- GitHub release (needs valid GitHub auth in that environment):
-
-  ```bash
-  gh release create v0.1.0 dist/*.prg dist/SHA256SUMS.txt \
-     --title "Tesla Key v0.1.0" \
-     --notes "Standalone Tesla BLE key for Garmin Instinct 2 / 2S / 2X."
-  ```
-
-## Things Garmin access does NOT fix
-
-- The GitHub **release** limitation is about GitHub auth, not Garmin.
-- Real-vehicle testing still requires hardware: sideload, set the VIN in Garmin
-  Connect, pair with an NFC key-card tap, and test unlock/lock on the car.
+Sideload, set the VIN in Garmin Connect, pair with an NFC key-card tap, then
+test unlock/lock/trunk/frunk/wake on the car. Bluetooth behaviour varies by
+watch model, so test on several.
