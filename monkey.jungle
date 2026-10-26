@@ -11,6 +11,12 @@
 
 project.manifest = manifest.xml
 
+# This app leans on dynamically-typed protobuf dictionaries/byte arrays and a
+# few SDK API type stubs that are over-narrow (e.g. Cryptography.createPublicKey,
+# BLE iterator element types). Disable gradual type checking to avoid false
+# positives; syntax and semantic compilation are unaffected.
+project.typecheck = 0
+
 # The unit tests under source/tests are only compiled into test builds. They are
 # excluded from normal release builds via the base sourcePath below plus the
 # --unit-test flag pulling them back in.

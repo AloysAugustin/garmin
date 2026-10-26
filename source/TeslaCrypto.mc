@@ -57,8 +57,8 @@ module TeslaCrypto {
         var priv = Cryptography.randomBytes(32);
         var kp = keyPairFromPrivate(priv);
         return {
-            :private => kp.getPrivateKey().getBytes(),
-            :public => kp.getPublicKey().getBytes()
+            :priv => kp.getPrivateKey().getBytes(),
+            :pub => kp.getPublicKey().getBytes()
         };
     }
 

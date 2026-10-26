@@ -165,3 +165,32 @@ sideload it from the Connect IQ simulator / VS Code extension.
   replay and relay beyond a short window.
 - Session-info responses from the car are integrity-checked before use.
 - Never commit your `certs/` developer keys (see `.gitignore`).
+
+### Does using HMAC instead of AES-GCM weaken security?
+
+**Not for authorization — only a minor privacy trade-off.**
+
+- **Authorization / forgery / replay are unaffected.** Both HMAC and GCM
+  authenticate commands with a tag derived from the ECDH shared key `K`, which
+  only the holder of the enrolled private key can produce. The HMAC covers the
+  full metadata (domain, VIN, epoch, counter, expiry) plus the command, so
+  tampering, cross-vehicle reuse and replay are rejected identically. Dropping
+  GCM does **not** let anyone control the car who couldn't already.
+- **What you give up:** confidentiality of the command/response *contents* to a
+  passive BLE sniffer physically in range (a few metres) — they could see
+  *which* command was sent and the returned vehicle status. That's low-sensitivity
+  metadata, not a control compromise. Encrypting responses (`FLAG_ENCRYPT_RESPONSE`)
+  would require GCM to decrypt, which Connect IQ cannot do, so it is intentionally
+  left off.
+
+### The more relevant considerations
+
+- **Key storage is not hardware-backed.** The P-256 private key lives in Connect
+  IQ app storage, not a secure element. Someone with developer access to an
+  unlocked watch could extract it (a phone key benefits from the phone's secure
+  enclave; the watch has no equivalent). This is the most meaningful real-world
+  weakness, and it is independent of the HMAC/GCM choice.
+- **RNG.** Security rests on `Cryptography.randomBytes` being a proper CSPRNG
+  (it generates the private key, challenge and routing address).
+- **Revocation.** If the watch is lost, remove its key in the Tesla app
+  (Controls → Locks → Keys), exactly as for a lost phone key.

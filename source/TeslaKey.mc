@@ -43,8 +43,8 @@ class TeslaKey {
         mPub = Application.Storage.getValue(STORE_PUB);
         if (mPriv == null || mPub == null) {
             var kp = TeslaCrypto.generateKeyPair();
-            mPriv = kp[:private];
-            mPub = kp[:public];
+            mPriv = kp[:priv];
+            mPub = kp[:pub];
             Application.Storage.setValue(STORE_PRIV, mPriv);
             Application.Storage.setValue(STORE_PUB, mPub);
         }
