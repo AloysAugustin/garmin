@@ -9,6 +9,18 @@ that were blocked in the environment where it was built (Garmin hosts returned
 Read `AGENTS.md` first for build mechanics and Monkey C gotchas. This file only
 covers what Garmin access additionally unlocks.
 
+## Status update (2026-10-26)
+
+- With full network access, the SDK itself now downloads from
+  developer.garmin.com (9.3.0 is current), but **device files still need a
+  Garmin account login**, so tasks 1–3 for `instinct2x` remain open. Any
+  environment with a signed-in SDK Manager (or Garmin credentials supplied
+  as environment secrets for a CLI SDK manager) can do them.
+- Source was reviewed against the current `teslamotors/vehicle-command` and
+  fixed (handshake challenge = request uuid, mandatory session-info tag,
+  VCSEC multi-reply handling, retries, pairing status, BLE framing guards).
+  **The `dist/` binaries predate those fixes and must be rebuilt.**
+
 ## Current state (already done)
 
 - Full Connect IQ app in `source/`; compiles cleanly for `instinct2` and

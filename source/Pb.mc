@@ -102,7 +102,8 @@ module Pb {
     // For WIRE_LEN entries the value is a ByteArray (the raw field contents).
     // For WIRE_VARINT entries the value is a Long.
     // For WIRE_FIXED32 entries the value is a Long (decoded little-endian).
-    // Unsupported wire types are skipped as best as possible.
+    // Unsupported wire types are skipped as best as possible. Truncated input
+    // stops decoding (returning the fields read so far) instead of throwing.
     function decode(buf) {
         var fields = {};
         var pos = 0;
@@ -122,9 +123,15 @@ module Pb {
                 r = readVarint(buf, pos);
                 var len = r[0].toNumber();
                 pos = r[1];
+                if (len < 0 || pos + len > n) {
+                    break; // truncated / malformed: stop rather than throw
+                }
                 value = buf.slice(pos, pos + len);
                 pos += len;
             } else if (wire == WIRE_FIXED32) {
+                if (pos + 4 > n) {
+                    break;
+                }
                 value = ((buf[pos] & 0xff).toLong())
                     | ((buf[pos + 1] & 0xff).toLong() << 8)
                     | ((buf[pos + 2] & 0xff).toLong() << 16)

@@ -18,12 +18,20 @@ class TeslaKey {
     // How far in the future (vehicle seconds) a command is valid.
     const COMMAND_TTL = 30;
 
+    // applySessionInfo() results.
+    enum {
+        SESSION_OK,
+        SESSION_NOT_PAIRED,
+        SESSION_INVALID
+    }
+
     hidden var mPriv;        // ByteArray, 32 bytes
     hidden var mPub;         // ByteArray, 65 bytes (0x04||X||Y)
     hidden var mVin;         // String (17 chars) or null
 
     // Per-domain session state, keyed by domain Number.
-    //   { :key, :epoch, :counter, :clockTime, :timerMs, :verified, :challenge }
+    //   { :key, :vehiclePub, :epoch, :counter, :clockTime, :timerMs, :verified,
+    //     :challenge (uuid of the last request, used to verify session info) }
     hidden var mSessions;
 
     // The routing address for the current BLE connection (16 random bytes).
@@ -124,69 +132,109 @@ class TeslaKey {
         return mSessions.hasKey(domain) && mSessions[domain][:verified];
     }
 
+    // True if a vehicle reply is addressed to this connection. Replies carry
+    // our routing address in to_destination; anything else is not for us.
+    function isForUs(routable) {
+        if (!routable.hasKey(:toAddress)) {
+            return true;
+        }
+        return TeslaCrypto.constantTimeEquals(routable[:toAddress], mRoutingAddr);
+    }
+
     // --- Handshake ----------------------------------------------------------
 
-    // Build the handshake request for a domain and remember the challenge.
+    // Build the handshake request for a domain. The request uuid doubles as
+    // the challenge the vehicle binds into its session-info HMAC.
     function buildHandshake(domain) {
-        var challenge = Cryptography.randomBytes(16);
         var uuid = Cryptography.randomBytes(16);
         mSessions[domain] = {
-            :challenge => challenge,
+            :challenge => uuid,
             :verified => false
         };
-        return TeslaProto.handshakeRequest(domain, mPub, mRoutingAddr, challenge, uuid);
+        return TeslaProto.handshakeRequest(domain, mPub, mRoutingAddr, uuid);
+    }
+
+    // The challenge a session-info reply was tagged with: the request_uuid the
+    // vehicle echoed if any (VCSEC usually omits it), else the uuid we sent.
+    hidden function replyChallenge(sess, routable) {
+        if (routable.hasKey(:requestUuid) && routable[:requestUuid].size() > 0) {
+            return routable[:requestUuid];
+        }
+        return sess[:challenge];
     }
 
     // Consume a handshake response (parsed RoutableMessage dict). Derives the
     // shared key, verifies the session-info HMAC, and records session state.
-    // Returns true on success.
+    // Returns SESSION_OK, SESSION_NOT_PAIRED or SESSION_INVALID.
     function applySessionInfo(domain, routable) {
-        if (!routable.hasKey(:sessionInfo)) {
-            return false;
+        var sess = mSessions[domain];
+        if (sess == null || !routable.hasKey(:sessionInfo)) {
+            return SESSION_INVALID;
         }
         var encoded = routable[:sessionInfo];
         var info = TeslaProto.parseSessionInfo(encoded);
+        if (info[:status] == TeslaProto.SESSION_INFO_STATUS_KEY_NOT_ON_WHITELIST) {
+            return SESSION_NOT_PAIRED;
+        }
         if (info[:publicKey] == null || info[:epoch] == null) {
-            return false;
+            return SESSION_INVALID;
         }
 
         var key = TeslaCrypto.deriveSharedKey(mPriv, info[:publicKey]);
 
-        // Verify the response integrity tag when present.
-        var sess = mSessions[domain];
-        if (routable.hasKey(:sessionInfoTag) && sess != null && sess[:challenge] != null) {
-            var ok = TeslaCrypto.verifySessionInfo(
-                key, vinBytes(), sess[:challenge], encoded, routable[:sessionInfoTag]);
-            if (!ok) {
-                return false;
-            }
+        // The integrity tag is mandatory: session info without a valid tag
+        // must be discarded (protocol.md "Session state").
+        if (!routable.hasKey(:sessionInfoTag)) {
+            return SESSION_INVALID;
+        }
+        if (!TeslaCrypto.verifySessionInfo(key, vinBytes(), replyChallenge(sess, routable),
+                encoded, routable[:sessionInfoTag])) {
+            return SESSION_INVALID;
         }
 
         mSessions[domain] = {
             :key => key,
+            :vehiclePub => info[:publicKey],
             :epoch => info[:epoch],
             :counter => info[:counter],
             :clockTime => info[:clockTime],
             :timerMs => System.getTimer(),
             :verified => true,
-            :challenge => (sess != null ? sess[:challenge] : null)
+            :challenge => sess[:challenge]
         };
-        return true;
+        return SESSION_OK;
     }
 
-    // Update counter/epoch/clock from a fault response that carried fresh
-    // session info (used to recover from counter/epoch/time errors and retry).
+    // Resync from session info the vehicle attached to an error reply (used to
+    // recover from counter/epoch/time faults before retrying). The info is only
+    // applied if its HMAC verifies against the request it answers. Following
+    // protocol.md, the counter never rolls back unless the epoch changes, and
+    // clock time never goes backwards within an epoch.
     function refreshFromResponse(domain, routable) {
-        if (!routable.hasKey(:sessionInfo) || !mSessions.hasKey(domain)) {
+        if (!routable.hasKey(:sessionInfo) || !routable.hasKey(:sessionInfoTag)
+                || !hasSession(domain)) {
             return false;
         }
-        var info = TeslaProto.parseSessionInfo(routable[:sessionInfo]);
         var sess = mSessions[domain];
-        if (info[:counter] > sess[:counter]) {
-            sess[:counter] = info[:counter];
+        var encoded = routable[:sessionInfo];
+        if (!TeslaCrypto.verifySessionInfo(sess[:key], vinBytes(), replyChallenge(sess, routable),
+                encoded, routable[:sessionInfoTag])) {
+            return false;
         }
-        if (info[:epoch] != null) {
+        var info = TeslaProto.parseSessionInfo(encoded);
+        if (info[:epoch] == null
+                || (info[:publicKey] != null
+                    && !TeslaCrypto.constantTimeEquals(info[:publicKey], sess[:vehiclePub]))) {
+            return false;
+        }
+        var newEpoch = !TeslaCrypto.constantTimeEquals(info[:epoch], sess[:epoch]);
+        if (newEpoch) {
             sess[:epoch] = info[:epoch];
+            sess[:counter] = info[:counter];
+        } else if (info[:clockTime] < sess[:clockTime]) {
+            return false; // stale
+        } else if (info[:counter] > sess[:counter]) {
+            sess[:counter] = info[:counter];
         }
         sess[:clockTime] = info[:clockTime];
         sess[:timerMs] = System.getTimer();
@@ -226,6 +274,7 @@ class TeslaKey {
 
         var tag = TeslaCrypto.commandTag(sess[:key], metadata, plaintext);
         var uuid = Cryptography.randomBytes(16);
+        sess[:challenge] = uuid;
 
         return TeslaProto.signedCommand(
             domain, plaintext, mPub, mRoutingAddr,

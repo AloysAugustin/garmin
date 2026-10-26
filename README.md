@@ -83,7 +83,8 @@ The app implements the client side of Tesla's protocol on top of Connect IQ's
    identity the car whitelists.
 2. **Handshake.** For each connection the app sends a `SessionInfoRequest` to the
    VCSEC domain. The car replies with its ephemeral public key, an anti-replay
-   counter, its epoch and clock.
+   counter, its epoch and clock. The reply's integrity tag is bound to the
+   request's random `uuid`, so a replayed or forged reply is rejected.
 3. **Key agreement.** `K = SHA1(ECDH(ourPriv, carPub))[:16]` — a shared 128-bit
    key, exactly as specified.
 4. **Response integrity.** The session-info reply is verified with
@@ -92,6 +93,12 @@ The app implements the client side of Tesla's protocol on top of Connect IQ's
    `tag = HMAC-SHA256(HMAC-SHA256(K,"authenticated command"), metadata || command)`
    where `metadata` is the canonical TLV serialization of the signature type,
    domain, VIN, epoch, expiry and counter.
+6. **Reply handling.** VCSEC can send up to three replies per command. The app
+   follows the reference client: a reply without `commandStatus` is final
+   (empty = success, `nominalError` = refused, e.g. "door open"),
+   `OPERATIONSTATUS_WAIT` means busy and is retried after 1 s, and
+   counter/epoch/clock faults are retried after resyncing from the
+   HMAC-verified session info the car attaches.
 
 ### Why HMAC instead of AES-GCM
 
@@ -109,7 +116,10 @@ The protocol math is validated against the official test vectors in Tesla's
 `protocol.md`, both as Connect IQ unit tests (`source/tests/CryptoTests.mc`,
 runnable in the simulator) and independently. All checks pass: K derivation,
 sub-key derivation, TLV metadata for both the session-info and command paths,
-and the end-to-end session-info HMAC verification.
+and the end-to-end session-info HMAC verification. The tests also pin the exact
+bytes of the handshake, a signed unlock, trunk/frunk and add-key messages, and
+the parsing of vehicle replies, against bytes produced from Tesla's official
+`.proto` files.
 
 ---
 
@@ -193,7 +203,10 @@ sideload it from the Connect IQ simulator / VS Code extension.
   length prefix and reassembles replies accordingly.
 - **Authentication method.** Commands use the documented HMAC-SHA256 method (see
   above). This is a supported method for the VCSEC domain; the app does not
-  implement AES-GCM because Connect IQ lacks a GCM cipher.
+  implement AES-GCM because Connect IQ lacks a GCM cipher. The protocol defines
+  a `REQUIRES_RESPONSE_ENCRYPTION` fault; if a future firmware enforces it, the
+  app shows "Car requires encrypted replies" and would need AES-GCM (buildable
+  on top of Connect IQ's AES-ECB).
 - **Not affiliated with Tesla or Garmin.** "Tesla" is a trademark of Tesla, Inc.
   Use on vehicles and keys you own, at your own risk.
 

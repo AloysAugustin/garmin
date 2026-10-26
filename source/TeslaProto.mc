@@ -29,6 +29,23 @@ module TeslaProto {
     // VCSEC.SignatureType
     const VCSEC_SIG_PRESENT_KEY = 2;
 
+    // OperationStatus_E (same values in UniversalMessage and VCSEC)
+    const OPSTATUS_OK = 0;
+    const OPSTATUS_WAIT = 1;
+    const OPSTATUS_ERROR = 2;
+
+    // Signatures.Session_Info_Status
+    const SESSION_INFO_STATUS_KEY_NOT_ON_WHITELIST = 1;
+
+    // VCSEC.WhitelistOperation_information_E values we report specially
+    const WL_INFO_NONE = 0;
+    const WL_INFO_WHITELIST_FULL = 4;
+    const WL_INFO_ALREADY_ON_WHITELIST = 13;
+    const WL_INFO_UI_DENIED = 24;
+    const WL_INFO_TIMED_OUT_WAITING_FOR_TAP = 25;
+    const WL_INFO_TIMED_OUT_WAITING_FOR_UI_ACK = 26;
+    const WL_INFO_CANCELLED = 28;
+
     // ---- RoutableMessage builders -----------------------------------------
 
     // Destination { domain = 1 }
@@ -42,10 +59,14 @@ module TeslaProto {
     }
 
     // The session-info handshake request.
-    function handshakeRequest(domain, ourPublicKey, routingAddr, challenge, uuid) {
-        // SessionInfoRequest { public_key = 1, challenge = 2 }
+    //
+    // The vehicle authenticates its reply with TAG_CHALLENGE = this message's
+    // `uuid` (protocol.md "Handshake"), so the caller must keep `uuid` to verify
+    // the response. Like the reference client, we leave
+    // SessionInfoRequest.challenge unset so there is only one candidate value.
+    function handshakeRequest(domain, ourPublicKey, routingAddr, uuid) {
+        // SessionInfoRequest { public_key = 1 }
         var sir = Pb.fieldBytes(1, ourPublicKey);
-        sir.addAll(Pb.fieldBytes(2, challenge));
 
         var msg = []b;
         msg.addAll(Pb.fieldBytes(6, destDomain(domain)));      // to_destination
@@ -145,13 +166,53 @@ module TeslaProto {
 
     // ---- Response parsing --------------------------------------------------
 
+    // Field numbers that only occur at the top level of a RoutableMessage. A
+    // FromVCSECMessage (the legacy reply to a raw ToVCSECMessage) uses 1, 4,
+    // 16, 17 and 46 instead, so the two can be told apart.
+    function isRoutable(bytes) {
+        var f = Pb.decode(bytes);
+        var keys = [6, 7, 10, 12, 13, 14, 15, 50, 51, 52];
+        for (var i = 0; i < keys.size(); i++) {
+            if (f.hasKey(keys[i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // Parse a RoutableMessage. Returns a dictionary with any of:
     //   :sessionInfo (ByteArray), :sessionInfoTag (ByteArray),
     //   :fault (Number MessageFault_E), :operationStatus (Number),
-    //   :payload (ByteArray, the plaintext protobuf_message_as_bytes)
+    //   :payload (ByteArray, the plaintext protobuf_message_as_bytes),
+    //   :toAddress (ByteArray, to_destination.routing_address),
+    //   :fromDomain (Number, from_destination.domain),
+    //   :requestUuid (ByteArray)
     function parseRoutable(bytes) {
         var f = Pb.decode(bytes);
         var result = {};
+
+        // to_destination (6) -> routing_address (2)
+        var to = Pb.firstBytes(f, 6);
+        if (to != null) {
+            var addr = Pb.firstBytes(Pb.decode(to), 2);
+            if (addr != null) {
+                result[:toAddress] = addr;
+            }
+        }
+
+        // from_destination (7) -> domain (1)
+        var fromDest = Pb.firstBytes(f, 7);
+        if (fromDest != null) {
+            var dom = Pb.firstInt(Pb.decode(fromDest), 1);
+            if (dom != null) {
+                result[:fromDomain] = dom.toNumber();
+            }
+        }
+
+        var reqUuid = Pb.firstBytes(f, 50);
+        if (reqUuid != null) {
+            result[:requestUuid] = reqUuid;
+        }
 
         var si = Pb.firstBytes(f, 15);
         if (si != null) {
@@ -191,6 +252,47 @@ module TeslaProto {
             }
         }
 
+        return result;
+    }
+
+    // Parse a VCSEC.FromVCSECMessage (the application-layer reply from VCSEC).
+    // Returns a dictionary with any of:
+    //   :nominalError (Number GenericError_E; present => command refused)
+    //   :opStatus (Number, commandStatus.operationStatus; present => has commandStatus)
+    //   :whitelistInfo (Number, commandStatus.whitelistOperationStatus
+    //                   .whitelistOperationInformation; present => whitelist op status)
+    //   :signedStatus (true when commandStatus.signedMessageStatus is present)
+    //   :empty (true when the message has no fields at all)
+    function parseFromVcsec(bytes) {
+        var f = Pb.decode(bytes);
+        var result = {};
+        if (f.size() == 0) {
+            result[:empty] = true;
+        }
+
+        // nominalError (46) -> genericError (1)
+        var ne = Pb.firstBytes(f, 46);
+        if (ne != null) {
+            var code = Pb.firstInt(Pb.decode(ne), 1);
+            result[:nominalError] = code == null ? 0 : code.toNumber();
+        }
+
+        // commandStatus (4) { operationStatus = 1, signedMessageStatus = 2,
+        //                     whitelistOperationStatus = 3 }
+        var cs = Pb.firstBytes(f, 4);
+        if (cs != null) {
+            var c = Pb.decode(cs);
+            var op = Pb.firstInt(c, 1);
+            result[:opStatus] = op == null ? OPSTATUS_OK : op.toNumber();
+            if (c.hasKey(2)) {
+                result[:signedStatus] = true;
+            }
+            var wl = Pb.firstBytes(c, 3);
+            if (wl != null) {
+                var info = Pb.firstInt(Pb.decode(wl), 1);
+                result[:whitelistInfo] = info == null ? WL_INFO_NONE : info.toNumber();
+            }
+        }
         return result;
     }
 

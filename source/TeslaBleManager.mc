@@ -25,6 +25,11 @@ class TeslaBleManager extends Ble.BleDelegate {
     // length prefix, so smaller chunks are always safe.
     const CHUNK_SIZE = 20;
     const SCAN_TIMEOUT_MS = 20000;
+    // Same framing guards as the reference client: no message is larger than
+    // this, and a partial message older than RX_TIMEOUT_MS is discarded so a
+    // lost chunk cannot desynchronize the length-prefix framing.
+    const MAX_MESSAGE_SIZE = 1024;
+    const RX_TIMEOUT_MS = 1000;
 
     hidden var mListener;          // object receiving high-level callbacks
     hidden var mTargetName;        // expected advertisement local name
@@ -39,6 +44,7 @@ class TeslaBleManager extends Ble.BleDelegate {
     hidden var mWriteQueue;        // array of ByteArray chunks pending write
     hidden var mWriting;
     hidden var mInputBuffer;       // ByteArray accumulating notification data
+    hidden var mLastRxMs;          // System.getTimer() of the last notification
     hidden var mScanning;
     hidden var mRegistered;
 
@@ -78,6 +84,7 @@ class TeslaBleManager extends Ble.BleDelegate {
     function connect(name) {
         mTargetName = name;
         mInputBuffer = []b;
+        mLastRxMs = null;
         mWriteQueue = [];
         mWriting = false;
         startScan();
@@ -186,11 +193,13 @@ class TeslaBleManager extends Ble.BleDelegate {
 
     hidden function matches(scanResult) {
         var name = scanResult.getDeviceName();
-        if (name != null && name.equals(mTargetName)) {
-            return true;
+        if (name != null) {
+            // Another Tesla nearby advertises the same service UUID, so a
+            // named advertisement must match our VIN-derived name exactly.
+            return name.equals(mTargetName);
         }
-        // Fall back to matching the Tesla service UUID if the name wasn't in the
-        // advertisement packet.
+        // Fall back to matching the Tesla service UUID only if the name wasn't
+        // in the advertisement packet.
         var uuids = scanResult.getServiceUuids();
         if (uuids != null) {
             for (var u = uuids.next(); u != null; u = uuids.next()) {
@@ -251,6 +260,11 @@ class TeslaBleManager extends Ble.BleDelegate {
     }
 
     function onCharacteristicChanged(characteristic, value) {
+        var now = System.getTimer();
+        if (mLastRxMs != null && now - mLastRxMs > RX_TIMEOUT_MS) {
+            mInputBuffer = []b;
+        }
+        mLastRxMs = now;
         mInputBuffer.addAll(value);
         drainInput();
     }
@@ -259,6 +273,10 @@ class TeslaBleManager extends Ble.BleDelegate {
     hidden function drainInput() {
         while (mInputBuffer.size() >= 2) {
             var len = ((mInputBuffer[0] & 0xff) << 8) | (mInputBuffer[1] & 0xff);
+            if (len > MAX_MESSAGE_SIZE) {
+                mInputBuffer = []b; // garbage; resync on the next message
+                break;
+            }
             if (mInputBuffer.size() < 2 + len) {
                 break; // wait for more chunks
             }

@@ -90,4 +90,118 @@ module CryptoTests {
         Test.assertEqual(TeslaCrypto.toHex(Pb.firstBytes(fields, 10)), "deadbeef");
         return true;
     }
+
+    // ---- Message builders / parsers ---------------------------------------
+    // Expected bytes below were produced by serializing the same messages with
+    // the official .proto files (protobuf-python), so they check our hand-rolled
+    // encoder against the real schema rather than against itself.
+
+    const CLIENT_PUB = "04b2b6bc68c2da0665ce656815594996c62394edd8bea905fe781a754fe6a845a714330902f225e9269d466e05b349981fda9d85cc23c6fb444aa73b629105dc6e";
+    const ROUTING_ADDR = "2c907bd76c640d360b3027dc7404efde";
+    // protocol.md's handshake uuid. It equals CHALLENGE above: the session-info
+    // HMAC is bound to the request uuid.
+    const REQUEST_UUID = "1588d5a30eabc6f8fc9a951b11f6fd11";
+
+    // The handshake example from protocol.md (to DOMAIN_INFOTAINMENT).
+    (:test)
+    function testHandshakeRequest(logger) {
+        var msg = TeslaProto.handshakeRequest(TeslaProto.DOMAIN_INFOTAINMENT,
+            TeslaCrypto.fromHex(CLIENT_PUB), TeslaCrypto.fromHex(ROUTING_ADDR),
+            TeslaCrypto.fromHex(REQUEST_UUID));
+        Test.assertEqualMessage(TeslaCrypto.toHex(msg),
+            "320208033a1212102c907bd76c640d360b3027dc7404efde72430a41" + CLIENT_PUB
+            + "9a0310" + REQUEST_UUID,
+            "handshake request mismatch");
+        return true;
+    }
+
+    // A complete HMAC-personalized unlock addressed to VCSEC.
+    (:test)
+    function testSignedUnlockCommand(logger) {
+        var p = TeslaProto.rkeAction(TeslaProto.RKE_UNLOCK);
+        Test.assertEqual(TeslaCrypto.toHex(p), "1000");
+        var epoch = TeslaCrypto.fromHex(EPOCH);
+        var meta = TeslaCrypto.commandMetadata(
+            TeslaCrypto.SIGNATURE_TYPE_HMAC_PERSONALIZED, TeslaProto.DOMAIN_VEHICLE_SECURITY,
+            VIN.toUtf8Array(), epoch, 2655, 7, 0);
+        var tag = TeslaCrypto.commandTag(TeslaCrypto.fromHex(SHARED_K), meta, p);
+        Test.assertEqualMessage(TeslaCrypto.toHex(tag),
+            "48469506544f0a1d1f2ef05993ba040fb12968d885a8e8dbcfc4abb9901dbfdf", "unlock tag mismatch");
+        var msg = TeslaProto.signedCommand(TeslaProto.DOMAIN_VEHICLE_SECURITY, p,
+            TeslaCrypto.fromHex(CLIENT_PUB), TeslaCrypto.fromHex(ROUTING_ADDR),
+            epoch, 7, 2655, tag, TeslaCrypto.fromHex(REQUEST_UUID));
+        Test.assertEqualMessage(TeslaCrypto.toHex(msg),
+            "320208023a1212102c907bd76c640d360b3027dc7404efde520210006a82010a430a41" + CLIENT_PUB
+            + "423b0a10" + EPOCH + "10071d5f0a00002220" + TeslaCrypto.toHex(tag)
+            + "9a0310" + REQUEST_UUID,
+            "signed command mismatch");
+        return true;
+    }
+
+    (:test)
+    function testClosurePayloads(logger) {
+        Test.assertEqual(TeslaCrypto.toHex(TeslaProto.openTrunk()), "22022803");
+        Test.assertEqual(TeslaCrypto.toHex(TeslaProto.openFrunk()), "22023003");
+        return true;
+    }
+
+    (:test)
+    function testAddKeyEnvelope(logger) {
+        var env = TeslaProto.addKeyEnvelope(TeslaCrypto.fromHex(CLIENT_PUB),
+            TeslaProto.ROLE_DRIVER, TeslaProto.FORM_FACTOR_ANDROID);
+        Test.assertEqualMessage(TeslaCrypto.toHex(env),
+            "0a54125082014d2a470a430a41" + CLIENT_PUB + "2003320208071802",
+            "add-key envelope mismatch");
+        return true;
+    }
+
+    // FromVCSECMessage replies: busy/waiting, whitelist results, nominal error.
+    (:test)
+    function testParseFromVcsec(logger) {
+        var wait = TeslaCrypto.fromHex("22020801");
+        Test.assert(!TeslaProto.isRoutable(wait));
+        var r = TeslaProto.parseFromVcsec(wait);
+        Test.assertEqual(r[:opStatus], TeslaProto.OPSTATUS_WAIT);
+        Test.assert(!r.hasKey(:whitelistInfo));
+
+        r = TeslaProto.parseFromVcsec(TeslaCrypto.fromHex("220608021a020819"));
+        Test.assertEqual(r[:opStatus], TeslaProto.OPSTATUS_ERROR);
+        Test.assertEqual(r[:whitelistInfo], TeslaProto.WL_INFO_TIMED_OUT_WAITING_FOR_TAP);
+
+        r = TeslaProto.parseFromVcsec(TeslaCrypto.fromHex("22021a00"));
+        Test.assertEqual(r[:whitelistInfo], TeslaProto.WL_INFO_NONE);
+
+        r = TeslaProto.parseFromVcsec(TeslaCrypto.fromHex("f202020802"));
+        Test.assertEqual(r[:nominalError], 2); // GENERICERROR_CLOSURES_OPEN
+        Test.assert(!r.hasKey(:opStatus));
+
+        r = TeslaProto.parseFromVcsec([]b);
+        Test.assert(r.hasKey(:empty));
+        return true;
+    }
+
+    // A protocol-layer fault reply (INVALID_SIGNATURE) from VCSEC.
+    (:test)
+    function testParseRoutableFault(logger) {
+        var bytes = TeslaCrypto.fromHex(
+            "321212102c907bd76c640d360b3027dc7404efde3a0208026204080210059203101588d5a30eabc6f8fc9a951b11f6fd11");
+        Test.assert(TeslaProto.isRoutable(bytes));
+        var r = TeslaProto.parseRoutable(bytes);
+        Test.assertEqual(TeslaCrypto.toHex(r[:toAddress]), ROUTING_ADDR);
+        Test.assertEqual(r[:fromDomain], TeslaProto.DOMAIN_VEHICLE_SECURITY);
+        Test.assertEqual(TeslaCrypto.toHex(r[:requestUuid]), REQUEST_UUID);
+        Test.assertEqual(r[:operationStatus], TeslaProto.OPSTATUS_ERROR);
+        Test.assertEqual(r[:fault], 5);
+        return true;
+    }
+
+    // Truncated input must stop decoding, not throw.
+    (:test)
+    function testDecodeTruncated(logger) {
+        var full = TeslaCrypto.fromHex("320208023a1212102c907bd76c640d360b3027dc7404efde52021000");
+        var fields = Pb.decode(full.slice(0, 20));
+        Test.assert(fields.hasKey(6));
+        Test.assert(!fields.hasKey(10));
+        return true;
+    }
 }
