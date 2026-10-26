@@ -163,13 +163,34 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   If it says "Unable to connect to simulator", `docker restart ciqsim` and
   start Xvfb + simulator again (a killed simulator leaves state that makes the
   next one exit 255). Docker Hub may rate-limit pulls (429).
-- The simulator has **no device fonts** (`~/.Garmin/ConnectIQ/Fonts` is
-  downloaded by the logged-in SDK Manager; the endpoint returns 401), so
-  launching the app UI fails with "Invalid Font Specified". Unit tests don't
-  draw and are unaffected.
+- Device fonts come with `tools/ciq-setup.sh` (`--include-fonts`); without
+  them launching the app UI fails with "Invalid Font Specified".
+- **Driving the UI:** launch with
+  `docker exec -d -e DISPLAY=:99 -w /proj ciqsim sh -c "/sdk/bin/monkeydo bin/app.prg instinct2 >/tmp/run.log 2>&1"`
+  (wait ~12 s), then `tools/sim-shot.sh <device> out.png [enter|esc|up|down...]`
+  clicks the device's buttons (positions from its `simulator.json`) and
+  crops a screenshot of the display. Needs `xdotool imagemagick` installed in
+  the container. Keyboard input via xdotool does **not** reach the simulator;
+  mouse clicks on the button images do. Screenshots include Garmin's device
+  artwork if not cropped; don't commit them.
 - Running binaries extracted from a container can be gated by the auto-mode
   safety classifier ("Code from External"); the user may need to grant
   permission to run the SDK/compiler.
+
+## UI / layout notes (checked in the simulator 2026-10-26)
+
+- `source/ui/Layout.mc` does the screen-shape work: titles go in the strip
+  left of the Instinct **subscreen** (`WatchUi.getSubscreen()`, with ~8 px
+  extra below it for the physical ring), body text is wrapped by pixel width
+  (`getTextWidthInPixels`), round screens use the chord width, and the
+  largest of SMALL/TINY/XTINY that fits is chosen.
+- Instinct 2/2S/2X are **1-bit** displays (`bitsPerPixel: 1` in the device's
+  `compiler.json`): `COLOR_RED`/`GREEN` draw as **black**, i.e. invisible on
+  black. `Layout.resultColor` has `(:color)`/`(:mono)` variants; every 1-bit
+  device needs `<id>.excludeAnnotations = color` in `monkey.jungle`
+  (base excludes `mono`).
+- Menu2's title on Instinct only fits one short word beside the subscreen
+  ("Tesla"); the subscreen shows the launcher icon in menus.
 
 ## Repo conventions
 

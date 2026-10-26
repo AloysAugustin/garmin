@@ -20,8 +20,8 @@ the Docker simulator recipe. This file covers what's next.
   product from the fixed source, signed
   with a throwaway developer key (the original key was never committed; no
   permanent key exists yet).
-- **Not verified:** the UI in the simulator (no device fonts until Garmin
-  access works) and anything on real hardware or a real car.
+- UI checked in the simulator on Instinct 2 and 2S (fixed layout bugs).
+- **Not verified:** anything on real hardware or a real car.
 
 ## Garmin access: the `CIQ_TOKEN` secret
 
@@ -52,9 +52,9 @@ Device files and fonts are Garmin-licensed: keep them out of git.
 
 1. ~~Run `tools/ciq-setup.sh`~~ — done 2026-10-26 (fixed the CLI install).
 2. ~~Re-enable the Instinct 2X~~ — done 2026-10-26; tests pass on it.
-3. **Check the UI in the simulator** now that fonts exist (Menu2 menus,
-   `StatusView`, `InfoView`). Screenshots via `import -window root` in the
-   container (install `imagemagick`).
+3. ~~Check the UI in the simulator~~ — done 2026-10-26. Fixed: invisible
+   status title on the 1-bit Instinct display, titles under the subscreen,
+   clipped/overflowing text. See AGENTS.md "UI / layout notes".
 4. **Multi-device support** (owner's goal: as many Garmin watches as
    possible). About 125 watches have both `BluetoothLowEnergy` and
    `Cryptography.KeyPair` per the SDK 9.3.0 docs: roughly everything since

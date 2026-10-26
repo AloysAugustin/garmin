@@ -3,7 +3,8 @@ using Toybox.WatchUi;
 // The main menu of actions.
 class MainMenu extends WatchUi.Menu2 {
     function initialize() {
-        Menu2.initialize({ :title => "Tesla Key" });
+        // The title strip beside the Instinct subscreen only fits one short word.
+        Menu2.initialize({ :title => Layout.subscreen() != null ? "Tesla" : "Tesla Key" });
         addItem(new WatchUi.MenuItem("Unlock", null, :unlock, {}));
         addItem(new WatchUi.MenuItem("Lock", null, :lock, {}));
         addItem(new WatchUi.MenuItem("Trunk", null, :trunk, {}));

@@ -47,64 +47,19 @@ class StatusView extends WatchUi.View {
         var w = dc.getWidth();
         var h = dc.getHeight();
 
-        var accent = Graphics.COLOR_WHITE;
-        if (mDone) {
-            accent = mSuccess ? Graphics.COLOR_GREEN : Graphics.COLOR_RED;
-        }
+        var accent = mDone ? Layout.resultColor(mSuccess) : Graphics.COLOR_WHITE;
+        var top = Layout.drawTitle(dc, mTitle, accent);
 
-        dc.setColor(accent, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 0.22, Graphics.FONT_MEDIUM, mTitle,
-            Graphics.TEXT_JUSTIFY_CENTER);
+        // The "BACK to return" hint gives way when a long message needs the room.
+        var bottom = h * 0.92;
+        if (mDone && Layout.bodyFits(dc, mMessage, top, h * 0.80)) {
+            bottom = h * 0.80;
+            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+            Layout.drawLine(dc, "BACK to return", bottom + 2,
+                [Graphics.FONT_TINY, Graphics.FONT_XTINY]);
+        }
 
         dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h / 2, Graphics.FONT_SMALL, wrap(mMessage),
-            Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-
-        if (mDone) {
-            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 0.86, Graphics.FONT_TINY, "BACK to return",
-                Graphics.TEXT_JUSTIFY_CENTER);
-        }
-    }
-
-    // Very small word-wrap helper so long messages fit the round/square screen.
-    hidden function wrap(text) {
-        var words = splitWords(text);
-        var line = "";
-        var out = "";
-        var max = 16;
-        for (var i = 0; i < words.size(); i++) {
-            var candidate = line.equals("") ? words[i] : line + " " + words[i];
-            if (candidate.length() > max) {
-                out = out.equals("") ? line : out + "\n" + line;
-                line = words[i];
-            } else {
-                line = candidate;
-            }
-        }
-        if (!line.equals("")) {
-            out = out.equals("") ? line : out + "\n" + line;
-        }
-        return out;
-    }
-
-    hidden function splitWords(text) {
-        var words = [];
-        var current = "";
-        for (var i = 0; i < text.length(); i++) {
-            var c = text.substring(i, i + 1);
-            if (c.equals(" ")) {
-                if (!current.equals("")) {
-                    words.add(current);
-                    current = "";
-                }
-            } else {
-                current += c;
-            }
-        }
-        if (!current.equals("")) {
-            words.add(current);
-        }
-        return words;
+        Layout.drawBody(dc, mMessage, top, bottom);
     }
 }

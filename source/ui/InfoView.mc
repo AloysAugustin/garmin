@@ -22,37 +22,30 @@ class InfoView extends WatchUi.View {
     function onUpdate(dc) {
         dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
         dc.clear();
-        var w = dc.getWidth();
         var h = dc.getHeight();
+        var fonts = [Graphics.FONT_SMALL, Graphics.FONT_TINY, Graphics.FONT_XTINY];
 
-        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-
+        var title;
+        var value;
+        var hint;
         if (mMode == MODE_VIN) {
-            dc.drawText(w / 2, h * 0.22, Graphics.FONT_MEDIUM, "Vehicle",
-                Graphics.TEXT_JUSTIFY_CENTER);
-            var vin = mKey.hasVin() ? mKey.vin() : "(not set)";
-            dc.drawText(w / 2, h * 0.45, Graphics.FONT_SMALL, vin,
-                Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 0.70, Graphics.FONT_TINY,
-                "Set VIN in the\nGarmin Connect app\n(app settings)",
-                Graphics.TEXT_JUSTIFY_CENTER);
+            title = "Vehicle";
+            value = mKey.hasVin() ? mKey.vin() : "(not set)";
+            hint = "Set the VIN in the Garmin Connect app (app settings)";
         } else {
-            dc.drawText(w / 2, h * 0.18, Graphics.FONT_MEDIUM, "My key",
-                Graphics.TEXT_JUSTIFY_CENTER);
+            title = "My key";
             // Show a short fingerprint; the full key is long. The fingerprint is
-            // the first bytes of the public key, which is what the vehicle keychain
-            // shows too.
-            var hex = mKey.publicKeyHex();
-            var fp = hex.substring(0, 16);
-            dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 0.45, Graphics.FONT_SMALL, fp + "...",
-                Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 0.70, Graphics.FONT_TINY,
-                "Pair to enroll\nthis key",
-                Graphics.TEXT_JUSTIFY_CENTER);
+            // the first bytes of the public key, which is what the vehicle
+            // keychain shows too.
+            value = mKey.publicKeyHex().substring(0, 16) + "...";
+            hint = "Pair to enroll this key";
         }
+
+        var top = Layout.drawTitle(dc, title, Graphics.COLOR_WHITE);
+        dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+        var y = Layout.drawLine(dc, value, top + 2, fonts);
+        dc.setColor(Graphics.COLOR_LT_GRAY, Graphics.COLOR_TRANSPARENT);
+        Layout.drawBody(dc, hint, y + 4, h * 0.92);
     }
 }
 

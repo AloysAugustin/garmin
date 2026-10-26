@@ -21,3 +21,10 @@ project.typecheck = 0
 # excluded from normal release builds via the base sourcePath below plus the
 # --unit-test flag pulling them back in.
 base.sourcePath = source
+
+# Layout.resultColor: red/green on colour displays, white on 1-bit displays
+# (where red/green render as black). Every 1-bit device must override this.
+base.excludeAnnotations = mono
+instinct2.excludeAnnotations = color
+instinct2s.excludeAnnotations = color
+instinct2x.excludeAnnotations = color
