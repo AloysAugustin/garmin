@@ -1,6 +1,8 @@
-# Tesla Key for Garmin Instinct 2
+# Tesla Key for Garmin watches
 
-A Connect IQ watch app that turns a **Garmin Instinct 2 / 2S / 2X** into a
+A Connect IQ watch app that turns a **Garmin watch** (Instinct 2/3/E,
+fēnix 5 Plus and later, epix, Forerunner 55–970, Venu, vívoactive 3 Music–6,
+Enduro, MARQ, D2, Descent, Approach S50/S70; 118 models, listed below) into a
 **standalone Bluetooth key for a Tesla** — no phone required once it's paired.
 
 The watch talks to the car directly over Bluetooth Low Energy using Tesla's
@@ -39,11 +41,138 @@ Pre-built apps are published on the repo's
 [**Releases**](https://github.com/AloysAugustin/garmin/releases) page, and are
 also kept in the [`dist/`](dist/) folder:
 
+<details><summary>Supported watches and their files (118)</summary>
+
+<!-- BEGIN devices -->
 | Watch | File |
 | ----- | ---- |
-| Instinct 2  | `TeslaKey-instinct2.prg` |
-| Instinct 2S | `TeslaKey-instinct2s.prg` |
-| Instinct 2X | `TeslaKey-instinct2x.prg` |
+| Approach® S50 | `TeslaKey-approachs50.prg` |
+| Approach® S70 42mm | `TeslaKey-approachs7042mm.prg` |
+| Approach® S70 47mm | `TeslaKey-approachs7047mm.prg` |
+| Approach® S72 43mm | `TeslaKey-approachs7243mm.prg` |
+| Approach® S72 47mm | `TeslaKey-approachs7247mm.prg` |
+| Captain Marvel | `TeslaKey-legacyherocaptainmarvel.prg` |
+| D2™ Air | `TeslaKey-d2air.prg` |
+| D2™ Air X10 | `TeslaKey-d2airx10.prg` |
+| D2™ Mach 1 | `TeslaKey-d2mach1.prg` |
+| D2™ Mach 2 | `TeslaKey-d2mach2.prg` |
+| D2™ Mach 2 Pro | `TeslaKey-d2mach2pro.prg` |
+| Darth Vader™ | `TeslaKey-legacysagadarthvader.prg` |
+| Descent™ G1 / G1 Solar | `TeslaKey-descentg1.prg` |
+| Descent™ G2 | `TeslaKey-descentg2.prg` |
+| Descent™ Mk2 / Mk2i | `TeslaKey-descentmk2.prg` |
+| Descent™ Mk2 S | `TeslaKey-descentmk2s.prg` |
+| Descent™ Mk3 43mm / Mk3i 43mm | `TeslaKey-descentmk343mm.prg` |
+| Descent™ Mk3i 51mm | `TeslaKey-descentmk351mm.prg` |
+| Enduro™ | `TeslaKey-enduro.prg` |
+| Enduro™ 3 | `TeslaKey-enduro3.prg` |
+| Enduro™ 4 | `TeslaKey-enduro4.prg` |
+| epix™ (Gen 2) / quatix® 7 Sapphire | `TeslaKey-epix2.prg` |
+| epix™ Pro (Gen 2) 42mm | `TeslaKey-epix2pro42mm.prg` |
+| epix™ Pro (Gen 2) 47mm / quatix® 7 Pro | `TeslaKey-epix2pro47mm.prg` |
+| epix™ Pro (Gen 2) 51mm / D2™ Mach 1 Pro / tactix® 7 – AMOLED Edition | `TeslaKey-epix2pro51mm.prg` |
+| First Avenger | `TeslaKey-legacyherofirstavenger.prg` |
+| Forerunner® 165 | `TeslaKey-fr165.prg` |
+| Forerunner® 165 Music | `TeslaKey-fr165m.prg` |
+| Forerunner® 170 | `TeslaKey-fr170.prg` |
+| Forerunner® 170 Music | `TeslaKey-fr170m.prg` |
+| Forerunner® 245 | `TeslaKey-fr245.prg` |
+| Forerunner® 245 Music | `TeslaKey-fr245m.prg` |
+| Forerunner® 255 | `TeslaKey-fr255.prg` |
+| Forerunner® 255 Music | `TeslaKey-fr255m.prg` |
+| Forerunner® 255s | `TeslaKey-fr255s.prg` |
+| Forerunner® 255s Music | `TeslaKey-fr255sm.prg` |
+| Forerunner® 265 | `TeslaKey-fr265.prg` |
+| Forerunner® 265s | `TeslaKey-fr265s.prg` |
+| Forerunner® 55 | `TeslaKey-fr55.prg` |
+| Forerunner® 570 42mm | `TeslaKey-fr57042mm.prg` |
+| Forerunner® 570 47mm | `TeslaKey-fr57047mm.prg` |
+| Forerunner® 645 Music | `TeslaKey-fr645m.prg` |
+| Forerunner® 70 | `TeslaKey-fr70.prg` |
+| Forerunner® 745 | `TeslaKey-fr745.prg` |
+| Forerunner® 945 | `TeslaKey-fr945.prg` |
+| Forerunner® 945 LTE | `TeslaKey-fr945lte.prg` |
+| Forerunner® 955 / Solar | `TeslaKey-fr955.prg` |
+| Forerunner® 965 | `TeslaKey-fr965.prg` |
+| Forerunner® 970 | `TeslaKey-fr970.prg` |
+| fēnix® 5 Plus | `TeslaKey-fenix5plus.prg` |
+| fēnix® 5S Plus | `TeslaKey-fenix5splus.prg` |
+| fēnix® 5X Plus | `TeslaKey-fenix5xplus.prg` |
+| fēnix® 6 / 6 Solar / 6 Dual Power | `TeslaKey-fenix6.prg` |
+| fēnix® 6 Pro / 6 Sapphire / 6 Pro Solar / 6 Pro Dual Power / quatix® 6 | `TeslaKey-fenix6pro.prg` |
+| fēnix® 6S / 6S Solar / 6S Dual Power | `TeslaKey-fenix6s.prg` |
+| fēnix® 6S Pro / 6S Sapphire / 6S Pro Solar / 6S Pro Dual Power | `TeslaKey-fenix6spro.prg` |
+| fēnix® 6X Pro / 6X Sapphire / 6X Pro Solar / tactix® Delta Sapphire / Delta Solar / Delta Solar - Ballistics Edition / quatix® 6X / 6X Solar / 6X Dual Power | `TeslaKey-fenix6xpro.prg` |
+| fēnix® 7 / quatix® 7 | `TeslaKey-fenix7.prg` |
+| fēnix® 7 Pro | `TeslaKey-fenix7pro.prg` |
+| fēnix® 7 Pro - Solar Edition (no Wi-Fi) | `TeslaKey-fenix7pronowifi.prg` |
+| fēnix® 7S | `TeslaKey-fenix7s.prg` |
+| fēnix® 7S Pro | `TeslaKey-fenix7spro.prg` |
+| fēnix® 7X / tactix® 7 / quatix® 7X Solar / Enduro™ 2 | `TeslaKey-fenix7x.prg` |
+| fēnix® 7X Pro | `TeslaKey-fenix7xpro.prg` |
+| fēnix® 7X Pro - Solar Edition (no Wi-Fi) | `TeslaKey-fenix7xpronowifi.prg` |
+| fēnix® 8 43mm | `TeslaKey-fenix843mm.prg` |
+| fēnix® 8 47mm / 51mm / tactix® 8 47mm / 51mm / quatix® 8 47mm / 51mm | `TeslaKey-fenix847mm.prg` |
+| fēnix® 8 Pro 47mm / 51mm / MicroLED / quatix® 8 Pro 47mm / 51mm | `TeslaKey-fenix8pro47mm.prg` |
+| fēnix® 8 Solar 47mm | `TeslaKey-fenix8solar47mm.prg` |
+| fēnix® 8 Solar 51mm / tactix® 8 Solar 51mm | `TeslaKey-fenix8solar51mm.prg` |
+| fēnix® 9 43mm | `TeslaKey-fenix943mm.prg` |
+| fēnix® 9 47mm / 51mm | `TeslaKey-fenix947mm.prg` |
+| fēnix® 9 Pro 43mm | `TeslaKey-fenix9pro43mm.prg` |
+| fēnix® 9 Pro 47mm | `TeslaKey-fenix9pro47mm.prg` |
+| fēnix® 9 Pro 51mm | `TeslaKey-fenix9pro51mm.prg` |
+| fēnix® 9 Pro Solar 47mm | `TeslaKey-fenix9prosolar47mm.prg` |
+| fēnix® 9 Pro Solar 51mm | `TeslaKey-fenix9prosolar51mm.prg` |
+| fēnix® E | `TeslaKey-fenixe.prg` |
+| Instinct® 2 / Solar / Dual Power / dēzl Edition | `TeslaKey-instinct2.prg` |
+| Instinct® 2S / Solar / Dual Power | `TeslaKey-instinct2s.prg` |
+| Instinct® 2X Solar | `TeslaKey-instinct2x.prg` |
+| Instinct® 3 AMOLED 45mm | `TeslaKey-instinct3amoled45mm.prg` |
+| Instinct® 3 AMOLED 50mm | `TeslaKey-instinct3amoled50mm.prg` |
+| Instinct® 3 Solar 45mm / 50mm | `TeslaKey-instinct3solar45mm.prg` |
+| Instinct® Crossover | `TeslaKey-instinctcrossover.prg` |
+| Instinct® Crossover AMOLED | `TeslaKey-instinctcrossoveramoled.prg` |
+| Instinct® E 40mm | `TeslaKey-instincte40mm.prg` |
+| Instinct® E 45mm | `TeslaKey-instincte45mm.prg` |
+| MARQ® (Gen 2) Athlete / Adventurer / Captain / Golfer / Carbon Edition / Commander - Carbon Edition | `TeslaKey-marq2.prg` |
+| MARQ® (Gen 2) Aviator | `TeslaKey-marq2aviator.prg` |
+| MARQ® (Gen 3) Athlete / Adventurer / Aviator / Commander / Golfer / Diver | `TeslaKey-marq3.prg` |
+| MARQ® Adventurer | `TeslaKey-marqadventurer.prg` |
+| MARQ® Athlete | `TeslaKey-marqathlete.prg` |
+| MARQ® Aviator | `TeslaKey-marqaviator.prg` |
+| MARQ® Captain / MARQ® Captain: American Magic Edition | `TeslaKey-marqcaptain.prg` |
+| MARQ® Commander | `TeslaKey-marqcommander.prg` |
+| MARQ® Driver | `TeslaKey-marqdriver.prg` |
+| MARQ® Expedition | `TeslaKey-marqexpedition.prg` |
+| MARQ® Golfer | `TeslaKey-marqgolfer.prg` |
+| Rey™ | `TeslaKey-legacysagarey.prg` |
+| Venu® | `TeslaKey-venu.prg` |
+| Venu® 2 | `TeslaKey-venu2.prg` |
+| Venu® 2 Plus | `TeslaKey-venu2plus.prg` |
+| Venu® 2S | `TeslaKey-venu2s.prg` |
+| Venu® 3 | `TeslaKey-venu3.prg` |
+| Venu® 3S | `TeslaKey-venu3s.prg` |
+| Venu® 4 41mm | `TeslaKey-venu441mm.prg` |
+| Venu® 4 45mm / D2™ Air X15 | `TeslaKey-venu445mm.prg` |
+| Venu® Mercedes-Benz® Collection | `TeslaKey-venud.prg` |
+| Venu® Sq 2 Music | `TeslaKey-venusq2m.prg` |
+| Venu® Sq. Music Edition | `TeslaKey-venusqm.prg` |
+| Venu® X1 | `TeslaKey-venux1.prg` |
+| vívoactive® 3 Music | `TeslaKey-vivoactive3m.prg` |
+| vívoactive® 3 Music LTE | `TeslaKey-vivoactive3mlte.prg` |
+| vívoactive® 4 | `TeslaKey-vivoactive4.prg` |
+| vívoactive® 4S | `TeslaKey-vivoactive4s.prg` |
+| vívoactive® 5 | `TeslaKey-vivoactive5.prg` |
+| vívoactive® 6 | `TeslaKey-vivoactive6.prg` |
+<!-- END devices -->
+
+</details>
+
+A watch is supported when its Connect IQ firmware has Bluetooth Low Energy
+(central role) and `Cryptography.KeyPair` (ECDH P-256). Not supported:
+Venu Sq / Sq 2 (no BLE API), fēnix 5/5S/5X, Forerunner 645/935, vívoactive 3
+(non-Music), Instinct (1st gen), and older models. Only the Instinct 2 has
+been tried by the author; the others are built and checked in the simulator.
 
 1. **Download** the `.prg` that matches your watch (verify it against
    `dist/SHA256SUMS.txt` if you like).
@@ -126,7 +255,8 @@ the parsing of vehicle replies, against bytes produced from Tesla's official
 ```
 manifest.xml                 App manifest (supported watches, BLE permission)
 monkey.jungle                Build configuration
-resources/                   Strings, launcher icon, VIN setting
+resources/                   Strings, VIN setting
+resources-icons/<size>/      Launcher icon per size (generated)
 source/
   Pb.mc                      Minimal protobuf encoder/decoder
   TeslaCrypto.mc             ECDH / hashing / HMAC / TLV metadata
@@ -144,8 +274,9 @@ source/
 ## Building
 
 You need the [Connect IQ SDK](https://developer.garmin.com/connect-iq/sdk/)
-(9.x; the Instinct 2X needs a recent SDK) with the device files installed
-via the SDK Manager, and a developer key.
+(9.x) with the device files installed via the SDK Manager, and a developer
+key. `tools/devices.py` decides which watches are supported from the device
+files and regenerates the manifest, jungle, icons and the table above.
 
 ```bash
 # One-time: create a developer signing key
@@ -156,8 +287,8 @@ openssl pkcs8 -topk8 -inform PEM -outform DER \
 # Build for the Instinct 2
 monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y certs/developer_key.der -d instinct2
 
-# Build for the 2S or 2X instead
-monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y certs/developer_key.der -d instinct2x
+# Or any other supported watch, e.g.
+monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y certs/developer_key.der -d fenix7
 
 # Release-build every supported watch into dist/ (+ SHA256SUMS.txt)
 tools/build-dist.sh

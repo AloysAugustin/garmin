@@ -7,7 +7,9 @@ Tesla, speaking Tesla's documented Vehicle Command protocol directly.
 ## What this project is
 
 - Language: **Monkey C** (Garmin Connect IQ).
-- Target devices: **instinct2 / instinct2s / instinct2x** (multi-device work in progress, see HANDOFF.md).
+- Target devices: **118 watches** — every Garmin wearable whose device files
+  have BLE + `Cryptography.KeyPair` etc. (`tools/devices.py`). Developed on
+  the Instinct 2.
 - Protocol: Tesla `vehicle-command` (BLE to the VCSEC service). See README for
   the full design.
 
@@ -50,8 +52,10 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 - `monkeyc -o dir/x.prg` also writes `x.prg.debug.xml`, `*-settings.json`,
   `external-mir/`, `internal-mir/` and `gen/` into `dir/`. Never point `-o` at
   `dist/` directly; `tools/build-dist.sh` builds in a temp dir.
-- The launcher icon must match the device's size (Instinct 2 = **62x62**) or you
-  get a scaling warning.
+- The launcher icon must match the device's size (`launcherIcon` in its
+  `compiler.json`; 26x26 to 70x70, one is 40x33) or you get a scaling warning.
+  Icons live in `resources-icons/<WxH>[-mono]/` and each device's
+  `<id>.resourcePath` in `monkey.jungle` picks one.
 - The manifest validates **every** `<iq:product>` against the SDK, even when
   building for just one device. An unknown product id (e.g. `instinct2x` on an
   older SDK) fails the whole build.
@@ -177,6 +181,38 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   safety classifier ("Code from External"); the user may need to grant
   permission to run the SDK/compiler.
 
+## Multi-device support
+
+- `tools/devices.py` reads `~/.Garmin/ConnectIQ/Devices/*/<id>.api.debug.xml`
+  (each device's exact API surface) and `compiler.json`, and lists devices
+  in the "Watches/Wearables" group that have every class/function the app
+  calls (BLE delegate/registerProfile/setScanState/pairDevice,
+  KeyPair/KeyAgreement/Hash/HMAC, createPublicKey, randomBytes, Menu2) at
+  API >= `minApiLevel`. `tools/devices.py update` regenerates the manifest
+  products, the jungle block (icon folder, `excludeAnnotations = color` for
+  1-bit screens), missing icons and the README table. If you add an API
+  call, add it to `REQUIRED_*` there and re-run `update`.
+- Needs all device files: `connect-iq-sdk-manager device download --download-all`
+  (~380 MB, 179 devices, ~2 min). Fonts only for devices you run in the
+  simulator: `... device download -d a,b --include-fonts`.
+- `minApiLevel` is **3.1.0** (was 3.3.0 for no recorded reason): that adds
+  vívoactive 3 Music/LTE, FR 645 Music and D2 Air, whose last firmware is
+  API 3.1–3.2 but has every API used. Tests pass on vívoactive 3 Music.
+- Unit tests pass (15/15) on fenix7, venu3, venusq2m, fr55, vivoactive3m,
+  instinctcrossover, instincte40mm, instinct3amoled45mm and the Instinct 2
+  family. `tools/build-dist.sh` builds all 118 (~15 min).
+- Simulator quirk: `BluetoothLowEnergy.registerProfile` fails with a fatal
+  "System Error" (not the catchable `ProfileRegistrationException`) on about
+  the 4th app launch in one simulator session — profiles are never released
+  between runs (limit 3). **Restart the simulator every ~3 launches.**
+  `docker restart` leaves a stale `/tmp/.X99-lock`; delete it before Xvfb.
+- Touch watches: the simulator's Enter button doesn't select Menu2 items on
+  Venu; tap them (`tools/sim-shot.sh <dev> out.png tap:X,Y`, swipe with
+  `drag:...`). vívoactive 3 has no Back button in the simulator (swipe right).
+- Instinct Crossover: the simulator draws the physical hands over the app;
+  nothing to fix in the app. Instinct 3 AMOLED and Instinct E also report a
+  subscreen, so `Layout` handles them like the Instinct 2.
+
 ## UI / layout notes (checked in the simulator 2026-10-26)
 
 - `source/ui/Layout.mc` does the screen-shape work: titles go in the strip
@@ -184,11 +220,11 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
   extra below it for the physical ring), body text is wrapped by pixel width
   (`getTextWidthInPixels`), round screens use the chord width, and the
   largest of SMALL/TINY/XTINY that fits is chosen.
-- Instinct 2/2S/2X are **1-bit** displays (`bitsPerPixel: 1` in the device's
-  `compiler.json`): `COLOR_RED`/`GREEN` draw as **black**, i.e. invisible on
-  black. `Layout.resultColor` has `(:color)`/`(:mono)` variants; every 1-bit
-  device needs `<id>.excludeAnnotations = color` in `monkey.jungle`
-  (base excludes `mono`).
+- Instinct 2/2S/2X/E/Crossover are **1-bit** displays (`bitsPerPixel: 1` in
+  the device's `compiler.json`): `COLOR_RED`/`GREEN` draw as **black**, i.e.
+  invisible on black. `Layout.resultColor` has `(:color)`/`(:mono)` variants;
+  1-bit devices get `<id>.excludeAnnotations = color` in `monkey.jungle`
+  (generated; base excludes `mono`).
 - Menu2's title on Instinct only fits one short word beside the subscreen
   ("Tesla"); the subscreen shows the launcher icon in menus.
 

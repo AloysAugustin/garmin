@@ -5,10 +5,10 @@ the Docker simulator recipe. This file covers what's next.
 
 ## Where things stand
 
-- App in `source/` builds for `instinct2` / `instinct2s` / `instinct2x` with
-  SDK **9.3.0** and Garmin's current device files (`tools/ciq-setup.sh`).
-  **All 15 unit tests pass in the simulator on all three** (Docker recipe in
-  AGENTS.md).
+- App in `source/` builds for 118 watches with SDK **9.3.0** and Garmin's
+  current device files (`tools/ciq-setup.sh`). **All 15 unit tests pass in
+  the simulator** on the Instinct 2 family and 8 representative watches
+  (Docker recipe in AGENTS.md).
 - Protocol code was checked against the current `teslamotors/vehicle-command`
   and fixed: handshake challenge = request uuid, mandatory session-info tag,
   verified/monotonic session refresh, VCSEC multi-reply handling with
@@ -20,7 +20,9 @@ the Docker simulator recipe. This file covers what's next.
   product from the fixed source, signed
   with a throwaway developer key (the original key was never committed; no
   permanent key exists yet).
-- UI checked in the simulator on Instinct 2 and 2S (fixed layout bugs).
+- **118 watches** supported (was Instinct 2 family only); UI checked in the
+  simulator on Instinct 2/2S/E/Crossover/3 AMOLED, fēnix 7, FR 55, Venu 3,
+  Venu Sq 2 and vívoactive 3 Music.
 - **Not verified:** anything on real hardware or a real car.
 
 ## Garmin access: the `CIQ_TOKEN` secret
@@ -55,16 +57,17 @@ Device files and fonts are Garmin-licensed: keep them out of git.
 3. ~~Check the UI in the simulator~~ — done 2026-10-26. Fixed: invisible
    status title on the 1-bit Instinct display, titles under the subscreen,
    clipped/overflowing text. See AGENTS.md "UI / layout notes".
-4. **Multi-device support** (owner's goal: as many Garmin watches as
-   possible). About 125 watches have both `BluetoothLowEnergy` and
-   `Cryptography.KeyPair` per the SDK 9.3.0 docs: roughly everything since
-   ~2019 (fēnix 6+, epix, FR 245–970, Venu 2/3/4, vívoactive 4–6,
-   Instinct 2/3/Crossover/E, Enduro, MARQ, D2, Descent). Not supported: Venu
-   Sq/Sq 2 (no BLE API), fēnix 5, FR 645/935, Instinct 1, vívosmart/Lily.
-   - Add those products to the manifest (check `minApiLevel`).
-   - Per-resolution launcher icons (the current one is 62×62 for Instinct).
-   - Check layouts on round, rectangular and Instinct screens in the simulator.
-   - Run the unit tests on a few representative devices.
+4. ~~Multi-device support~~ — done 2026-10-26: 118 watches (all wearables
+   with the needed APIs, per `tools/devices.py`), icons per size, layouts
+   checked on round / rectangular / Instinct screens, tests pass on 8
+   representative devices. See AGENTS.md "Multi-device support".
+   Follow-ups:
+   - Only the Instinct 2 family and the 8 devices above were run in the
+     simulator; the rest are build-checked only.
+   - The launcher icon is a generated key glyph (not the Tesla logo); a
+     designer might want to redo it.
+   - Approach S50/S70/S72 (golf watches) and the "Legacy Hero/Saga" editions
+     are included because their firmware qualifies; drop them if unwanted.
 5. **Permanent signing key:** create once, store outside the repo (store
    updates must use the same key forever). Ask the owner where to keep it.
 6. **AES-GCM (recommended before a public release):** Tesla recommends
