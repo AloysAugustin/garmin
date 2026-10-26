@@ -24,6 +24,14 @@ class MainMenuDelegate extends WatchUi.Menu2InputDelegate {
             runCommand(TeslaController.INTENT_FRUNK, "Frunk");
         } else if (id == :wake) {
             runCommand(TeslaController.INTENT_WAKE, "Wake");
+        } else if (id == :drive) {
+            var code = DriveGuard.precheck();
+            if (code == DriveGuard.PIN_OK) {
+                var pinView = new PinView();
+                WatchUi.pushView(pinView, new PinDelegate(pinView, self), WatchUi.SLIDE_LEFT);
+            } else {
+                showMessage("Drive", DriveGuard.message(code));
+            }
         } else if (id == :doors) {
             WatchUi.pushView(new DoorMenu(), new MainMenuDelegate(mController, mKey), WatchUi.SLIDE_LEFT);
         } else if (id == :doorFrontDriver) {
@@ -45,6 +53,18 @@ class MainMenuDelegate extends WatchUi.Menu2InputDelegate {
         } else if (id == :vin) {
             WatchUi.pushView(new InfoView(InfoView.MODE_VIN, mKey), new InfoDelegate(), WatchUi.SLIDE_LEFT);
         }
+    }
+
+    // Called by PinDelegate once the Drive PIN is verified.
+    function startDrive() {
+        runCommand(TeslaController.INTENT_DRIVE, "Drive");
+    }
+
+    // A full-screen message (reusing StatusView's layout); BACK returns.
+    function showMessage(title, msg) {
+        var view = new StatusView(title);
+        view.onResult(false, msg);
+        WatchUi.pushView(view, new InfoDelegate(), WatchUi.SLIDE_LEFT);
     }
 
     hidden function runCommand(intent, title) {

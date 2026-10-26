@@ -5,4 +5,10 @@
     <setting propertyKey="@Properties.encrypt" title="@Strings.EncryptTitle">
         <settingConfig type="boolean" />
     </setting>
+    <setting propertyKey="@Properties.allowDrive" title="@Strings.AllowDriveTitle">
+        <settingConfig type="boolean" />
+    </setting>
+    <setting propertyKey="@Properties.drivePin" title="@Strings.DrivePinTitle" prompt="@Strings.DrivePinPrompt">
+        <settingConfig type="alphaNumeric" maxLength="4" />
+    </setting>
 </settings>

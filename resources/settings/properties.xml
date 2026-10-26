@@ -4,4 +4,8 @@
     <!-- Encrypt commands and replies with AES-GCM (beta). Off: HMAC-SHA256
          authenticated plaintext, the original behaviour. -->
     <property id="encrypt" type="boolean">false</property>
+    <!-- Keyless driving (Drive menu): off by default, and needs a 4-digit
+         PIN entered on the watch; see source/DriveGuard.mc. -->
+    <property id="allowDrive" type="boolean">false</property>
+    <property id="drivePin" type="string"></property>
 </properties>

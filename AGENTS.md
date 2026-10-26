@@ -233,7 +233,8 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 - `minApiLevel` is **3.1.0** (was 3.3.0 for no recorded reason): that adds
   vívoactive 3 Music/LTE, FR 645 Music and D2 Air, whose last firmware is
   API 3.1–3.2 but has every API used. Tests pass on vívoactive 3 Music.
-- Unit tests (25 since AES-GCM) pass on instinct2, fenix7 and venu3 (23 of
+- Unit tests: 29 (incl. Drive) pass on instinct2, venu3 and vivoactive3m;
+  25 (since AES-GCM) on instinct2, fenix7 and venu3 (23 of
   them also on instinct2x, venusq2m and vivoactive3m); the earlier 15 also on fr55, instinctcrossover,
   instincte40mm and instinct3amoled45mm. A GCM command + reply takes ~40 ms
   in the simulator. `tools/build-dist.sh` builds all 118 (~8 min, 3.8 MB).
@@ -248,6 +249,24 @@ openssl pkcs8 -topk8 -inform PEM -outform DER -in certs/developer_key.pem -out c
 - Instinct Crossover: the simulator draws the physical hands over the app;
   nothing to fix in the app. Instinct 3 AMOLED and Instinct E also report a
   subscreen, so `Layout` handles them like the Instinct 2.
+
+## Keyless driving (Drive)
+
+- `RKE_ACTION_REMOTE_DRIVE` (20) over VCSEC; Tesla's `tesla-control drive`
+  sends it over BLE. Two-minute window (Tesla's guide). Per the Model 3
+  manual it also bypasses PIN to Drive, so `DriveGuard.mc` gates it: setting
+  `allowDrive` (default false) + 4-digit `drivePin` entered on the watch,
+  3 wrong PINs -> 5 min lockout (Application.Storage, survives restarts).
+- PIN entry is a custom `PinView` + plain `InputDelegate`:
+  `WatchUi.Picker` follows the watch theme (white background on fēnix) and
+  can't take a background colour; number fonts lack `*`/`-` glyphs (draw
+  shapes); on a `BehaviorDelegate` a touch tap only arrives as `onSelect`,
+  never `onTap`, so tap zones need `InputDelegate` (map KEY_UP/DOWN/ENTER/
+  START/ESC yourself).
+- Simulator: app settings persist per app and ignore changed defaults, and
+  Storage (the lockout) is not under `/tmp/com.garmin.connectiq`. For
+  screenshots, temporarily hard-code `DriveGuard.property` in a demo build
+  and revert it (never commit that).
 
 ## UI / layout notes (checked in the simulator 2026-10-26)
 

@@ -88,6 +88,11 @@ test unlock/lock/trunk/frunk/wake on the car. Also try **Doors**
 (experimental, added 2026-10-26): it sends `ClosureMoveRequest` with a door
 field set to OPEN, which Tesla's reference client never does. Note what the
 car does (opens, unlatches, ignores, or returns an error) and on which model.
+Try **Drive** (keyless driving, added 2026-10-26): enable *Allow keyless
+driving* and set a *Drive PIN* in the app settings, pick *Drive*, enter the
+PIN, and see whether the car can be driven within 2 minutes. Note: whether it
+works with a Driver-role key or only Owner; whether PIN to Drive (if enabled
+on the car) is still asked for.
 Then turn on **Encrypt commands (AES-GCM, beta)** in the app settings, check
 *Vehicle* on the watch says "Encryption on", and repeat unlock/lock. A
 "Reply failed verification" result would point at the GCM reply path. Bluetooth behaviour varies by

@@ -10,6 +10,8 @@ class MainMenu extends WatchUi.Menu2 {
         addItem(new WatchUi.MenuItem("Trunk", null, :trunk, {}));
         addItem(new WatchUi.MenuItem("Frunk", null, :frunk, {}));
         addItem(new WatchUi.MenuItem("Wake", null, :wake, {}));
+        addItem(new WatchUi.MenuItem("Drive",
+            DriveGuard.isEnabled() ? "Keyless, PIN" : "Off in settings", :drive, {}));
         addItem(new WatchUi.MenuItem("Doors", "Experimental", :doors, {}));
         addItem(new WatchUi.MenuItem("Pair this watch", "Enroll as a key", :pair, {}));
         addItem(new WatchUi.MenuItem("My key", "Show public key", :mykey, {}));

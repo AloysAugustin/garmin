@@ -18,7 +18,8 @@ class TeslaController {
         INTENT_DOOR_FRONT_DRIVER,
         INTENT_DOOR_FRONT_PASSENGER,
         INTENT_DOOR_REAR_DRIVER,
-        INTENT_DOOR_REAR_PASSENGER
+        INTENT_DOOR_REAR_PASSENGER,
+        INTENT_DRIVE
     }
 
     // Internal flow state.
@@ -144,6 +145,8 @@ class TeslaController {
             return TeslaProto.openTrunk();
         } else if (mIntent == INTENT_FRUNK) {
             return TeslaProto.openFrunk();
+        } else if (mIntent == INTENT_DRIVE) {
+            return TeslaProto.rkeAction(TeslaProto.RKE_REMOTE_DRIVE);
         } else if (mIntent == INTENT_DOOR_FRONT_DRIVER) {
             return TeslaProto.openDoor(TeslaProto.DOOR_FRONT_DRIVER);
         } else if (mIntent == INTENT_DOOR_FRONT_PASSENGER) {
@@ -156,12 +159,20 @@ class TeslaController {
         return null;
     }
 
+    hidden function successMessage() {
+        if (mIntent == INTENT_DRIVE) {
+            return "Keyless driving on. Start driving within 2 minutes.";
+        }
+        return intentName() + " OK";
+    }
+
     hidden function intentName() {
         if (mIntent == INTENT_UNLOCK) { return "Unlock"; }
         if (mIntent == INTENT_LOCK) { return "Lock"; }
         if (mIntent == INTENT_WAKE) { return "Wake"; }
         if (mIntent == INTENT_TRUNK) { return "Trunk"; }
         if (mIntent == INTENT_FRUNK) { return "Frunk"; }
+        if (mIntent == INTENT_DRIVE) { return "Drive"; }
         if (mIntent == INTENT_DOOR_FRONT_DRIVER) { return "Front driver door"; }
         if (mIntent == INTENT_DOOR_FRONT_PASSENGER) { return "Front passenger door"; }
         if (mIntent == INTENT_DOOR_REAR_DRIVER) { return "Rear driver door"; }
@@ -355,7 +366,7 @@ class TeslaController {
             if (hasInfo) {
                 return; // session-info-only message; keep waiting
             }
-            result(true, intentName() + " OK");
+            result(true, successMessage());
             return;
         }
 
@@ -365,7 +376,7 @@ class TeslaController {
             return;
         }
         if (!vc.hasKey(:opStatus)) {
-            result(true, intentName() + " OK");
+            result(true, successMessage());
             return;
         }
         var vop = vc[:opStatus];

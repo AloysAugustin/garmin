@@ -26,6 +26,7 @@ lock, open the trunk/frunk and wake the car.
 | Trunk  | VCSEC `ClosureMoveRequest { rearTrunk = OPEN }` |
 | Frunk  | VCSEC `ClosureMoveRequest { frontTrunk = OPEN }` |
 | Wake   | VCSEC `RKEAction = RKE_ACTION_WAKE_VEHICLE` |
+| Drive (keyless, opt-in) | VCSEC `RKEAction = RKE_ACTION_REMOTE_DRIVE` |
 | Doors (experimental) | VCSEC `ClosureMoveRequest { <door> = OPEN }` for one of the four doors |
 | Pair   | Unsigned `WhitelistOperation` add-key request (needs NFC card tap) |
 
@@ -349,7 +350,13 @@ sideload it from the Connect IQ simulator / VS Code extension.
    just like adding a phone key.
 3. **Use it.** Walk up to the car and pick *Unlock*, *Lock*, *Trunk*, etc. The
    watch finds the car, performs the handshake and sends the command.
-4. *(Optional)* **Encryption.** The app setting *Encrypt commands (AES-GCM,
+4. *(Optional)* **Keyless driving.** Turn on *Allow keyless driving (Drive)*
+   and set a 4-digit *Drive PIN* in the app settings. *Drive* on the watch
+   asks for that PIN, then lets the car be driven for **two minutes** without
+   another key (like *Start* in the Tesla app). Three wrong PINs lock Drive
+   for 5 minutes. Untested on a car: whether a *Driver*-role key may use it
+   is not documented.
+5. *(Optional)* **Encryption.** The app setting *Encrypt commands (AES-GCM,
    beta)* encrypts commands and replies. *Vehicle* on the watch shows whether
    it is on.
 
@@ -408,5 +415,10 @@ sideload it from the Connect IQ simulator / VS Code extension.
   weakness, and it is independent of the HMAC/GCM choice.
 - **RNG.** Security rests on `Cryptography.randomBytes` being a proper CSPRNG
   (it generates the private key, challenge and routing address).
+- **Keyless driving.** Per Tesla's manual, keyless driving also gets past
+  PIN to Drive, so with Drive enabled a watch plus its Drive PIN is enough to
+  drive away. That is why Drive is off by default and needs the on-watch PIN
+  (with a lockout). The PIN is stored in the app settings on the watch and in
+  Garmin Connect, not in a secure element.
 - **Revocation.** If the watch is lost, remove its key in the Tesla app
   (Controls → Locks → Keys), exactly as for a lost phone key.

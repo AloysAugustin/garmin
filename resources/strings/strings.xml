@@ -3,4 +3,7 @@
     <string id="VinTitle">Vehicle VIN</string>
     <string id="VinPrompt">17-character VIN</string>
     <string id="EncryptTitle">Encrypt commands (AES-GCM, beta)</string>
+    <string id="AllowDriveTitle">Allow keyless driving (Drive)</string>
+    <string id="DrivePinTitle">Drive PIN</string>
+    <string id="DrivePinPrompt">4 digits, entered on the watch before Drive</string>
 </strings>

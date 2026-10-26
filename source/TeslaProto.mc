@@ -12,6 +12,7 @@ module TeslaProto {
     // VCSEC.RKEAction_E
     const RKE_UNLOCK = 0;
     const RKE_LOCK = 1;
+    const RKE_REMOTE_DRIVE = 20; // keyless driving for two minutes
     const RKE_AUTO_SECURE = 29;
     const RKE_WAKE = 30;
 
