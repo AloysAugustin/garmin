@@ -1,0 +1,5 @@
+<strings>
+    <string id="AppName">Tesla Key</string>
+    <string id="VinTitle">Vehicle VIN</string>
+    <string id="VinPrompt">17-character VIN</string>
+</strings>

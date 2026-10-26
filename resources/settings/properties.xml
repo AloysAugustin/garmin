@@ -1,0 +1,4 @@
+<properties>
+    <!-- The 17-character Vehicle Identification Number of your Tesla. -->
+    <property id="vin" type="string"></property>
+</properties>

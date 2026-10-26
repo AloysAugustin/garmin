@@ -1,0 +1,17 @@
+# Connect IQ build configuration for Tesla Key.
+#
+# Build (with the Connect IQ SDK on your PATH):
+#   monkeyc -f monkey.jungle -o bin/TeslaKey.prg -y developer_key.der -d instinct2
+#
+# Run the unit tests in the simulator ("Run No Evil"):
+#   monkeyc -f monkey.jungle -o bin/TeslaKey-test.prg -y developer_key.der \
+#           -d instinct2 --unit-test
+#   connectiq            # start the simulator, then:
+#   monkeydo bin/TeslaKey-test.prg instinct2 -t
+
+project.manifest = manifest.xml
+
+# The unit tests under source/tests are only compiled into test builds. They are
+# excluded from normal release builds via the base sourcePath below plus the
+# --unit-test flag pulling them back in.
+base.sourcePath = source

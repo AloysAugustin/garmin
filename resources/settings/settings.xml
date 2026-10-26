@@ -1,0 +1,5 @@
+<settings>
+    <setting propertyKey="@Properties.vin" title="@Strings.VinTitle" prompt="@Strings.VinPrompt">
+        <settingConfig type="alphaNumeric" maxLength="17" />
+    </setting>
+</settings>
